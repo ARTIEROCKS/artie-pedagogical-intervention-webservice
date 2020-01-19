@@ -10,13 +10,32 @@
 	</parent>
 	<groupId>artie.pedagogicalintervention</groupId>
 	<artifactId>webservice</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1-RELEASE</version>
 	<name>webservice</name>
-	<description>Demo project for Spring Boot</description>
+	<description>ARTIE Pedagogical intervention webservice</description>
 
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
+	
+	<repositories>
+		<repository>
+          <id>central</id>
+          <url>https://repo1.maven.org/maven2</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+      		<id>artie-snapshots</id>
+      		<name>ARTIE repository</name>
+      		<url>http://nexus.ai-mind.com:8081/nexus/content/repositories/snapshots</url>
+    	</repository>
+    	<repository>
+      		<id>artie-releases</id>
+      		<name>ARTIE repository</name>
+      		<url>http://nexus.ai-mind.com:8081/nexus/content/repositories/releases</url>
+    	</repository>
+  	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -38,6 +57,12 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>artie.common</groupId>
+			<artifactId>web</artifactId>
+			<version>0.1-RELEASE</version>
 		</dependency>
 	</dependencies>
 
