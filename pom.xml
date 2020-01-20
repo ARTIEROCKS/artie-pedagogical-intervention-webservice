@@ -8,10 +8,10 @@
 		<version>2.2.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>artie.pedagogicalintervention</groupId>
-	<artifactId>webservice</artifactId>
+	<groupId>artie.web</groupId>
+	<artifactId>pedagogicalinterventionws</artifactId>
 	<version>0.1-RELEASE</version>
-	<name>webservice</name>
+	<name>pedagogical intervention webservice</name>
 	<description>ARTIE Pedagogical intervention webservice</description>
 
 	<properties>
@@ -60,8 +60,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>artie.common</groupId>
-			<artifactId>web</artifactId>
+			<groupId>artie.web</groupId>
+			<artifactId>common</artifactId>
 			<version>0.1-RELEASE</version>
 		</dependency>
 	</dependencies>
