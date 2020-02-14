@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import artie.common.web.dto.Student;
 import artie.sensor.common.dto.SensorObject;
 
-@Document
+@Document(collection="SensorData")
 public class SensorData {
 	
 	//Attributes
