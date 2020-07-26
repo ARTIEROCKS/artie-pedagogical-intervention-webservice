@@ -28,12 +28,12 @@
         <repository>
       		<id>artie-snapshots</id>
       		<name>ARTIE repository</name>
-      		<url>http://nexus.ai-mind.com:8081/nexus/content/repositories/snapshots</url>
+      		<url>http://nexus.ai-mind.com:8081/nexus/repository/maven-snapshots/</url>
     	</repository>
     	<repository>
       		<id>artie-releases</id>
       		<name>ARTIE repository</name>
-      		<url>http://nexus.ai-mind.com:8081/nexus/content/repositories/releases</url>
+      		<url>http://nexus.ai-mind.com:8081/nexus/repository/maven-releases/</url>
     	</repository>
   	</repositories>
 
