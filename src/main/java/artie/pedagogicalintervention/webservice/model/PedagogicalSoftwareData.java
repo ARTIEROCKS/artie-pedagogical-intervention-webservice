@@ -51,4 +51,10 @@ public class PedagogicalSoftwareData {
 		this.elementType = elementType;
 		this.fields = fields;
 	}
+	
+	
+	//Methods
+	public void addField(PedagogicalSoftwareField field) {
+		this.fields.add(field);
+	}
 }
