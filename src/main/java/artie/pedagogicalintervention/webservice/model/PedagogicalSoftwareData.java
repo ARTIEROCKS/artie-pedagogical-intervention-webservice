@@ -9,52 +9,34 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="PedagogicalSoftwareData")
 public class PedagogicalSoftwareData {
-
-	//Attributes
+	
 	@Id
 	private String id;
-	private String elementType;
-	private List<PedagogicalSoftwareField> fields = new ArrayList<>();
+	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
-	
-	//Properties
 	public String getId() {
-		return id;
+		return this.id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	public String getElementType() {
-		return elementType;
+	public List<PedagogicalSoftwareElement> getElements(){
+		return this.elements;
 	}
-	public void setElementType(String elementType) {
-		this.elementType = elementType;
-	}
-	
-	public List<PedagogicalSoftwareField> getFields(){
-		return fields;
-	}
-	public void setFields(List<PedagogicalSoftwareField> fields) {
-		this.fields = fields;
+	public void setElements(List<PedagogicalSoftwareElement> elements) {
+		this.elements = elements;
 	}
 	
-	//Default constructor
+	/**
+	 * Default Constructor
+	 */
 	public PedagogicalSoftwareData() {}
 	
 	/**
 	 * Parameterized constructor
-	 * @param elementType
-	 * @param fields
+	 * @param elements
 	 */
-	public PedagogicalSoftwareData(String elementType, List<PedagogicalSoftwareField> fields) {
-		this.elementType = elementType;
-		this.fields = fields;
-	}
-	
-	
-	//Methods
-	public void addField(PedagogicalSoftwareField field) {
-		this.fields.add(field);
+	public PedagogicalSoftwareData(List<PedagogicalSoftwareElement> elements) {
+		this.elements = elements;
 	}
 }

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
+
 
 @Controller
 @RestController
@@ -28,7 +28,7 @@ public class PedagogicalSoftwareRestController {
 	@PostMapping(path = "/sendPedagogicalSoftwareData",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.FOUND)
-	public void sendPedagogicalSoftwareData(@RequestBody PedagogicalSoftwareData data) {
+	public void sendPedagogicalSoftwareData(@RequestBody String data) {
 		this.pedagogicalSoftwareService.add(data);
 	}
 	
