@@ -39,4 +39,8 @@ public class PedagogicalSoftwareData {
 	public PedagogicalSoftwareData(List<PedagogicalSoftwareElement> elements) {
 		this.elements = elements;
 	}
+	
+	public void addElement(PedagogicalSoftwareElement element) {
+		this.elements.add(element);
+	}
 }

@@ -8,8 +8,8 @@ public class PedagogicalSoftwareElement {
 	//Attributes
 	private String elementName;
 	private String elementFamily;
-	private List<PedagogicalSoftwareField> fields = new ArrayList<>();
-	private PedagogicalSoftwareElement nextElement;
+	private List<PedagogicalSoftwareInput> inputs = new ArrayList<>();
+	private PedagogicalSoftwareElement next;
 	
 	
 	//Properties
@@ -27,18 +27,18 @@ public class PedagogicalSoftwareElement {
 		this.elementFamily = elementFamily;
 	}
 	
-	public List<PedagogicalSoftwareField> getFields(){
-		return fields;
+	public List<PedagogicalSoftwareInput> getInputs(){
+		return inputs;
 	}
-	public void setFields(List<PedagogicalSoftwareField> fields) {
-		this.fields = fields;
+	public void setInputs(List<PedagogicalSoftwareInput> inputs) {
+		this.inputs = inputs;
 	}
 	
-	public PedagogicalSoftwareElement getNextElement() {
-		return this.nextElement;
+	public PedagogicalSoftwareElement getNext() {
+		return this.next;
 	}
-	public void setNextElement(PedagogicalSoftwareElement nextElement) {
-		this.nextElement = nextElement;
+	public void setNext(PedagogicalSoftwareElement next) {
+		this.next = next;
 	}
 	
 	
@@ -48,18 +48,12 @@ public class PedagogicalSoftwareElement {
 	/**
 	 * Parameterized constructor
 	 * @param elementName
-	 * @param fields
+	 * @param inputs
 	 */
-	public PedagogicalSoftwareElement(String elementName, String elementFamily, List<PedagogicalSoftwareField> fields, PedagogicalSoftwareElement nextElement) {
+	public PedagogicalSoftwareElement(String elementName, String elementFamily, List<PedagogicalSoftwareInput> inputs, PedagogicalSoftwareElement next) {
 		this.elementName = elementName;
 		this.elementFamily = elementFamily;
-		this.fields = fields;
-		this.nextElement = nextElement;
-	}
-	
-	
-	//Methods
-	public void addField(PedagogicalSoftwareField field) {
-		this.fields.add(field);
+		this.inputs = inputs;
+		this.next = next;
 	}
 }

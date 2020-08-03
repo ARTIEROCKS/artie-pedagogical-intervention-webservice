@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 
 @Service
@@ -26,12 +27,21 @@ public class PedagogicalSoftwareService {
 	
 	/**
 	 * Function to transform a pedagogical software data from string to object
-	 * @param psd
+	 * @param pse
 	 */
-	public void add(String psd) {
+	public void add(String pse) {
 		try {
-			PedagogicalSoftwareData pedagogicalSoftwareData = new ObjectMapper().readValue(psd, PedagogicalSoftwareData.class);
-			this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
+			
+			//Transforming all the elements to pedagogical software elements
+			PedagogicalSoftwareElement[] pedagogicalSoftwareElements = new ObjectMapper().readValue(pse, PedagogicalSoftwareElement[].class);
+			
+			//Inserting all these elements in the pedagogical software data block
+			PedagogicalSoftwareData pedagogicalSoftwareData = new PedagogicalSoftwareData();
+			for (PedagogicalSoftwareElement pedagogicalSoftwareElement : pedagogicalSoftwareElements){
+				
+				pedagogicalSoftwareData.addElement(pedagogicalSoftwareElement);
+				this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
+			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
