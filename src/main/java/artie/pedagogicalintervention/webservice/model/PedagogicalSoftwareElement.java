@@ -6,16 +6,25 @@ import java.util.List;
 public class PedagogicalSoftwareElement {
 
 	//Attributes
-	private String elementType;
+	private String elementName;
+	private String elementFamily;
 	private List<PedagogicalSoftwareField> fields = new ArrayList<>();
+	private PedagogicalSoftwareElement nextElement;
 	
 	
 	//Properties
-	public String getElementType() {
-		return elementType;
+	public String getElementName() {
+		return elementName;
 	}
-	public void setElementType(String elementType) {
-		this.elementType = elementType;
+	public void setElementName(String elementName) {
+		this.elementName = elementName;
+	}
+	
+	public String elementFamily() {
+		return this.elementFamily;
+	}
+	public void setElementFamily(String elementFamily) {
+		this.elementFamily = elementFamily;
 	}
 	
 	public List<PedagogicalSoftwareField> getFields(){
@@ -25,17 +34,27 @@ public class PedagogicalSoftwareElement {
 		this.fields = fields;
 	}
 	
+	public PedagogicalSoftwareElement getNextElement() {
+		return this.nextElement;
+	}
+	public void setNextElement(PedagogicalSoftwareElement nextElement) {
+		this.nextElement = nextElement;
+	}
+	
+	
 	//Default constructor
 	public PedagogicalSoftwareElement() {}
 	
 	/**
 	 * Parameterized constructor
-	 * @param elementType
+	 * @param elementName
 	 * @param fields
 	 */
-	public PedagogicalSoftwareElement(String elementType, List<PedagogicalSoftwareField> fields) {
-		this.elementType = elementType;
+	public PedagogicalSoftwareElement(String elementName, String elementFamily, List<PedagogicalSoftwareField> fields, PedagogicalSoftwareElement nextElement) {
+		this.elementName = elementName;
+		this.elementFamily = elementFamily;
 		this.fields = fields;
+		this.nextElement = nextElement;
 	}
 	
 	
