@@ -74,7 +74,7 @@ public class PedagogicalSoftwareService {
 		long diffElements = 0;
 		
 		//Input values variables
-		long diffInputValues = 0;
+		long diffInput = 0;
 		
 		
 		//1- Getting all the elements in a single list (not nested)
@@ -97,7 +97,7 @@ public class PedagogicalSoftwareService {
 		mapFamilySimilarities = null;
 		
 		//4- Input element similarities from the element similarities
-		diffInputValues = this.inputDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffInputValues);
+		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffInput);
 		
 		return 0;	
 	}
@@ -220,8 +220,15 @@ public class PedagogicalSoftwareService {
 	}
 	
 	
-	private long inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, long diffInputValues) {
-		
+	/**
+	 * Function to get the input distance between the inputs from the same elements
+	 * @param mapElementSimilarities
+	 * @param aimElements
+	 * @param originElements
+	 * @param diffInputValues
+	 * @return
+	 */
+	public long inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, long diffInputValues) {
 		
 		for(String element : mapElementSimilarities.keySet()) {
 			
@@ -233,7 +240,25 @@ public class PedagogicalSoftwareService {
 			
 			//4.2- Gets the elements in the origin
 			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
+			
+			//4.3- Checks all the inputs for each element
+			for(PedagogicalSoftwareElementDTO elementAimElement : elementAimElements) {
+				
+				for(int input=0; input<elementAimElement.getInputs().size(); input++) {
+					for(int field=0; field<elementAimElement.getInputs().get(input).getFields().size(); field++) {
+					
+						for(PedagogicalSoftwareElementDTO elementOriginElement : elementOriginElements) {
+							
+							//If the field of the input of the aim element is equal of the field of the input of the origin element
+							if(!elementAimElement.getInputs().get(input).getFields().get(field).equals(elementOriginElement.getInputs().get(input).getFields().get(field))) {
+								diffInputValues += 1;
+							}							
+						}
 						
+					}
+				}
+				
+			}		
 			
 		}
 		
