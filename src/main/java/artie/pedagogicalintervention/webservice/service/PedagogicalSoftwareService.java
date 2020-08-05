@@ -111,9 +111,10 @@ public class PedagogicalSoftwareService {
 	 * @param diffFamily
 	 * @return
 	 */
-	private long familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, long diffFamily) {
+	public long familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, long diffFamily) {
 		
 		boolean addedDifference = false;
+		int addedElements = 0;
 		
 		for(PedagogicalSoftwareElementDTO aimElement : aimElements) {
 			
@@ -137,13 +138,14 @@ public class PedagogicalSoftwareService {
 															  					.filter(c -> c.getElementFamily().equals(aimElement.getElementFamily()))
 															  					.collect(Collectors.toList());
 					mapFamilySimilarities.put(aimElement.getElementFamily(), existingElements);
+					addedElements += existingElements.size();
 				}
 			}
 		}
 		
 		if(addedDifference) {
 			//We return the distance of the families, less the number of families found
-			diffFamily -= mapFamilySimilarities.values().size();
+			diffFamily -= addedElements;
 		}
 		
 		return diffFamily;
@@ -157,9 +159,11 @@ public class PedagogicalSoftwareService {
 	 * @param diffElements
 	 * @return
 	 */
-	private long elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, long diffElements) {
+	public long elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, long diffElements) {
 		
 		boolean addedDifference = false;
+		int addedElements = 0;
+		
 		for(String family : mapFamilySimilarities.keySet()) {
 			
 			//3.1- Gets the elements in the aim for this family
@@ -193,13 +197,14 @@ public class PedagogicalSoftwareService {
 					
 					//If there are similarities, we add these similarities to the element map
 					mapElementSimilarities.put(familyAimElement.getElementName(), existingElements);
+					addedElements += existingElements.size();
 				}
 			}
 		}
 		
 		if(addedDifference) {
 			//We return the distance of the elements, less the number of elements found
-			diffElements -= mapElementSimilarities.values().size();
+			diffElements -= addedElements;
 		}
 		
 		return diffElements;
