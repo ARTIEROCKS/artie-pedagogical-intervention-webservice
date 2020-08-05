@@ -29,4 +29,18 @@ public class PedagogicalSoftwareField {
 		this.name = name;
 		this.value = value;
 	}
+	
+	
+	/**
+	 * Overrides equals
+	 */
+	public boolean equals(Object obj) {
+		
+		if (this == obj) return true;
+	    if (obj == null) return false;
+	    if (this.getClass() != obj.getClass()) return false;
+		PedagogicalSoftwareField objField = (PedagogicalSoftwareField) obj;
+		
+		return (this.name.equals(objField.getName()) && this.value.equals(objField.getValue()));
+	}
 }

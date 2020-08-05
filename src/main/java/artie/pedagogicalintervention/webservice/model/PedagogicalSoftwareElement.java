@@ -56,4 +56,30 @@ public class PedagogicalSoftwareElement {
 		this.inputs = inputs;
 		this.next = next;
 	}
+	
+	
+	/**
+	 * Overrides equals
+	 */
+	public boolean equals(Object obj) {
+		
+		
+		if (this == obj) return true;
+	    if (obj == null) return false;
+	    if (this.getClass() != obj.getClass()) return false;
+	    PedagogicalSoftwareElement objElement = (PedagogicalSoftwareElement) obj;
+	    
+	    //Checks if the name and the family are equals
+	    if (!this.elementName.equals(objElement.getElementName())) return false;
+	    if (!this.elementFamily.equals(objElement.getElementFamily())) return false;
+	    
+	    //Checks if all the inputs are equals
+	    boolean result = this.inputs.size() == objElement.getInputs().size();
+	    for(PedagogicalSoftwareInput i : this.inputs) {
+	    	result = result && (objElement.getInputs().stream().filter(oi -> oi.equals(i)).count() > 0);
+	    }
+	    
+		return result;
+		
+	}
 }

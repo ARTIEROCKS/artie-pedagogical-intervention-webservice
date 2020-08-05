@@ -87,6 +87,34 @@ public class PedagogicalSoftwareService {
 		}
 		
 		//2- Family differences and similarities
+		diffFamily = this.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
+		
+		//3- Element similarities from the family similarities
+		diffElements = this.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElements);
+		
+		//We can now delete the family similarities map
+		mapFamilySimilarities.clear();
+		mapFamilySimilarities = null;
+		
+		//4- Input element similarities from the element similarities
+		diffInputValues = this.inputDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffInputValues);
+		
+		return 0;	
+	}
+	
+	
+	/**
+	 * Function to get the family distance between two elements
+	 * @param aimElements
+	 * @param originElements
+	 * @param mapFamilySimilarities
+	 * @param diffFamily
+	 * @return
+	 */
+	private long familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, long diffFamily) {
+		
+		boolean addedDifference = false;
+		
 		for(PedagogicalSoftwareElementDTO aimElement : aimElements) {
 			
 			//2.1- Checks that this family has not been already checked
@@ -101,6 +129,7 @@ public class PedagogicalSoftwareService {
 				if(countOriginFamilies==0) {
 					//If there are no similar families, we count all the elements in the origin
 					diffFamily += originElements.size();
+					addedDifference = true;
 				}else {
 					//If there are similarities, we add these similarities to the family map
 					List<PedagogicalSoftwareElementDTO> existingElements = originElements
@@ -112,7 +141,25 @@ public class PedagogicalSoftwareService {
 			}
 		}
 		
-		//3- Element similarities from the family similarities
+		if(addedDifference) {
+			//We return the distance of the families, less the number of families found
+			diffFamily -= mapFamilySimilarities.values().size();
+		}
+		
+		return diffFamily;
+	}
+	
+	/**
+	 * Function to get the element distance between two elements
+	 * @param mapFamilySimilarities
+	 * @param mapElementSimilarities
+	 * @param aimElements
+	 * @param diffElements
+	 * @return
+	 */
+	private long elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, long diffElements) {
+		
+		boolean addedDifference = false;
 		for(String family : mapFamilySimilarities.keySet()) {
 			
 			//3.1- Gets the elements in the aim for this family
@@ -135,7 +182,8 @@ public class PedagogicalSoftwareService {
 				//3.3.2- Adds to the element result
 				if(countOriginElements == 0) {
 					//If there are no similar elements, we count all the elements of the family in the origin
-					diffElements += countOriginElements;
+					diffElements += familyOriginElements.size();
+					addedDifference = true;
 				} else {
 					
 					List<PedagogicalSoftwareElementDTO> existingElements = familyOriginElements
@@ -149,12 +197,18 @@ public class PedagogicalSoftwareService {
 			}
 		}
 		
-		//We can now delete the family similarities map
-		mapFamilySimilarities.clear();
-		mapFamilySimilarities = null;
+		if(addedDifference) {
+			//We return the distance of the elements, less the number of elements found
+			diffElements -= mapElementSimilarities.values().size();
+		}
+		
+		return diffElements;
+	}
+	
+	
+	private long inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, long diffInputValues) {
 		
 		
-		//4- Input element similarities from the element similarities
 		for(String element : mapElementSimilarities.keySet()) {
 			
 			//4.1- Gets the elements in the aim for this element
@@ -163,10 +217,19 @@ public class PedagogicalSoftwareService {
 																		.filter(c -> c.getElementName().equals(element))
 																		.collect(Collectors.toList());
 			
+			//4.2- Gets the elements in the origin
+			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
+			
+			//4.3- Checks for this element, that there are the same number in the origin and the aim
+			long countSameElementsOrigin = originElements
+												.stream()
+												.filter(c -> c.getElementName().equals(element))
+												.count();
 		}
 		
-		return 0;	
+		return diffInputValues;
 	}
+	
 	
 	/**
 	 * Function to get all the elements in a single list

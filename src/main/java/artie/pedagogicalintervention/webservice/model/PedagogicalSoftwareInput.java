@@ -39,4 +39,23 @@ public class PedagogicalSoftwareInput {
 		this.fields = fields;
 	}
 
+	/**
+	 * Overrides equals
+	 */
+	public boolean equals(Object obj) {
+		
+		if (this == obj) return true;
+	    if (obj == null) return false;
+	    if (this.getClass() != obj.getClass()) return false;
+	    PedagogicalSoftwareInput objInput = (PedagogicalSoftwareInput) obj;
+
+	    if(!this.name.equals(objInput.getName())) return false;
+	    
+	    boolean result = this.fields.size()== objInput.getFields().size();
+	    for(PedagogicalSoftwareField field : this.fields) {
+	    	result = result && (objInput.getFields().stream().filter(f -> f.equals(field)).count() > 0);
+	    }
+		
+		return result;
+	}
 }
