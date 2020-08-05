@@ -177,13 +177,19 @@ public class PedagogicalSoftwareService {
 			//3.3- For each aim element we look for the origin element
 			for(PedagogicalSoftwareElementDTO familyAimElement : familyAimElements) {
 				
-				//3.3.1 - Counts the number of elements similar to the aim element for the family
+				//3.3.1- Counts how many aim elements are the same element
+				long countAimElements = familyAimElements
+													.stream()
+													.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
+													.count();
+				
+				//3.3.2 - Counts the number of elements similar to the aim element for the family
 				long countOriginElements = familyOriginElements
 													.stream()
 													.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
 													.count();
 				
-				//3.3.2- Adds to the element result
+				//3.3.3- Adds to the element result
 				if(countOriginElements == 0) {
 					//If there are no similar elements, we count all the elements of the family in the origin
 					diffElements += familyOriginElements.size();
@@ -195,9 +201,12 @@ public class PedagogicalSoftwareService {
 																				.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
 																				.collect(Collectors.toList());
 					
+					//Checks the difference in number between the origin and the aim
+					long differenceOriginAim = Math.abs(countAimElements - countOriginElements);
+					
 					//If there are similarities, we add these similarities to the element map
 					mapElementSimilarities.put(familyAimElement.getElementName(), existingElements);
-					addedElements += existingElements.size();
+					addedElements += existingElements.size() - differenceOriginAim;
 				}
 			}
 		}
@@ -224,12 +233,8 @@ public class PedagogicalSoftwareService {
 			
 			//4.2- Gets the elements in the origin
 			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
+						
 			
-			//4.3- Checks for this element, that there are the same number in the origin and the aim
-			long countSameElementsOrigin = originElements
-												.stream()
-												.filter(c -> c.getElementName().equals(element))
-												.count();
 		}
 		
 		return diffInputValues;

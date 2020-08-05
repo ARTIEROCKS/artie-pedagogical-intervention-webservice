@@ -29,6 +29,7 @@ class PedagogicalSoftwareServiceTest {
 	private PedagogicalSoftwareElement elementAim1;
 	private PedagogicalSoftwareElement elementAim2;
 	private PedagogicalSoftwareElement elementAim3;
+	private PedagogicalSoftwareElement elementAim4;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -62,7 +63,8 @@ class PedagogicalSoftwareServiceTest {
 		this.elementOrigin1 = new PedagogicalSoftwareElement("element1", "family1", inputs1, elementOrigin2);
 		
 		//Sets the aim elements
-		this.elementAim3 = new PedagogicalSoftwareElement("element4", "family4", inputs1, null);
+		this.elementAim4 = new PedagogicalSoftwareElement("element1", "family1", inputs1, null);
+		this.elementAim3 = new PedagogicalSoftwareElement("element4", "family4", inputs1, elementAim4);
 		this.elementAim2 = new PedagogicalSoftwareElement("element3", "family1", inputs1, elementAim3);
 		this.elementAim1 = new PedagogicalSoftwareElement("element1", "family1", inputs1, elementAim2);
 	}
@@ -145,7 +147,7 @@ class PedagogicalSoftwareServiceTest {
 		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
 		
 		//Checks the calculated element difference
-		assertEquals(diffElement, 1);
+		assertEquals(diffElement, 2);
 		
 		//Checks the elements map
 		assertEquals(mapElementSimilarities.keySet().size(), 1);
