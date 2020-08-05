@@ -20,7 +20,7 @@ public class PedagogicalSoftwareElement {
 		this.elementName = elementName;
 	}
 	
-	public String elementFamily() {
+	public String getElementFamily() {
 		return this.elementFamily;
 	}
 	public void setElementFamily(String elementFamily) {
