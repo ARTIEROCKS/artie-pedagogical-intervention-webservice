@@ -126,7 +126,7 @@ class PedagogicalSoftwareServiceTest {
 		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
 		
 		//Checks the calculated family difference
-		assertEquals(1, diffFamily);
+		assertEquals(2, diffFamily);
 		
 		//Checks the family map
 		assertEquals(1, mapFamilySimilarities.keySet().size());

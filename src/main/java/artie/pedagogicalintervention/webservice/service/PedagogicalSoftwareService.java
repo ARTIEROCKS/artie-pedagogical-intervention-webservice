@@ -113,7 +113,7 @@ public class PedagogicalSoftwareService {
 	 */
 	public long familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, long diffFamily) {
 		
-		boolean addedDifference = false;
+		int addedDifference = 0;
 		int addedElements = 0;
 		
 		for(PedagogicalSoftwareElementDTO aimElement : aimElements) {
@@ -128,9 +128,9 @@ public class PedagogicalSoftwareService {
 							  					.count();
 				//2.1.2- Adds to the family result
 				if(countOriginFamilies==0) {
-					//If there are no similar families, we count all the elements in the origin
-					diffFamily += originElements.size();
-					addedDifference = true;
+					//If there are no similar families, we count all the elements in the origin + the element in the aim that has not been included in the origin
+					diffFamily += originElements.size() + 1;
+					addedDifference++;
 				}else {
 					//If there are similarities, we add these similarities to the family map
 					List<PedagogicalSoftwareElementDTO> existingElements = originElements
@@ -143,9 +143,9 @@ public class PedagogicalSoftwareService {
 			}
 		}
 		
-		if(addedDifference) {
-			//We return the distance of the families, less the number of families found
-			diffFamily -= addedElements;
+		if(addedDifference > 0) {
+			//We return the distance of the families, less the number of families found by each number of difference
+			diffFamily -= (addedElements * addedDifference);
 		}
 		
 		return diffFamily;
