@@ -232,16 +232,16 @@ public class PedagogicalSoftwareService {
 		
 		for(String element : mapElementSimilarities.keySet()) {
 			
-			//4.1- Gets the elements in the aim for this element
+			//5.1- Gets the elements in the aim for this element
 			List<PedagogicalSoftwareElementDTO> elementAimElements = aimElements
 																		.stream()
 																		.filter(c -> c.getElementName().equals(element))
 																		.collect(Collectors.toList());
 			
-			//4.2- Gets the elements in the origin
+			//5.2- Gets the elements in the origin
 			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
 			
-			//4.3- Checks all the inputs for each element
+			//5.3- Checks all the inputs for each element
 			for(PedagogicalSoftwareElementDTO elementAimElement : elementAimElements) {
 				
 				for(int input=0; input<elementAimElement.getInputs().size(); input++) {
@@ -263,6 +263,46 @@ public class PedagogicalSoftwareService {
 		}
 		
 		return diffInputValues;
+	}
+	
+	
+	public long positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, long diffPosition) {
+		
+		long nearestPosition= -1;
+		
+		for(String element : mapElementSimilarities.keySet()) {
+			
+			
+			//4.1- Gets the elements in the aim for this element
+			List<PedagogicalSoftwareElementDTO> elementAimElements = aimElements
+																		.stream()
+																		.filter(c -> c.getElementName().equals(element))
+																		.collect(Collectors.toList());
+	
+			//4.2- Gets the elements in the origin
+			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
+			
+			//4.3- From the correct elements we get the less distance in the position between then aim and the origin
+			for(PedagogicalSoftwareElementDTO elementAimElement : elementAimElements) {
+				
+				nearestPosition = -1;
+				
+				for(PedagogicalSoftwareElementDTO elementOriginElement : elementOriginElements) {
+					
+					if(nearestPosition == -1) {
+						nearestPosition = Math.abs(elementAimElement.getElementPosition() - elementOriginElement.getElementPosition());
+					}else if (nearestPosition > Math.abs(elementAimElement.getElementPosition() - elementOriginElement.getElementPosition())) {
+						nearestPosition = Math.abs(elementAimElement.getElementPosition() - elementOriginElement.getElementPosition());
+					}
+				}
+				
+				if(nearestPosition > -1) {
+					diffPosition += nearestPosition;
+				}
+			}
+		}
+		
+		return diffPosition;
 	}
 	
 	

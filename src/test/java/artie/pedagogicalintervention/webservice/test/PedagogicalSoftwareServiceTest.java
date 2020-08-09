@@ -96,13 +96,13 @@ class PedagogicalSoftwareServiceTest {
 		
 		//Checks the orders
 		assertTrue(elements.get(0).getElementName() == "element1");
-		assertTrue(elements.get(0).getElementOrder() == 0);
+		assertTrue(elements.get(0).getElementPosition() == 0);
 		
 		assertTrue(elements.get(1).getElementName() == "element2");
-		assertTrue(elements.get(1).getElementOrder() == 1);
+		assertTrue(elements.get(1).getElementPosition() == 1);
 		
 		assertTrue(elements.get(2).getElementName() == "element3");
-		assertTrue(elements.get(2).getElementOrder() == 2);
+		assertTrue(elements.get(2).getElementPosition() == 2);
 		
 	}
 	

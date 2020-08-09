@@ -4,14 +4,14 @@ import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement
 
 public class PedagogicalSoftwareElementDTO extends PedagogicalSoftwareElement{
 	
-	private int elementOrder = 0;
+	private int elementPosition = 0;
 
-	public int getElementOrder() {
-		return elementOrder;
+	public int getElementPosition() {
+		return elementPosition;
 	}
 
-	public void setElementOrder(int elementOrder) {
-		this.elementOrder = elementOrder;
+	public void setElementPosition(int elementPosition) {
+		this.elementPosition = elementPosition;
 	}
 	
 	
@@ -33,12 +33,12 @@ public class PedagogicalSoftwareElementDTO extends PedagogicalSoftwareElement{
 	/**
 	 * Parameterized constructor
 	 * @param element
-	 * @param order
+	 * @param position
 	 */
-	public PedagogicalSoftwareElementDTO(PedagogicalSoftwareElement element,int order) {
+	public PedagogicalSoftwareElementDTO(PedagogicalSoftwareElement element,int position) {
 		
 		super(element.getElementName(), element.getElementFamily(), element.getInputs(), null);
-		this.elementOrder = order;
+		this.elementPosition = position;
 		
 	}
 
