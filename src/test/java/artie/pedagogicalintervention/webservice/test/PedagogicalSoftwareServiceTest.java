@@ -198,5 +198,39 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(4, diffInput);
 		
 	}
+	
+	@Test
+	void positionDistanceCalculationTest() {
+		
+		//Sets the needed variables
+		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
+		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
+		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
+		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
+		
+		//Gets the elements not nested
+		int order = 0;
+		originElements = this.pedagogicalSoftwareService.getAllElements(elementOrigin1, originElements, order);
+		
+		order = 0;
+		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, order);
+		
+		//Calls the family distance calculation
+		long diffFamily = 0;
+		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
+		
+		//Calls the element distance calculation
+		long diffElement = 0;
+		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
+		
+		//Calls the position distancce calculation
+		long diffPosition = 0;
+		diffPosition = this.pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffPosition);
+		
+		//Checks the calculated position distance
+		assertEquals(3, diffPosition);
+	}
 
 }
+
+
