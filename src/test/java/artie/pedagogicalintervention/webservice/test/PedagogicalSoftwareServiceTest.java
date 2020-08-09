@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDTO;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
@@ -30,6 +31,10 @@ class PedagogicalSoftwareServiceTest {
 	private PedagogicalSoftwareElement elementAim2;
 	private PedagogicalSoftwareElement elementAim3;
 	private PedagogicalSoftwareElement elementAim4;
+	
+	//Final variables
+	private PedagogicalSoftwareData origin;
+	private PedagogicalSoftwareData aim;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -79,6 +84,18 @@ class PedagogicalSoftwareServiceTest {
 		this.elementAim3 = new PedagogicalSoftwareElement("element4", "family4", inputs1, elementAim4);
 		this.elementAim2 = new PedagogicalSoftwareElement("element3", "family1", inputs1, elementAim3);
 		this.elementAim1 = new PedagogicalSoftwareElement("element1", "family1", inputs1, elementAim2);
+		
+		
+		//Sets the final data elements
+		List<PedagogicalSoftwareElement> originElements = new ArrayList<>();
+		originElements.add(elementOrigin1);
+		
+		List<PedagogicalSoftwareElement> aimElements = new ArrayList<>();
+		aimElements.add(elementAim1);
+		
+		this.origin = new PedagogicalSoftwareData(originElements);
+		this.aim = new PedagogicalSoftwareData(aimElements);
+		
 	}
 
 	@Test
@@ -209,11 +226,11 @@ class PedagogicalSoftwareServiceTest {
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
 		
 		//Gets the elements not nested
-		int order = 0;
-		originElements = this.pedagogicalSoftwareService.getAllElements(elementOrigin1, originElements, order);
+		int position = 0;
+		originElements = this.pedagogicalSoftwareService.getAllElements(elementOrigin1, originElements, position);
 		
-		order = 0;
-		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, order);
+		position = 0;
+		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, position);
 		
 		//Calls the family distance calculation
 		long diffFamily = 0;
@@ -223,12 +240,20 @@ class PedagogicalSoftwareServiceTest {
 		long diffElement = 0;
 		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
 		
-		//Calls the position distancce calculation
+		//Calls the position distance calculation
 		long diffPosition = 0;
 		diffPosition = this.pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffPosition);
 		
 		//Checks the calculated position distance
 		assertEquals(3, diffPosition);
+	}
+	
+	void totalDistanceCalculation() {
+
+		double totalDistance = this.pedagogicalSoftwareService.distanceCalculation(this.origin, this.aim);
+		
+		//Checks the total calculation
+		assertEquals(4.5, totalDistance);
 	}
 
 }

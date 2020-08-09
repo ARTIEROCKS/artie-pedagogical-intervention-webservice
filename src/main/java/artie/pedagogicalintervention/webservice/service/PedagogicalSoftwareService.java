@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDTO;
+import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
@@ -73,8 +74,14 @@ public class PedagogicalSoftwareService {
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
 		long diffElements = 0;
 		
+		//Position variables
+		long diffPosition = 0;
+		
 		//Input values variables
 		long diffInput = 0;
+		
+		//total distance
+		double totalDistance = 0;
 		
 		
 		//1- Getting all the elements in a single list (not nested)
@@ -96,10 +103,16 @@ public class PedagogicalSoftwareService {
 		mapFamilySimilarities.clear();
 		mapFamilySimilarities = null;
 		
-		//4- Input element similarities from the element similarities
+		//4- Position similarities from the element similarities
+		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffPosition);
+		
+		//5- Input element similarities from the element similarities
 		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffInput);
 		
-		return 0;	
+		//6- Calculates the total distance in base of the coefficients
+		totalDistance = (1/DistanceEnum.FAMILY.getValue()*diffFamily) + (1/DistanceEnum.ELEMENT.getValue()*diffElements) + (1/DistanceEnum.POSITION.getValue()*diffPosition) + (1/DistanceEnum.INPUT.getValue()*diffInput);
+		
+		return totalDistance;	
 	}
 	
 	
@@ -310,18 +323,18 @@ public class PedagogicalSoftwareService {
 	 * Function to get all the elements in a single list
 	 * @param element
 	 * @param elementList
-	 * @param order
+	 * @param position
 	 * @return
 	 */
-	public List<PedagogicalSoftwareElementDTO> getAllElements(PedagogicalSoftwareElement element, List<PedagogicalSoftwareElementDTO> elementList, int order){
+	public List<PedagogicalSoftwareElementDTO> getAllElements(PedagogicalSoftwareElement element, List<PedagogicalSoftwareElementDTO> elementList, int position){
 		
 		//Adds the element to the list
-		elementList.add(new PedagogicalSoftwareElementDTO(element, order));
-		order++;
+		elementList.add(new PedagogicalSoftwareElementDTO(element, position));
+		position++;
 		
 		//Checks if the element has a next element
 		if(element.getNext() != null) {
-			elementList = this.getAllElements(element.getNext(), elementList, order);
+			elementList = this.getAllElements(element.getNext(), elementList, position);
 		}
 			
 		return elementList;
