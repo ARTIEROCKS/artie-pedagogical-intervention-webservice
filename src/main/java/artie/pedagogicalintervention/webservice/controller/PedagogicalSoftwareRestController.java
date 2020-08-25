@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
+import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareSolutionService;
 
 
 @Controller
@@ -23,6 +24,9 @@ public class PedagogicalSoftwareRestController {
 	@Autowired
 	private PedagogicalSoftwareService pedagogicalSoftwareService;
 	
+	@Autowired
+	private PedagogicalSoftwareSolutionService pedagogicalSoftwareSolutionService;
+	
 	/**
 	 * Function to store the pedagogical software data
 	 * @param data
@@ -32,6 +36,17 @@ public class PedagogicalSoftwareRestController {
 	@ResponseStatus(HttpStatus.FOUND)
 	public void sendPedagogicalSoftwareData(@RequestBody String data) {
 		this.pedagogicalSoftwareService.add(data);
+	}
+	
+	/**
+	 * Function to add the pedagogical software solution
+	 * @param data
+	 */
+	@PostMapping(path = "/addPedagogicalSoftwareSolution",
+	         produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseStatus(HttpStatus.FOUND)
+	public void addPedagogicalSoftwareSolution(@RequestBody String data) {
+		this.pedagogicalSoftwareSolutionService.add(data);
 	}
 	
 }

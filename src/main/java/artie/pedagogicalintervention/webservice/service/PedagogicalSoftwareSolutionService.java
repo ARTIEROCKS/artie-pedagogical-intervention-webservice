@@ -1,5 +1,7 @@
 package artie.pedagogicalintervention.webservice.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,17 @@ public class PedagogicalSoftwareSolutionService {
 		}catch(JsonProcessingException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	/**
+	 * Function to find the solution of an exercise
+	 * @param exercise
+	 * @return
+	 */
+	public PedagogicalSoftwareSolution findByExercise(String exercise) {
+		List<PedagogicalSoftwareSolution> solutions = this.pedagogicalSoftwareSolutionRepository.findByExercise(exercise);
+		return (solutions.size() > 0 ? solutions.get(0) : null);
 	}
 
 }
