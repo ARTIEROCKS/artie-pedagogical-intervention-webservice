@@ -16,6 +16,7 @@ import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDT
 import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 
 @Service
@@ -262,9 +263,19 @@ public class PedagogicalSoftwareService {
 					
 						for(PedagogicalSoftwareElementDTO elementOriginElement : elementOriginElements) {
 							
+							PedagogicalSoftwareField solutionField = elementAimElement.getInputs().get(input).getFields().get(field);
+							PedagogicalSoftwareField workspaceField = elementOriginElement.getInputs().get(input).getFields().get(field);
+							
 							//If the field of the input of the aim element is equal of the field of the input of the origin element
-							if(!elementAimElement.getInputs().get(input).getFields().get(field).equals(elementOriginElement.getInputs().get(input).getFields().get(field))) {
-								diffInputValues += 1;
+							if(!solutionField.equals(workspaceField)) {
+								
+								if(solutionField.isNumeric()) {
+									
+									diffInputValues += Math.abs(solutionField.getDoubleValue() - workspaceField.getDoubleValue());
+									
+								}else {
+									diffInputValues += 1;
+								}
 							}							
 						}
 						
