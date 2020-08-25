@@ -9,52 +9,47 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="PedagogicalSoftwareData")
 public class PedagogicalSoftwareData {
-
-	//Attributes
+	
 	@Id
 	private String id;
-	private String elementType;
-	private List<PedagogicalSoftwareField> fields = new ArrayList<>();
+	private String exercise;
+	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
-	
-	//Properties
 	public String getId() {
-		return id;
+		return this.id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	public String getElementType() {
-		return elementType;
+	public String getExercise() {
+		return this.exercise;
 	}
-	public void setElementType(String elementType) {
-		this.elementType = elementType;
+	public void setExercise(String exercise) {
+		this.exercise = exercise;
 	}
-	
-	public List<PedagogicalSoftwareField> getFields(){
-		return fields;
+	public List<PedagogicalSoftwareElement> getElements(){
+		return this.elements;
 	}
-	public void setFields(List<PedagogicalSoftwareField> fields) {
-		this.fields = fields;
+	public void setElements(List<PedagogicalSoftwareElement> elements) {
+		this.elements = elements;
 	}
 	
-	//Default constructor
+	/**
+	 * Default Constructor
+	 */
 	public PedagogicalSoftwareData() {}
 	
 	/**
 	 * Parameterized constructor
-	 * @param elementType
-	 * @param fields
+	 * @param exercise
+	 * @param elements
 	 */
-	public PedagogicalSoftwareData(String elementType, List<PedagogicalSoftwareField> fields) {
-		this.elementType = elementType;
-		this.fields = fields;
+	public PedagogicalSoftwareData(String exercise, List<PedagogicalSoftwareElement> elements) {
+		this.exercise = exercise;
+		this.elements = elements;
 	}
 	
-	
-	//Methods
-	public void addField(PedagogicalSoftwareField field) {
-		this.fields.add(field);
+	public void addElement(PedagogicalSoftwareElement element) {
+		this.elements.add(element);
 	}
 }
