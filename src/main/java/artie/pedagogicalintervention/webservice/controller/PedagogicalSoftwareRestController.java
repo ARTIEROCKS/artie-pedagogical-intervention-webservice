@@ -29,7 +29,7 @@ public class PedagogicalSoftwareRestController {
 	
 	/**
 	 * Function to store the pedagogical software data
-	 * @param data
+	 * @param data, the elements in the workspace
 	 */
 	@PostMapping(path = "/sendPedagogicalSoftwareData",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -40,7 +40,7 @@ public class PedagogicalSoftwareRestController {
 	
 	/**
 	 * Function to add the pedagogical software solution
-	 * @param data
+	 * @param data, the solution to the exercise
 	 */
 	@PostMapping(path = "/addPedagogicalSoftwareSolution",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})
