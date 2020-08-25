@@ -12,6 +12,7 @@ public class PedagogicalSoftwareData {
 	
 	@Id
 	private String id;
+	private String exercise;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
 	public String getId() {
@@ -19,6 +20,12 @@ public class PedagogicalSoftwareData {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getExercise() {
+		return this.exercise;
+	}
+	public void setExercise(String exercise) {
+		this.exercise = exercise;
 	}
 	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
@@ -34,9 +41,11 @@ public class PedagogicalSoftwareData {
 	
 	/**
 	 * Parameterized constructor
+	 * @param exercise
 	 * @param elements
 	 */
-	public PedagogicalSoftwareData(List<PedagogicalSoftwareElement> elements) {
+	public PedagogicalSoftwareData(String exercise, List<PedagogicalSoftwareElement> elements) {
+		this.exercise = exercise;
 		this.elements = elements;
 	}
 	

@@ -93,8 +93,8 @@ class PedagogicalSoftwareServiceTest {
 		List<PedagogicalSoftwareElement> aimElements = new ArrayList<>();
 		aimElements.add(elementAim1);
 		
-		this.origin = new PedagogicalSoftwareData(originElements);
-		this.aim = new PedagogicalSoftwareData(aimElements);
+		this.origin = new PedagogicalSoftwareData("exercise1",originElements);
+		this.aim = new PedagogicalSoftwareData("exercise1",aimElements);
 		
 	}
 
