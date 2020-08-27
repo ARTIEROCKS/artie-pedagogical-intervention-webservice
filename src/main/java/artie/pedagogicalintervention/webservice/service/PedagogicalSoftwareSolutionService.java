@@ -31,18 +31,10 @@ public class PedagogicalSoftwareSolutionService {
 	 * @param pse
 	 */
 	public void add(String pse) {
-		try {
-			
-			//Transforming all the elements to pedagogical software elements
-			PedagogicalSoftwareElement[] pedagogicalSoftwareElements = new ObjectMapper().readValue(pse, PedagogicalSoftwareElement[].class);
-			
+		try {					
 			//Inserting all these elements in the pedagogical software data block
-			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new PedagogicalSoftwareSolution();
-			for (PedagogicalSoftwareElement pedagogicalSoftwareElement : pedagogicalSoftwareElements){
-				pedagogicalSoftwareSolution.addElement(pedagogicalSoftwareElement);
-				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
-			}
-			
+			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new ObjectMapper().readValue(pse, PedagogicalSoftwareSolution.class);
+			this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
 		}catch(JsonProcessingException e) {
 			e.printStackTrace();
 		}

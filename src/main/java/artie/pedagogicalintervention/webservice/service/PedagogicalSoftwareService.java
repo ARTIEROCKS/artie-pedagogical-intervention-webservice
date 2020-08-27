@@ -41,16 +41,9 @@ public class PedagogicalSoftwareService {
 	public void add(String pse) {
 		try {
 			
-			//Transforming all the elements to pedagogical software elements
-			PedagogicalSoftwareElement[] pedagogicalSoftwareElements = new ObjectMapper().readValue(pse, PedagogicalSoftwareElement[].class);
+			PedagogicalSoftwareData pedagogicalSoftwareData = new ObjectMapper().readValue(pse, PedagogicalSoftwareData.class);
+			this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 			
-			//Inserting all these elements in the pedagogical software data block
-			PedagogicalSoftwareData pedagogicalSoftwareData = new PedagogicalSoftwareData();
-			for (PedagogicalSoftwareElement pedagogicalSoftwareElement : pedagogicalSoftwareElements){
-				
-				pedagogicalSoftwareData.addElement(pedagogicalSoftwareElement);
-				this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
-			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
