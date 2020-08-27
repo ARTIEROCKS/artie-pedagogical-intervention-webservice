@@ -39,13 +39,13 @@ public class PedagogicalSoftwareRestController {
 	}
 	
 	/**
-	 * Function to add the pedagogical software solution
+	 * Function to store the pedagogical software solution
 	 * @param data, the solution to the exercise
 	 */
-	@PostMapping(path = "/addPedagogicalSoftwareSolution",
+	@PostMapping(path = "/sendPedagogicalSoftwareSolution",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.FOUND)
-	public void addPedagogicalSoftwareSolution(@RequestBody String data) {
+	public void sendPedagogicalSoftwareSolution(@RequestBody String data) {
 		this.pedagogicalSoftwareSolutionService.add(data);
 	}
 	
