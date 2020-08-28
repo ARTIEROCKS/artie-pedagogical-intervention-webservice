@@ -32,9 +32,20 @@ public class PedagogicalSoftwareSolutionService {
 	 */
 	public void add(String pse) {
 		try {					
-			//Inserting all these elements in the pedagogical software data block
+			//1- Transforms the string in pedagogical software solution object
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new ObjectMapper().readValue(pse, PedagogicalSoftwareSolution.class);
-			this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
+			
+			//2- Searches if there is a solution for this exercise
+			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExercise(pedagogicalSoftwareSolution.getExercise());
+			
+			//3- If there is an existing pedagogical software solution, we update its data
+			if(pedagogicalSoftwareSolutions.size() > 0 ) {
+				PedagogicalSoftwareSolution pedagogicalSoftwareSolutionDb = pedagogicalSoftwareSolutions.get(0);
+				pedagogicalSoftwareSolutionDb.setElements(pedagogicalSoftwareSolution.getElements());
+				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
+			}else {
+				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
+			}
 		}catch(JsonProcessingException e) {
 			e.printStackTrace();
 		}
