@@ -13,6 +13,7 @@ public class PedagogicalSoftwareData {
 	@Id
 	private String id;
 	private String exercise;
+	private double solutionDistance;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
 	public String getId() {
@@ -27,6 +28,12 @@ public class PedagogicalSoftwareData {
 	public void setExercise(String exercise) {
 		this.exercise = exercise;
 	}
+	public double getSolutionDistance() {
+		return solutionDistance;
+	}
+	public void setSolutionDistance(double solutionDistance) {
+		this.solutionDistance = solutionDistance;
+	}
 	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
 	}
@@ -37,14 +44,17 @@ public class PedagogicalSoftwareData {
 	/**
 	 * Default Constructor
 	 */
-	public PedagogicalSoftwareData() {}
+	public PedagogicalSoftwareData() {
+		this.solutionDistance = -1;
+	}
 	
 	/**
 	 * Parameterized constructor
 	 * @param exercise
+	 * @param solutionDistance
 	 * @param elements
 	 */
-	public PedagogicalSoftwareData(String exercise, List<PedagogicalSoftwareElement> elements) {
+	public PedagogicalSoftwareData(String exercise, double solutionDistance, List<PedagogicalSoftwareElement> elements) {
 		this.exercise = exercise;
 		this.elements = elements;
 	}

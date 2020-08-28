@@ -2,10 +2,10 @@ package artie.pedagogicalintervention.webservice.enums;
 
 public enum DistanceEnum {
 	
-	FAMILY(0),
-	ELEMENT(1),
-	POSITION(2),
-	INPUT(3);
+	FAMILY(1),
+	ELEMENT(2),
+	POSITION(4),
+	INPUT(8);
 	
 	private int value;
 	private DistanceEnum(int value) {

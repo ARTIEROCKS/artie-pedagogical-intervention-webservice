@@ -17,6 +17,7 @@ import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 
 @Service
@@ -24,6 +25,9 @@ public class PedagogicalSoftwareService {
 
 	@Autowired
 	private PedagogicalSoftwareDataRepository pedagogicalSoftwareDataRepository;
+	
+	@Autowired
+	private PedagogicalSoftwareSolutionService pedagogicalSoftwareSolutionService;
 	
 	
 	/**
@@ -38,10 +42,21 @@ public class PedagogicalSoftwareService {
 	 * Function to transform a pedagogical software data from string to object
 	 * @param pse
 	 */
-	public void add(String pse) {
+	public void add(String psd) {
 		try {
 			
-			PedagogicalSoftwareData pedagogicalSoftwareData = new ObjectMapper().readValue(pse, PedagogicalSoftwareData.class);
+			//1- Transforms the string into the pedagogical software data
+			PedagogicalSoftwareData pedagogicalSoftwareData = new ObjectMapper().readValue(psd, PedagogicalSoftwareData.class);
+			
+			//2- Looks for the solution to the exercise
+			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService.findByExercise(pedagogicalSoftwareData.getExercise());
+			
+			//3- If there at least 1 solution, we get the distances
+			if(pedagogicalSoftwareSolution != null) {
+				double distance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
+				pedagogicalSoftwareData.setSolutionDistance(distance);
+			}
+			
 			this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 			
 		} catch (JsonProcessingException e) {
@@ -55,7 +70,7 @@ public class PedagogicalSoftwareService {
 	 * @param aim
 	 * @return
 	 */
-	public double distanceCalculation(PedagogicalSoftwareData origin, PedagogicalSoftwareData aim) {
+	public double distanceCalculation(PedagogicalSoftwareData origin, PedagogicalSoftwareSolution aim) {
 		
 		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
 		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
@@ -104,7 +119,7 @@ public class PedagogicalSoftwareService {
 		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffInput);
 		
 		//6- Calculates the total distance in base of the coefficients
-		totalDistance = (1/DistanceEnum.FAMILY.getValue()*diffFamily) + (1/DistanceEnum.ELEMENT.getValue()*diffElements) + (1/DistanceEnum.POSITION.getValue()*diffPosition) + (1/DistanceEnum.INPUT.getValue()*diffInput);
+		totalDistance = (diffFamily/DistanceEnum.FAMILY.getValue()) + (diffElements/DistanceEnum.ELEMENT.getValue()) + (diffPosition/DistanceEnum.POSITION.getValue()) + (diffInput/DistanceEnum.INPUT.getValue());
 		
 		return totalDistance;	
 	}

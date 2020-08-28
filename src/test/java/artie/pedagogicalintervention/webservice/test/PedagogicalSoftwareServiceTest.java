@@ -15,6 +15,7 @@ import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 
 class PedagogicalSoftwareServiceTest {
@@ -34,7 +35,7 @@ class PedagogicalSoftwareServiceTest {
 	
 	//Final variables
 	private PedagogicalSoftwareData origin;
-	private PedagogicalSoftwareData aim;
+	private PedagogicalSoftwareSolution aim;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -93,8 +94,8 @@ class PedagogicalSoftwareServiceTest {
 		List<PedagogicalSoftwareElement> aimElements = new ArrayList<>();
 		aimElements.add(elementAim1);
 		
-		this.origin = new PedagogicalSoftwareData("exercise1",originElements);
-		this.aim = new PedagogicalSoftwareData("exercise1",aimElements);
+		this.origin = new PedagogicalSoftwareData("exercise1",-1,originElements);
+		this.aim = new PedagogicalSoftwareSolution("exercise1",aimElements);
 		
 	}
 
