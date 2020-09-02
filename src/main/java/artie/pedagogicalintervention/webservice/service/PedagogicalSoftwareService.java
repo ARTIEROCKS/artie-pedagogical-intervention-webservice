@@ -183,8 +183,6 @@ public class PedagogicalSoftwareService {
 	 */
 	public long elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, long diffElements) {
 		
-		boolean addedDifference = false;
-		int addedElements = 0;
 		
 		for(String family : mapFamilySimilarities.keySet()) {
 			
@@ -195,6 +193,13 @@ public class PedagogicalSoftwareService {
 																		.collect(Collectors.toList());
 			//3.2- Gets the elements in the origin for this family
 			List<PedagogicalSoftwareElementDTO> familyOriginElements = mapFamilySimilarities.get(family);
+			
+			if(familyAimElements.size() > familyOriginElements.size()) {
+				diffElements += familyAimElements.size();
+			}else {
+				diffElements += familyOriginElements.size();
+			}
+			
 			
 			//3.3- For each aim element we look for the origin element
 			for(PedagogicalSoftwareElementDTO familyAimElement : familyAimElements) {
@@ -212,30 +217,20 @@ public class PedagogicalSoftwareService {
 													.count();
 				
 				//3.3.3- Adds to the element result
-				if(countOriginElements == 0) {
-					//If there are no similar elements, we count all the elements of the family in the origin
-					diffElements += familyOriginElements.size();
-					addedDifference = true;
-				} else {
+				if(countOriginElements > 0) {
 					
 					List<PedagogicalSoftwareElementDTO> existingElements = familyOriginElements
 																				.stream()
 																				.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
 																				.collect(Collectors.toList());
 					
-					//Checks the difference in number between the origin and the aim
-					long differenceOriginAim = Math.abs(countAimElements - countOriginElements);
+					familyOriginElements.removeAll(existingElements);
 					
 					//If there are similarities, we add these similarities to the element map
 					mapElementSimilarities.put(familyAimElement.getElementName(), existingElements);
-					addedElements += existingElements.size() - differenceOriginAim;
+					diffElements -= existingElements.size();
 				}
 			}
-		}
-		
-		if(addedDifference) {
-			//We return the distance of the elements, less the number of elements found
-			diffElements -= addedElements;
 		}
 		
 		return diffElements;
