@@ -135,15 +135,14 @@ public class PedagogicalSoftwareService {
 	 */
 	public double familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, double diffFamily) {
 		
-		int addedDifference = 0;
-		int addedElements = 0;
+		List<String> listFamilyDifferences = new ArrayList<>();
 		
 		for(PedagogicalSoftwareElementDTO aimElement : aimElements) {
 			
 			//2.1- Checks that this family has not been already checked
-			if(!mapFamilySimilarities.containsKey(aimElement.getElementFamily())) {
+			if(!mapFamilySimilarities.containsKey(aimElement.getElementFamily()) && !listFamilyDifferences.contains(aimElement.getElementFamily())) {
 				
-				//2.1.1- Counts the number of elements of this family exist in the origin
+				//2.1.1- Counts the number of elements of this family existing in the origin
 				long countOriginFamilies = originElements
 							  					.stream()
 							  					.filter(c -> c.getElementFamily().equals(aimElement.getElementFamily()))
@@ -151,8 +150,9 @@ public class PedagogicalSoftwareService {
 				//2.1.2- Adds to the family result
 				if(countOriginFamilies==0) {
 					//If there are no similar families, we count all the elements in the origin + the element in the aim that has not been included in the origin
-					diffFamily += originElements.size() + 1;
-					addedDifference++;
+					diffFamily += 1;
+					listFamilyDifferences.add(aimElement.getElementFamily());
+					
 				}else {
 					//If there are similarities, we add these similarities to the family map
 					List<PedagogicalSoftwareElementDTO> existingElements = originElements
@@ -160,14 +160,8 @@ public class PedagogicalSoftwareService {
 															  					.filter(c -> c.getElementFamily().equals(aimElement.getElementFamily()))
 															  					.collect(Collectors.toList());
 					mapFamilySimilarities.put(aimElement.getElementFamily(), existingElements);
-					addedElements += existingElements.size();
 				}
 			}
-		}
-		
-		if(addedDifference > 0) {
-			//We return the distance of the families, less the number of families found by each number of difference
-			diffFamily -= (addedElements * addedDifference);
 		}
 		
 		return diffFamily;
@@ -184,6 +178,13 @@ public class PedagogicalSoftwareService {
 	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, double diffElements) {
 		
 		
+		//We get the element count from the different families and we add them to the diffElements
+		diffElements += aimElements	
+							.stream()
+							.filter(element -> !mapFamilySimilarities.containsKey(element.getElementFamily()))
+							.count();
+		
+		//For the similar families
 		for(String family : mapFamilySimilarities.keySet()) {
 			
 			//3.1- Gets the elements in the aim for this family

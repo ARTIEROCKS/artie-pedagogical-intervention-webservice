@@ -177,7 +177,7 @@ class PedagogicalSoftwareServiceTest {
 		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
 		
 		//Checks the calculated element difference
-		assertEquals(diffElement, 2);
+		assertEquals(3, diffElement);
 		
 		//Checks the elements map
 		assertEquals(1, mapElementSimilarities.keySet().size());
