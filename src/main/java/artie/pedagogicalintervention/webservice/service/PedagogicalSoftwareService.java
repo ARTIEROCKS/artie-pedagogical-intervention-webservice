@@ -77,17 +77,17 @@ public class PedagogicalSoftwareService {
 		
 		//Family variables
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
-		long diffFamily = 0;
+		double diffFamily = 0;
 		
 		//Element variables
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
-		long diffElements = 0;
+		double diffElements = 0;
 		
 		//Position variables
-		long diffPosition = 0;
+		double diffPosition = 0;
 		
 		//Input values variables
-		long diffInput = 0;
+		double diffInput = 0;
 		
 		//total distance
 		double totalDistance = 0;
@@ -133,7 +133,7 @@ public class PedagogicalSoftwareService {
 	 * @param diffFamily
 	 * @return
 	 */
-	public long familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, long diffFamily) {
+	public double familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, double diffFamily) {
 		
 		int addedDifference = 0;
 		int addedElements = 0;
@@ -181,7 +181,7 @@ public class PedagogicalSoftwareService {
 	 * @param diffElements
 	 * @return
 	 */
-	public long elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, long diffElements) {
+	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, double diffElements) {
 		
 		
 		for(String family : mapFamilySimilarities.keySet()) {
@@ -224,6 +224,7 @@ public class PedagogicalSoftwareService {
 																				.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
 																				.collect(Collectors.toList());
 					
+					//Once the elements have been added to the map, we delete them from the list to avoid repeat them
 					familyOriginElements.removeAll(existingElements);
 					
 					//If there are similarities, we add these similarities to the element map
@@ -245,7 +246,7 @@ public class PedagogicalSoftwareService {
 	 * @param diffInputValues
 	 * @return
 	 */
-	public long inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, long diffInputValues) {
+	public double inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, double diffInputValues) {
 		
 		for(String element : mapElementSimilarities.keySet()) {
 			
@@ -274,7 +275,9 @@ public class PedagogicalSoftwareService {
 								
 								if(solutionField.isNumeric()) {
 									
-									diffInputValues += Math.abs(solutionField.getDoubleValue() - workspaceField.getDoubleValue());
+									double difference = Math.abs(solutionField.getDoubleValue() - workspaceField.getDoubleValue());
+									double ratio = solutionField.getDoubleValue() / difference;
+									diffInputValues += ratio;
 									
 								}else {
 									diffInputValues += 1;
@@ -293,7 +296,7 @@ public class PedagogicalSoftwareService {
 	}
 	
 	
-	public long positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, long diffPosition) {
+	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, double diffPosition) {
 		
 		long nearestPosition= -1;
 		

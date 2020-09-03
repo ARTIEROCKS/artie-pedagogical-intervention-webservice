@@ -140,7 +140,7 @@ class PedagogicalSoftwareServiceTest {
 		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, order);
 		
 		//Calls the family distance calculation
-		long diffFamily = 0;
+		double diffFamily = 0;
 		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
 		
 		//Checks the calculated family difference
@@ -169,11 +169,11 @@ class PedagogicalSoftwareServiceTest {
 		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, order);
 		
 		//Calls the family distance calculation
-		long diffFamily = 0;
+		double diffFamily = 0;
 		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
 		
 		//Calls the element distance calculation
-		long diffElement = 0;
+		double diffElement = 0;
 		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
 		
 		//Checks the calculated element difference
@@ -202,14 +202,14 @@ class PedagogicalSoftwareServiceTest {
 		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, order);
 		
 		//Calls the family distance calculation
-		long diffFamily = 0;
+		double diffFamily = 0;
 		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
 		
 		//Calls the element distance calculation
-		long diffElement = 0;
+		double diffElement = 0;
 		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
 		
-		long diffInput = 0;
+		double diffInput = 0;
 		diffInput = this.pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffInput);
 		
 		//Checks the calculated input difference
@@ -234,15 +234,15 @@ class PedagogicalSoftwareServiceTest {
 		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, position);
 		
 		//Calls the family distance calculation
-		long diffFamily = 0;
+		double diffFamily = 0;
 		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
 		
 		//Calls the element distance calculation
-		long diffElement = 0;
+		double diffElement = 0;
 		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
 		
 		//Calls the position distance calculation
-		long diffPosition = 0;
+		double diffPosition = 0;
 		diffPosition = this.pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffPosition);
 		
 		//Checks the calculated position distance
