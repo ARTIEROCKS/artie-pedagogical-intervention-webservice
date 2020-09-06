@@ -164,6 +164,17 @@ public class PedagogicalSoftwareService {
 			}
 		}
 		
+		//Once the correct families have been added, we compare the number of elements in the correct families from the aim and the origin
+		for(String correctFamily : mapFamilySimilarities.keySet()) {
+			
+			long originCount = mapFamilySimilarities.get(correctFamily).size();
+			long aimCount = aimElements
+		  					.stream()
+		  					.filter(c -> c.getElementFamily().equals(correctFamily))
+		  					.count();
+			diffFamily += Math.abs(originCount - aimCount);
+		}
+		
 		return diffFamily;
 	}
 	
