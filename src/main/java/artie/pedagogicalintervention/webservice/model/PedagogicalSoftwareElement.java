@@ -10,6 +10,7 @@ public class PedagogicalSoftwareElement {
 	private String elementFamily;
 	private List<PedagogicalSoftwareInput> inputs = new ArrayList<>();
 	private PedagogicalSoftwareElement next;
+	private List<PedagogicalSoftwareElement> nested = new ArrayList<>();
 	
 	
 	//Properties
@@ -39,6 +40,13 @@ public class PedagogicalSoftwareElement {
 	}
 	public void setNext(PedagogicalSoftwareElement next) {
 		this.next = next;
+	}
+	
+	public List<PedagogicalSoftwareElement> getNested(){
+		return this.nested;
+	}
+	public void setNested(List<PedagogicalSoftwareElement> nested) {
+		this.nested = nested;
 	}
 	
 	
@@ -77,6 +85,12 @@ public class PedagogicalSoftwareElement {
 	    boolean result = this.inputs.size() == objElement.getInputs().size();
 	    for(PedagogicalSoftwareInput i : this.inputs) {
 	    	result = result && (objElement.getInputs().stream().filter(oi -> oi.equals(i)).count() > 0);
+	    }
+	    
+	    //Checks id all the nested elements are equals
+	    result = result && this.nested.size() == objElement.getNested().size();
+	    for(PedagogicalSoftwareElement e : this.nested) {
+	    	result = result && (objElement.getNested().stream().filter(oe -> oe.equals(e)).count() > 0);
 	    }
 	    
 		return result;
