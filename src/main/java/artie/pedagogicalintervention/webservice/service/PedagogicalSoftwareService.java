@@ -282,16 +282,16 @@ public class PedagogicalSoftwareService {
 							PedagogicalSoftwareField solutionField = elementAimElement.getInputs().get(input).getFields().get(field);
 							PedagogicalSoftwareField workspaceField = elementOriginElement.getInputs().get(input).getFields().get(field);
 							
-							//If the field of the input of the aim element is equal of the field of the input of the origin element
-							if(!solutionField.equals(workspaceField)) {
+							//If the field of the input of the aim element is equal of the field of the input of the origin element and the elements are the same short
+							if(!solutionField.equals(workspaceField) && elementOriginElement.getElementName().equals(elementAimElement.getElementName())) {
 								
 								if(solutionField.isNumeric()) {
 									
 									double difference = Math.abs(solutionField.getDoubleValue() - workspaceField.getDoubleValue());
-									double ratio = solutionField.getDoubleValue() / difference;
+									double ratio = difference / solutionField.getDoubleValue();
 									diffInputValues += ratio;
 									
-								}else {
+ 								}else {
 									diffInputValues += 1;
 								}
 							}							
