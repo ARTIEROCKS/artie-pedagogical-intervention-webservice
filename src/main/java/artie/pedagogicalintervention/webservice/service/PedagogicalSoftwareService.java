@@ -13,6 +13,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDTO;
+import artie.pedagogicalintervention.webservice.dto.ResponseBodyDTO;
+import artie.pedagogicalintervention.webservice.dto.ResponseDTO;
 import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
@@ -34,15 +36,26 @@ public class PedagogicalSoftwareService {
 	 * Function to add the pedagogical software data in the database
 	 * @param psd
 	 */
-	public void add(PedagogicalSoftwareData psd) {
-		this.pedagogicalSoftwareDataRepository.save(psd);
+	public String add(PedagogicalSoftwareData psd) {
+		
+		ResponseDTO response = new ResponseDTO(null);
+		PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(psd);
+		
+		if(objSaved != null) {
+			response = new ResponseDTO(new ResponseBodyDTO("OK"));
+		}
+		
+		return response.toJSON();
 	}
 	
 	/**
 	 * Function to transform a pedagogical software data from string to object
 	 * @param pse
 	 */
-	public void add(String psd) {
+	public String add(String psd) {
+		
+		ResponseDTO response = new ResponseDTO(null);
+		
 		try {
 			
 			//1- Transforms the string into the pedagogical software data
@@ -57,11 +70,18 @@ public class PedagogicalSoftwareService {
 				pedagogicalSoftwareData.setSolutionDistance(distance);
 			}
 			
-			this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
+			PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
+			
+			if(objSaved != null) {
+				response = new ResponseDTO(new ResponseBodyDTO("OK"));
+			}
+			
 			
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
+		
+		return response.toJSON();
 	}
 	
 	/**

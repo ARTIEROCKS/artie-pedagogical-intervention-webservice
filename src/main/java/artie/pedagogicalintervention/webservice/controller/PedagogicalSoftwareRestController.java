@@ -33,9 +33,9 @@ public class PedagogicalSoftwareRestController {
 	 */
 	@PostMapping(path = "/sendPedagogicalSoftwareData",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})
-	@ResponseStatus(HttpStatus.FOUND)
-	public void sendPedagogicalSoftwareData(@RequestBody String data) {
-		this.pedagogicalSoftwareService.add(data);
+	@ResponseStatus(HttpStatus.CREATED)
+	public String sendPedagogicalSoftwareData(@RequestBody String data) {
+		return this.pedagogicalSoftwareService.add(data);
 	}
 	
 	/**
@@ -44,9 +44,9 @@ public class PedagogicalSoftwareRestController {
 	 */
 	@PostMapping(path = "/sendPedagogicalSoftwareSolution",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})
-	@ResponseStatus(HttpStatus.FOUND)
-	public void sendPedagogicalSoftwareSolution(@RequestBody String data) {
-		this.pedagogicalSoftwareSolutionService.add(data);
+	@ResponseStatus(HttpStatus.CREATED)
+	public String sendPedagogicalSoftwareSolution(@RequestBody String data) {
+		return this.pedagogicalSoftwareSolutionService.add(data);
 	}
 	
 }

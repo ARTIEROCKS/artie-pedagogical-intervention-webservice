@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import artie.pedagogicalintervention.webservice.dto.ResponseBodyDTO;
+import artie.pedagogicalintervention.webservice.dto.ResponseDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
@@ -22,15 +24,26 @@ public class PedagogicalSoftwareSolutionService {
 	 * Function to add the pedagogical software solution in the database
 	 * @param psd
 	 */
-	public void add(PedagogicalSoftwareSolution pss) {
-		this.pedagogicalSoftwareSolutionRepository.save(pss);
+	public String add(PedagogicalSoftwareSolution pss) {
+		
+		ResponseDTO response = new ResponseDTO(null);
+		PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pss);
+		
+		if(objSaved != null) {
+			response = new ResponseDTO(new ResponseBodyDTO("OK"));
+		}
+		
+		return response.toJSON();
 	}
 	
 	/**
 	 * Function to transform a pedagogical software solution from string to object
 	 * @param pse
 	 */
-	public void add(String pse) {
+	public String add(String pse) {
+		
+		ResponseDTO response = new ResponseDTO(null);
+		
 		try {					
 			//1- Transforms the string in pedagogical software solution object
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new ObjectMapper().readValue(pse, PedagogicalSoftwareSolution.class);
@@ -42,13 +55,19 @@ public class PedagogicalSoftwareSolutionService {
 			if(pedagogicalSoftwareSolutions.size() > 0 ) {
 				PedagogicalSoftwareSolution pedagogicalSoftwareSolutionDb = pedagogicalSoftwareSolutions.get(0);
 				pedagogicalSoftwareSolutionDb.setElements(pedagogicalSoftwareSolution.getElements());
-				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
+				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
+				
+				if(objSaved != null) {
+					response = new ResponseDTO(new ResponseBodyDTO("OK"));
+				}
 			}else {
 				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
 			}
 		}catch(JsonProcessingException e) {
 			e.printStackTrace();
 		}
+		
+		return response.toJSON();
 	}
 	
 	
