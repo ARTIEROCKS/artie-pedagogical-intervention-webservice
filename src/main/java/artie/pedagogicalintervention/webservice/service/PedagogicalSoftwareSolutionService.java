@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import artie.pedagogicalintervention.webservice.dto.ResponseBodyDTO;
 import artie.pedagogicalintervention.webservice.dto.ResponseDTO;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
 
