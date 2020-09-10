@@ -381,6 +381,14 @@ public class PedagogicalSoftwareService {
 		elementList.add(new PedagogicalSoftwareElementDTO(element, position));
 		position++;
 		
+		//Gets the number of elements under this element
+		position = getElementsUnderNode(element, position);
+		
+		//Checks if the element has a nested element
+		for(PedagogicalSoftwareElement nestedElement : element.getNested()) {
+			elementList = this.getAllElements(nestedElement, elementList, position);
+		}
+		
 		//Checks if the element has a next element
 		if(element.getNext() != null) {
 			elementList = this.getAllElements(element.getNext(), elementList, position);
@@ -389,5 +397,27 @@ public class PedagogicalSoftwareService {
 		return elementList;
 	}
 	
+	/**
+	 * Function to get the number of elements under a node
+	 * @param element
+	 * @param numberOfElements
+	 * @return
+	 */
+	public int getElementsUnderNode(PedagogicalSoftwareElement element, int numberOfElements) {
+		
+		//1- Counts all the nested elements in the subtree
+		if(element.getNested().size() > 0) {
+			for(PedagogicalSoftwareElement nestedElement : element.getNested()) {
+				numberOfElements = getElementsUnderNode(nestedElement, numberOfElements++);
+			}
+		}
+		
+		//2- Counts all the next elements in the subtree
+		if(element.getNext() != null) {
+			numberOfElements =getElementsUnderNode(element.getNext(), numberOfElements++);
+		}
+		
+		return numberOfElements;
+	}
 
 }
