@@ -158,6 +158,7 @@ public class PedagogicalSoftwareService {
 		
 		List<String> listFamilyDifferences = new ArrayList<>();
 		
+		//Checks from the aim side
 		for(PedagogicalSoftwareElementDTO aimElement : aimElements) {
 			
 			//2.1- Checks that this family has not been already checked
@@ -185,15 +186,25 @@ public class PedagogicalSoftwareService {
 			}
 		}
 		
-		//Once the correct families have been added, we compare the number of elements in the correct families from the aim and the origin
-		for(String correctFamily : mapFamilySimilarities.keySet()) {
+		//Checks from the origin side
+		for(PedagogicalSoftwareElementDTO originElement : originElements) {
 			
-			long originCount = mapFamilySimilarities.get(correctFamily).size();
-			long aimCount = aimElements
-		  					.stream()
-		  					.filter(c -> c.getElementFamily().equals(correctFamily))
-		  					.count();
-			diffFamily += Math.abs(originCount - aimCount);
+			//3.1- Checks that this family has not been already checked
+			if(!mapFamilySimilarities.containsKey(originElement.getElementFamily()) && !listFamilyDifferences.contains(originElement.getElementFamily())) {
+				
+				//3.1.1- Counts the number of elements of this family existing in the origin
+				long countAimFamilies = aimElements
+						  					.stream()
+						  					.filter(c -> c.getElementFamily().equals(originElement.getElementFamily()))
+						  					.count();
+				//3.1.2- Adds to the family result
+				if(countAimFamilies==0) {
+					//If there are no similar families, we count all the elements in the origin + the element in the aim that has not been included in the origin
+					diffFamily += 1;
+					listFamilyDifferences.add(originElement.getElementFamily());
+					
+				}
+			}
 		}
 		
 		return diffFamily;

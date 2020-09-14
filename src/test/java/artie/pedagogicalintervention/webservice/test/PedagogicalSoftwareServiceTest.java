@@ -236,7 +236,7 @@ class PedagogicalSoftwareServiceTest {
 	@Test
 	void familyDistanceCalculationTest() {
 		
-		//A- Simple comparison
+		//A- Same origin and aim comparison
 		PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1","family1", null, null));
 		PedagogicalSoftwareElementDTO origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family2", null, null));
 		PedagogicalSoftwareElementDTO origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family3", null, null));
@@ -259,6 +259,28 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(1, mapFamilySimilarities.get("family1").size());
 		assertEquals(1, mapFamilySimilarities.get("family2").size());
 		assertEquals(1, mapFamilySimilarities.get("family3").size());
+		
+		
+		//B- More in origin comparison
+		origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1","family1", null, null));
+		origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family2", null, null));
+		origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family3", null, null));
+		
+		aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1","family1", null, null));
+		aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family2", null, null));
+
+		originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3));
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2));
+		mapFamilySimilarities = new HashMap<>();
+		
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, 0);
+		
+		assertEquals(1, distance);
+		assertEquals(2, mapFamilySimilarities.size());
+		assertTrue(mapFamilySimilarities.containsKey("family1"));
+		assertTrue(mapFamilySimilarities.containsKey("family2"));
+		assertEquals(1, mapFamilySimilarities.get("family1").size());
+		assertEquals(1, mapFamilySimilarities.get("family2").size());
 	}
 }
 
