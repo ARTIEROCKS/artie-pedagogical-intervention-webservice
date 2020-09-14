@@ -1,262 +1,265 @@
 package artie.pedagogicalintervention.webservice.test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDTO;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 
 class PedagogicalSoftwareServiceTest {
 
 	private PedagogicalSoftwareService pedagogicalSoftwareService;
 	
-	//Origin elements
-	private PedagogicalSoftwareElement elementOrigin1;
-	private PedagogicalSoftwareElement elementOrigin2;
-	private PedagogicalSoftwareElement elementOrigin3;
-	
-	//Aim elements
-	private PedagogicalSoftwareElement elementAim1;
-	private PedagogicalSoftwareElement elementAim2;
-	private PedagogicalSoftwareElement elementAim3;
-	private PedagogicalSoftwareElement elementAim4;
-	
-	//Final variables
-	private PedagogicalSoftwareData origin;
-	private PedagogicalSoftwareSolution aim;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		
-		//Sets the pedagogical software service
-		this.pedagogicalSoftwareService= new PedagogicalSoftwareService();
-		
-		//Sets the different fields
-		List<PedagogicalSoftwareField> fields1 = new ArrayList<>();
-		PedagogicalSoftwareField field11 = new PedagogicalSoftwareField("fieldName11", "fieldValue11");
-		PedagogicalSoftwareField field12 = new PedagogicalSoftwareField("fieldName12", "fieldValue12");
-		fields1.add(field11);
-		fields1.add(field12);
-		
-		List<PedagogicalSoftwareField> fields12 = new ArrayList<>();
-		PedagogicalSoftwareField field121 = new PedagogicalSoftwareField("fieldName11", "fieldValue121");
-		PedagogicalSoftwareField field122 = new PedagogicalSoftwareField("fieldName12", "fieldValue122");
-		fields12.add(field121);
-		fields12.add(field122);
-		
-		List<PedagogicalSoftwareField> fields2 = new ArrayList<>();
-		PedagogicalSoftwareField field21 = new PedagogicalSoftwareField("fieldName21", "fieldValue21");
-		PedagogicalSoftwareField field22 = new PedagogicalSoftwareField("fieldName22", "fieldValue22");
-		fields2.add(field21);
-		fields2.add(field22);
-		
-		//Sets the different inputs
-		List<PedagogicalSoftwareInput> inputs1 = new ArrayList<>();
-		PedagogicalSoftwareInput input11 = new PedagogicalSoftwareInput("input11", fields1);
-		PedagogicalSoftwareInput input12 = new PedagogicalSoftwareInput("input11", fields2);
-		inputs1.add(input11);
-		inputs1.add(input12);
-		
-		List<PedagogicalSoftwareInput> inputs2 = new ArrayList<>();
-		PedagogicalSoftwareInput input21 = new PedagogicalSoftwareInput("input11", fields12);
-		PedagogicalSoftwareInput input22 = new PedagogicalSoftwareInput("input11", fields2);
-		inputs2.add(input21);
-		inputs2.add(input22);
-		
-		//Sets the origin elements
-		this.elementOrigin3 = new PedagogicalSoftwareElement("element3", "family3", inputs1, null);
-		this.elementOrigin2 = new PedagogicalSoftwareElement("element2", "family1", inputs1, elementOrigin3);
-		this.elementOrigin1 = new PedagogicalSoftwareElement("element1", "family1", inputs2, elementOrigin2);
-		
-		//Sets the aim elements
-		this.elementAim4 = new PedagogicalSoftwareElement("element1", "family1", inputs1, null);
-		this.elementAim3 = new PedagogicalSoftwareElement("element4", "family4", inputs1, elementAim4);
-		this.elementAim2 = new PedagogicalSoftwareElement("element3", "family1", inputs1, elementAim3);
-		this.elementAim1 = new PedagogicalSoftwareElement("element1", "family1", inputs1, elementAim2);
-		
-		
-		//Sets the final data elements
-		List<PedagogicalSoftwareElement> originElements = new ArrayList<>();
-		originElements.add(elementOrigin1);
-		
-		List<PedagogicalSoftwareElement> aimElements = new ArrayList<>();
-		aimElements.add(elementAim1);
-		
-		this.origin = new PedagogicalSoftwareData("exercise1",-1,originElements,false);
-		this.aim = new PedagogicalSoftwareSolution("exercise1",aimElements);
-		
+		pedagogicalSoftwareService = new PedagogicalSoftwareService();		
 	}
 
 	@Test
 	void getAllElementsTest() {
 		
-		//Sets the needed variables
+		PedagogicalSoftwareElement e1 = new PedagogicalSoftwareElement("element1","family1", null, null);
+		PedagogicalSoftwareElement e11 = new PedagogicalSoftwareElement("element11", "family11", null, null);
+		PedagogicalSoftwareElement e12 = new PedagogicalSoftwareElement("element12", "family12", null, null);
+		PedagogicalSoftwareElement e121 = new PedagogicalSoftwareElement("element121", "family121", null, null);
+		PedagogicalSoftwareElement e122 = new PedagogicalSoftwareElement("element122", "family122", null, null);
+		PedagogicalSoftwareElement e13 = new PedagogicalSoftwareElement("element13", "family13", null, null);
+		PedagogicalSoftwareElement e131 = new PedagogicalSoftwareElement("element131", "family131", null, null);
+		PedagogicalSoftwareElement e132 = new PedagogicalSoftwareElement("element132", "family132", null, null);
+		
+		PedagogicalSoftwareElement e2 = new PedagogicalSoftwareElement("element2", "family2", null, null);
+		PedagogicalSoftwareElement e21 = new PedagogicalSoftwareElement("element21", "family21", null, null);
+		PedagogicalSoftwareElement e211 = new PedagogicalSoftwareElement("element211", "family211", null, null);
+		PedagogicalSoftwareElement e212 = new PedagogicalSoftwareElement("element212", "family212", null, null);
+		PedagogicalSoftwareElement e22 = new PedagogicalSoftwareElement("element22", "family22", null, null);
+		
 		List<PedagogicalSoftwareElementDTO> elements = new ArrayList<>();
-		int order = 0;
 		
-		//Calls the function
-		elements = this.pedagogicalSoftwareService.getAllElements(elementOrigin1, elements, order);
+		AtomicInteger position = new AtomicInteger(0);
 		
-		//Checks that the number of elements corresponds with the number of elements
-		assertTrue(elements.size() == 3);
 		
-		//Checks the orders
-		assertTrue(elements.get(0).getElementName() == "element1");
-		assertTrue(elements.get(0).getElementPosition() == 0);
+		//A- Testing simple next elements
+		position.set(0);
+		elements.clear();
 		
-		assertTrue(elements.get(1).getElementName() == "element2");
-		assertTrue(elements.get(1).getElementPosition() == 1);
+		e1.setNext(e2);
 		
-		assertTrue(elements.get(2).getElementName() == "element3");
-		assertTrue(elements.get(2).getElementPosition() == 2);
+		elements = this.pedagogicalSoftwareService.getAllElements(e1, elements, position);
 		
+		assertEquals(2, elements.size());
+		assertEquals(0, elements.get(0).getElementPosition());
+		assertEquals(1, elements.get(1).getElementPosition());
+		assertEquals("element1", elements.get(0).getElementName());
+		assertEquals("element2", elements.get(1).getElementName());
+		
+		
+		//B- Testing simple next elements nested elements
+		position.set(0);
+		elements.clear();
+		e1.setNext(null);
+		
+		e1.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e11)));
+		
+		elements = this.pedagogicalSoftwareService.getAllElements(e1, elements, position);
+		
+		assertEquals(2, elements.size());
+		assertEquals(0, elements.get(0).getElementPosition());
+		assertEquals(2, elements.get(1).getElementPosition());
+		assertEquals("element1", elements.get(0).getElementName());
+		assertEquals("element11", elements.get(1).getElementName());
+		
+		
+		//C- Testing a simple next and nested elements
+		position.set(0);
+		elements.clear();
+		
+		e1.setNext(e2);
+		e1.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e11)));
+		
+		elements = this.pedagogicalSoftwareService.getAllElements(e1, elements, position);
+		
+		assertEquals(3, elements.size());
+		assertEquals(0, elements.get(0).getElementPosition());
+		assertEquals(2, elements.get(1).getElementPosition());
+		assertEquals(3, elements.get(2).getElementPosition());
+		assertEquals("element1", elements.get(0).getElementName());
+		assertEquals("element11", elements.get(1).getElementName());
+		assertEquals("element2", elements.get(2).getElementName());
+		
+		
+		//D- Testing a simple next and medium nested elements
+		position.set(0);
+		elements.clear();
+		
+		e11.setNext(e12);
+		e1.setNext(e2);
+		
+		e1.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e11)));
+		
+		elements = this.pedagogicalSoftwareService.getAllElements(e1, elements, position);
+		
+		assertEquals(4, elements.size());
+		assertEquals(0, elements.get(0).getElementPosition());
+		assertEquals(3, elements.get(1).getElementPosition());
+		assertEquals(4, elements.get(2).getElementPosition());
+		assertEquals(5, elements.get(3).getElementPosition());
+		assertEquals("element1", elements.get(0).getElementName());
+		assertEquals("element11", elements.get(1).getElementName());
+		assertEquals("element12", elements.get(2).getElementName());
+		assertEquals("element2", elements.get(3).getElementName());
+		
+		
+		//E- Testing a simple next and complex nested elements
+		position.set(0);
+		elements.clear();
+		
+		e121.setNext(e122);
+		e12.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e121)));
+		e11.setNext(e12);
+		e1.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e11)));
+		e1.setNext(e2);
+		
+		elements = this.pedagogicalSoftwareService.getAllElements(e1, elements, position);
+		
+		assertEquals(6, elements.size());
+		assertEquals(0, elements.get(0).getElementPosition());
+		assertEquals(5, elements.get(1).getElementPosition());
+		assertEquals(6, elements.get(2).getElementPosition());
+		assertEquals(9, elements.get(3).getElementPosition());
+		assertEquals(10, elements.get(4).getElementPosition());
+		assertEquals(11, elements.get(5).getElementPosition());
+		assertEquals("element1", elements.get(0).getElementName());
+		assertEquals("element11", elements.get(1).getElementName());
+		assertEquals("element12", elements.get(2).getElementName());
+		assertEquals("element121", elements.get(3).getElementName());
+		assertEquals("element122", elements.get(4).getElementName());
+		assertEquals("element2", elements.get(5).getElementName());
+		
+		
+		//F- Testing a medium next and complex nested elements
+		position.set(0);
+		elements.clear();
+		
+		e121.setNext(e122);
+		e12.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e121)));
+		e11.setNext(e12);
+		e1.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e11)));
+		
+		e21.setNext(e22);
+		e2.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e21)));
+		e1.setNext(e2);
+		
+		elements = this.pedagogicalSoftwareService.getAllElements(e1, elements, position);
+		
+		assertEquals(8, elements.size());
+		assertEquals(0, elements.get(0).getElementPosition());
+		assertEquals(5, elements.get(1).getElementPosition());
+		assertEquals(6, elements.get(2).getElementPosition());
+		assertEquals(9, elements.get(3).getElementPosition());
+		assertEquals(10, elements.get(4).getElementPosition());
+		assertEquals(11, elements.get(5).getElementPosition());
+		assertEquals(14, elements.get(6).getElementPosition());
+		assertEquals(15, elements.get(7).getElementPosition());
+		assertEquals("element1", elements.get(0).getElementName());
+		assertEquals("element11", elements.get(1).getElementName());
+		assertEquals("element12", elements.get(2).getElementName());
+		assertEquals("element121", elements.get(3).getElementName());
+		assertEquals("element122", elements.get(4).getElementName());
+		assertEquals("element2", elements.get(5).getElementName());
+		assertEquals("element21", elements.get(6).getElementName());
+		assertEquals("element22", elements.get(7).getElementName());
+		
+		
+		//G- Testing a complex next and very complex nested elements
+		position.set(0);
+		elements.clear();
+		
+		e131.setNext(e132);
+		e13.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e131)));
+		
+		e121.setNext(e122);
+		e12.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e121)));
+		e12.setNext(e13);
+		e11.setNext(e12);
+		e1.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e11)));
+		
+		e211.setNext(e212);
+		e21.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e211)));
+		e21.setNext(e22);
+		e2.setNested(new ArrayList<PedagogicalSoftwareElement>(Arrays.asList(e21)));
+		e1.setNext(e2);
+		
+		elements = this.pedagogicalSoftwareService.getAllElements(e1, elements, position);
+		
+		assertEquals(13, elements.size());
+		assertEquals(0, elements.get(0).getElementPosition());
+		assertEquals(8, elements.get(1).getElementPosition());
+		assertEquals(9, elements.get(2).getElementPosition());
+		assertEquals(12, elements.get(3).getElementPosition());
+		assertEquals(13, elements.get(4).getElementPosition());
+		assertEquals(14, elements.get(5).getElementPosition());
+		assertEquals(17, elements.get(6).getElementPosition());
+		assertEquals(18, elements.get(7).getElementPosition());
+		assertEquals(19, elements.get(8).getElementPosition());
+		assertEquals(24, elements.get(9).getElementPosition());
+		assertEquals(27, elements.get(10).getElementPosition());
+		assertEquals(28, elements.get(11).getElementPosition());
+		assertEquals(29, elements.get(12).getElementPosition());
+		assertEquals("element1", elements.get(0).getElementName());
+		assertEquals("element11", elements.get(1).getElementName());
+		assertEquals("element12", elements.get(2).getElementName());
+		assertEquals("element121", elements.get(3).getElementName());
+		assertEquals("element122", elements.get(4).getElementName());
+		assertEquals("element13", elements.get(5).getElementName());
+		assertEquals("element131", elements.get(6).getElementName());
+		assertEquals("element132", elements.get(7).getElementName());
+		assertEquals("element2", elements.get(8).getElementName());
+		assertEquals("element21", elements.get(9).getElementName());
+		assertEquals("element211", elements.get(10).getElementName());
+		assertEquals("element212", elements.get(11).getElementName());
+		assertEquals("element22", elements.get(12).getElementName());
 	}
+
 	
 	@Test
 	void familyDistanceCalculationTest() {
 		
-		//Sets the needed variables
-		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
-		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
+		//A- Simple comparison
+		PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1","family1", null, null));
+		PedagogicalSoftwareElementDTO origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family2", null, null));
+		PedagogicalSoftwareElementDTO origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family3", null, null));
+		
+		PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1","family1", null, null));
+		PedagogicalSoftwareElementDTO aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family2", null, null));
+		PedagogicalSoftwareElementDTO aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family3", null, null));
+		
+		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3));
+		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
 		
-		//Gets the elements not nested
-		int order = 0;
-		originElements = this.pedagogicalSoftwareService.getAllElements(elementOrigin1, originElements, order);
+		double distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, 0);
 		
-		order = 0;
-		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, order);
-		
-		//Calls the family distance calculation
-		double diffFamily = 0;
-		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
-		
-		//Checks the calculated family difference
-		assertEquals(2, diffFamily);
-		
-		//Checks the family map
-		assertEquals(1, mapFamilySimilarities.keySet().size());
-		assertEquals("family1", mapFamilySimilarities.keySet().toArray()[0]);
-		assertEquals(2, mapFamilySimilarities.get("family1").size());		
+		assertEquals(0, distance);
+		assertEquals(3, mapFamilySimilarities.size());
+		assertTrue(mapFamilySimilarities.containsKey("family1"));
+		assertTrue(mapFamilySimilarities.containsKey("family2"));
+		assertTrue(mapFamilySimilarities.containsKey("family3"));
+		assertEquals(1, mapFamilySimilarities.get("family1").size());
+		assertEquals(1, mapFamilySimilarities.get("family2").size());
+		assertEquals(1, mapFamilySimilarities.get("family3").size());
 	}
-	
-	@Test
-	void elementDistanceCalculationTest() {
-		
-		//Sets the needed variables
-		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
-		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
-		
-		//Gets the elements not nested
-		int order = 0;
-		originElements = this.pedagogicalSoftwareService.getAllElements(elementOrigin1, originElements, order);
-		
-		order = 0;
-		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, order);
-		
-		//Calls the family distance calculation
-		double diffFamily = 0;
-		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
-		
-		//Calls the element distance calculation
-		double diffElement = 0;
-		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
-		
-		//Checks the calculated element difference
-		assertEquals(3, diffElement);
-		
-		//Checks the elements map
-		assertEquals(1, mapElementSimilarities.keySet().size());
-		assertEquals("element1", mapElementSimilarities.keySet().toArray()[0]);
-		assertEquals(1, mapElementSimilarities.get("element1").size());
-	}
-	
-	@Test
-	void inputDistanceCalculationTest() {
-		
-		//Sets the needed variables
-		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
-		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
-		
-		//Gets the elements not nested
-		int order = 0;
-		originElements = this.pedagogicalSoftwareService.getAllElements(elementOrigin1, originElements, order);
-		
-		order = 0;
-		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, order);
-		
-		//Calls the family distance calculation
-		double diffFamily = 0;
-		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
-		
-		//Calls the element distance calculation
-		double diffElement = 0;
-		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
-		
-		double diffInput = 0;
-		diffInput = this.pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffInput);
-		
-		//Checks the calculated input difference
-		assertEquals(4, diffInput);
-		
-	}
-	
-	@Test
-	void positionDistanceCalculationTest() {
-		
-		//Sets the needed variables
-		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
-		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
-		
-		//Gets the elements not nested
-		int position = 0;
-		originElements = this.pedagogicalSoftwareService.getAllElements(elementOrigin1, originElements, position);
-		
-		position = 0;
-		aimElements = this.pedagogicalSoftwareService.getAllElements(elementAim1, aimElements, position);
-		
-		//Calls the family distance calculation
-		double diffFamily = 0;
-		diffFamily = this.pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
-		
-		//Calls the element distance calculation
-		double diffElement = 0;
-		diffElement = this.pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElement);
-		
-		//Calls the position distance calculation
-		double diffPosition = 0;
-		diffPosition = this.pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffPosition);
-		
-		//Checks the calculated position distance
-		assertEquals(3, diffPosition);
-	}
-	
-	void totalDistanceCalculation() {
-
-		double totalDistance = this.pedagogicalSoftwareService.distanceCalculation(this.origin, this.aim);
-		
-		//Checks the total calculation
-		assertEquals(4.5, totalDistance);
-	}
-
 }
 
 
