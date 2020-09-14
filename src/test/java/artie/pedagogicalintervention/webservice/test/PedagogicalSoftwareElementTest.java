@@ -32,6 +32,11 @@ class PedagogicalSoftwareElementTest {
 		List<PedagogicalSoftwareInput> inputs2 = new ArrayList<>();
 		List<PedagogicalSoftwareInput> inputs21 = new ArrayList<>();
 		
+		List<PedagogicalSoftwareElement> nested1 = new ArrayList<>();
+		List<PedagogicalSoftwareElement> nested2 = new ArrayList<>();
+		List<PedagogicalSoftwareElement> nested21 = new ArrayList<>();
+		
+		
 		
 		//Data for elements 1 and 11
 		fields1.add(new PedagogicalSoftwareField("field1", "value1"));
@@ -39,8 +44,14 @@ class PedagogicalSoftwareElementTest {
 		
 		inputs1.add(new PedagogicalSoftwareInput("input1", fields1));
 		
+		nested1.add(new PedagogicalSoftwareElement("nested1", "nestedFamily1", inputs1, null));
+		
+		
 		this.element1 = new PedagogicalSoftwareElement("name1", "family1", inputs1, null);
 		this.element11 = new PedagogicalSoftwareElement("name1", "family1", inputs1, null);
+		
+		this.element1.setNested(nested1);
+		this.element11.setNested(nested1);
 		
 		
 		//Data for elements 2, 21 and 22
@@ -53,12 +64,18 @@ class PedagogicalSoftwareElementTest {
 		inputs2.add(new PedagogicalSoftwareInput("input2", fields2));
 		inputs21.add(new PedagogicalSoftwareInput("input2", fields21));
 		
+		nested2.add(new PedagogicalSoftwareElement("nested2", "nestedFamily2", inputs2, null));
+		nested21.add(new PedagogicalSoftwareElement("nested21", "nestedFamily21", inputs21, null));
+		
 		this.element2 = new PedagogicalSoftwareElement("name2", "family2", inputs2, null);
 		this.element21 = new PedagogicalSoftwareElement("name2", "family2", inputs21, null);
 		this.element22 = new PedagogicalSoftwareElement("name2", "family22", inputs21, null);
 		this.element23 = new PedagogicalSoftwareElement("name23", "family22", inputs21, null);
 		
-		
+		this.element2.setNested(nested2);
+		this.element21.setNested(nested21);
+		this.element22.setNested(nested21);
+		this.element23.setNested(nested21);
 	}
 
 	@Test

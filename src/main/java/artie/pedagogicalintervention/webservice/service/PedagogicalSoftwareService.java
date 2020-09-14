@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,10 +116,10 @@ public class PedagogicalSoftwareService {
 		
 		//1- Getting all the elements in a single list (not nested)
 		for(PedagogicalSoftwareElement element : aim.getElements()) {
-			aimElements = this.getAllElements(element, aimElements, 0);
+			aimElements = this.getAllElements(element, aimElements, new AtomicInteger(0), true);
 		}
 		for(PedagogicalSoftwareElement element : origin.getElements()) {
-			originElements = this.getAllElements(element, originElements, 0);
+			originElements = this.getAllElements(element, originElements, new AtomicInteger(0), true);
 			
 		}
 		
@@ -370,28 +371,37 @@ public class PedagogicalSoftwareService {
 	
 	/**
 	 * Function to get all the elements in a single list
-	 * @param element
-	 * @param elementList
-	 * @param position
+	 * @param element element to analyze its position
+	 * @param elementList cumulative element list
+	 * @param position cumulative position
+	 * @param root indicates whether the element is situated in the root or not
 	 * @return
 	 */
-	public List<PedagogicalSoftwareElementDTO> getAllElements(PedagogicalSoftwareElement element, List<PedagogicalSoftwareElementDTO> elementList, int position){
+	public List<PedagogicalSoftwareElementDTO> getAllElements(PedagogicalSoftwareElement element, List<PedagogicalSoftwareElementDTO> elementList, AtomicInteger position, boolean root){
 		
 		//Adds the element to the list
-		elementList.add(new PedagogicalSoftwareElementDTO(element, position));
-		position++;
-		
-		//Gets the number of elements under this element
-		position = getElementsUnderNode(element, position);
+		elementList.add(new PedagogicalSoftwareElementDTO(element, position.get()));
+		position.incrementAndGet();
 		
 		//Checks if the element has a nested element
 		for(PedagogicalSoftwareElement nestedElement : element.getNested()) {
-			elementList = this.getAllElements(nestedElement, elementList, position);
+			//Gets the number of elements under this element
+			position.incrementAndGet();
+			position = getElementsUnderNode(nestedElement, position);
+			
+			//We update its position
+			if(!root) {
+				PedagogicalSoftwareElementDTO updateElement = elementList.get(elementList.size() - 1);
+				updateElement.setElementPosition(position.get());
+				elementList.set(elementList.size() - 1, updateElement);
+			}
+			
+			elementList = this.getAllElements(nestedElement, elementList, position, false);
 		}
 		
 		//Checks if the element has a next element
 		if(element.getNext() != null) {
-			elementList = this.getAllElements(element.getNext(), elementList, position);
+			elementList = this.getAllElements(element.getNext(), elementList, position, false);
 		}
 			
 		return elementList;
@@ -403,18 +413,20 @@ public class PedagogicalSoftwareService {
 	 * @param numberOfElements
 	 * @return
 	 */
-	public int getElementsUnderNode(PedagogicalSoftwareElement element, int numberOfElements) {
+	public AtomicInteger getElementsUnderNode(PedagogicalSoftwareElement element, AtomicInteger numberOfElements) {
 		
 		//1- Counts all the nested elements in the subtree
 		if(element.getNested().size() > 0) {
 			for(PedagogicalSoftwareElement nestedElement : element.getNested()) {
-				numberOfElements = getElementsUnderNode(nestedElement, numberOfElements++);
+				numberOfElements.incrementAndGet();
+				numberOfElements = getElementsUnderNode(nestedElement, numberOfElements);
 			}
 		}
 		
 		//2- Counts all the next elements in the subtree
 		if(element.getNext() != null) {
-			numberOfElements =getElementsUnderNode(element.getNext(), numberOfElements++);
+			numberOfElements.incrementAndGet();
+			numberOfElements = getElementsUnderNode(element.getNext(), numberOfElements);
 		}
 		
 		return numberOfElements;
