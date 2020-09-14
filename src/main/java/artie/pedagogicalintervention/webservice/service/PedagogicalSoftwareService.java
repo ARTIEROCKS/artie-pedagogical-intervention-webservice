@@ -116,10 +116,10 @@ public class PedagogicalSoftwareService {
 		
 		//1- Getting all the elements in a single list (not nested)
 		for(PedagogicalSoftwareElement element : aim.getElements()) {
-			aimElements = this.getAllElements(element, aimElements, new AtomicInteger(0), true);
+			aimElements = this.getAllElements(element, aimElements, new AtomicInteger(0));
 		}
 		for(PedagogicalSoftwareElement element : origin.getElements()) {
-			originElements = this.getAllElements(element, originElements, new AtomicInteger(0), true);
+			originElements = this.getAllElements(element, originElements, new AtomicInteger(0));
 			
 		}
 		
@@ -329,6 +329,14 @@ public class PedagogicalSoftwareService {
 	}
 	
 	
+	/**
+	 * Function to calculate the distance between the positions
+	 * @param mapElementSimilarities
+	 * @param aimElements
+	 * @param originElements
+	 * @param diffPosition
+	 * @return
+	 */
 	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, double diffPosition) {
 		
 		long nearestPosition= -1;
@@ -369,6 +377,7 @@ public class PedagogicalSoftwareService {
 	}
 	
 	
+	
 	/**
 	 * Function to get all the elements in a single list
 	 * @param element element to analyze its position
@@ -377,59 +386,58 @@ public class PedagogicalSoftwareService {
 	 * @param root indicates whether the element is situated in the root or not
 	 * @return
 	 */
-	public List<PedagogicalSoftwareElementDTO> getAllElements(PedagogicalSoftwareElement element, List<PedagogicalSoftwareElementDTO> elementList, AtomicInteger position, boolean root){
+	public List<PedagogicalSoftwareElementDTO> getAllElements(PedagogicalSoftwareElement element, List<PedagogicalSoftwareElementDTO> elementList, AtomicInteger position){
 		
 		//Adds the element to the list
 		elementList.add(new PedagogicalSoftwareElementDTO(element, position.get()));
 		position.incrementAndGet();
 		
+		int numberOfSubElements = 0;
+		
 		//Checks if the element has a nested element
 		for(PedagogicalSoftwareElement nestedElement : element.getNested()) {
-			//Gets the number of elements under this element
+			
+			//Gets the number of elements of the nested element
+			numberOfSubElements = getElementsUnderNode(nestedElement, 0);
+			
+			//We add 1 because it's a nested element
 			position.incrementAndGet();
-			position = getElementsUnderNode(nestedElement, position);
-			
-			//We update its position
-			if(!root) {
-				PedagogicalSoftwareElementDTO updateElement = elementList.get(elementList.size() - 1);
-				updateElement.setElementPosition(position.get());
-				elementList.set(elementList.size() - 1, updateElement);
-			}
-			
-			elementList = this.getAllElements(nestedElement, elementList, position, false);
+			position.getAndAdd(numberOfSubElements);
+			elementList = this.getAllElements(nestedElement, elementList, position);
 		}
 		
 		//Checks if the element has a next element
 		if(element.getNext() != null) {
-			elementList = this.getAllElements(element.getNext(), elementList, position, false);
+			
+			//Gets the next elements
+			elementList = this.getAllElements(element.getNext(), elementList, position);
 		}
 			
 		return elementList;
 	}
 	
 	/**
-	 * Function to get the number of elements under a node
+	 * Function to get the number of elements of a node
 	 * @param element
-	 * @param numberOfElements
+	 * @param subElements
 	 * @return
 	 */
-	public AtomicInteger getElementsUnderNode(PedagogicalSoftwareElement element, AtomicInteger numberOfElements) {
+	private int getElementsUnderNode(PedagogicalSoftwareElement element, int subElements) {
 		
 		//1- Counts all the nested elements in the subtree
 		if(element.getNested().size() > 0) {
 			for(PedagogicalSoftwareElement nestedElement : element.getNested()) {
-				numberOfElements.incrementAndGet();
-				numberOfElements = getElementsUnderNode(nestedElement, numberOfElements);
+				subElements++;
+				subElements = getElementsUnderNode(nestedElement, subElements);
 			}
 		}
 		
 		//2- Counts all the next elements in the subtree
 		if(element.getNext() != null) {
-			numberOfElements.incrementAndGet();
-			numberOfElements = getElementsUnderNode(element.getNext(), numberOfElements);
+			subElements++;
+			subElements = getElementsUnderNode(element.getNext(), subElements);	
 		}
 		
-		return numberOfElements;
+		return subElements;
 	}
-
 }
