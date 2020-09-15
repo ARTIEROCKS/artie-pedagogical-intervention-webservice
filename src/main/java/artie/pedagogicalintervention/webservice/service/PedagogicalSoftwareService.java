@@ -221,12 +221,6 @@ public class PedagogicalSoftwareService {
 	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, double diffElements) {
 		
 		
-		//We get the element count from the different families and we add them to the diffElements
-		diffElements += aimElements	
-							.stream()
-							.filter(element -> !mapFamilySimilarities.containsKey(element.getElementFamily()))
-							.count();
-		
 		//For the similar families
 		for(String family : mapFamilySimilarities.keySet()) {
 			
@@ -237,13 +231,7 @@ public class PedagogicalSoftwareService {
 																		.collect(Collectors.toList());
 			//3.2- Gets the elements in the origin for this family
 			List<PedagogicalSoftwareElementDTO> familyOriginElements = mapFamilySimilarities.get(family);
-			
-			if(familyAimElements.size() > familyOriginElements.size()) {
-				diffElements += familyAimElements.size();
-			}else {
-				diffElements += familyOriginElements.size();
-			}
-			
+		
 			
 			//3.3- For each aim element we look for the origin element
 			for(PedagogicalSoftwareElementDTO familyAimElement : familyAimElements) {
@@ -260,6 +248,8 @@ public class PedagogicalSoftwareService {
 													.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
 													.count();
 				
+				diffElements += Math.abs(countAimElements - countOriginElements);				
+				
 				//3.3.3- Adds to the element result
 				if(countOriginElements > 0) {
 					
@@ -273,9 +263,11 @@ public class PedagogicalSoftwareService {
 					
 					//If there are similarities, we add these similarities to the element map
 					mapElementSimilarities.put(familyAimElement.getElementName(), existingElements);
-					diffElements -= existingElements.size();
 				}
 			}
+			
+			//3.4- Once we got all the aim elements, we check how many elements of this family remain in the origin
+			diffElements += familyOriginElements.size();
 		}
 		
 		return diffElements;
