@@ -137,7 +137,7 @@ public class PedagogicalSoftwareService {
 		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffPosition);
 		
 		//5- Input element similarities from the element similarities
-		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffInput);
+		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, diffInput);
 		
 		//6- Calculates the total distance in base of the coefficients
 		totalDistance = (diffFamily/DistanceEnum.FAMILY.getValue()) + (diffElements/DistanceEnum.ELEMENT.getValue()) + (diffPosition/DistanceEnum.POSITION.getValue()) + (diffInput/DistanceEnum.INPUT.getValue());
@@ -282,7 +282,7 @@ public class PedagogicalSoftwareService {
 	 * @param diffInputValues
 	 * @return
 	 */
-	public double inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, double diffInputValues) {
+	public double inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, double diffInputValues) {
 		
 		for(String element : mapElementSimilarities.keySet()) {
 			

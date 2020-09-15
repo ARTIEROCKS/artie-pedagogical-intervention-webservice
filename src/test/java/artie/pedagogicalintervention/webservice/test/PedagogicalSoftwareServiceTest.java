@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 
 class PedagogicalSoftwareServiceTest {
@@ -329,7 +331,6 @@ class PedagogicalSoftwareServiceTest {
 		PedagogicalSoftwareElementDTO aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element3", "family1", null, null));
 		PedagogicalSoftwareElementDTO aim5 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element5", "family1", null, null));
 		
-		List<PedagogicalSoftwareElementDTO> originElements;
 		List<PedagogicalSoftwareElementDTO> aimElements;
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities;
@@ -398,6 +399,123 @@ class PedagogicalSoftwareServiceTest {
 		assertTrue(mapElementSimilarities.containsKey("element2"));
 		assertEquals(1, mapElementSimilarities.get("element1").size());
 		assertEquals(1, mapElementSimilarities.get("element2").size());
+	}
+
+
+	@Test
+	void inputDistanceCalculationTest() {
+		
+		//Setup
+		PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null));				
+		PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null));
+		
+		PedagogicalSoftwareInput originInput1;
+		PedagogicalSoftwareField originFieldInput1;
+		
+		PedagogicalSoftwareInput originInput2;
+		PedagogicalSoftwareField originFieldInput2;
+		
+		
+		
+		PedagogicalSoftwareInput aimInput1;
+		PedagogicalSoftwareField aimFieldInput1;
+		
+		PedagogicalSoftwareInput aimInput2;
+		PedagogicalSoftwareField aimFieldInput2;
+		
+		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
+		List<PedagogicalSoftwareElementDTO> aimElements;
+		
+		//A- Same origin and aim
+		originFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
+		originInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
+		originInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
+		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+		
+		
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
+		aimInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
+		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+		
+		mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1));
+		
+		double distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, aimElements, 0);
+		
+		assertEquals(0, distance);
+		
+		
+		//B- String input difference
+		originFieldInput1 = new PedagogicalSoftwareField("STR", "b");
+		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
+		originInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
+		originInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
+		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+		
+		
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
+		aimInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
+		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+		
+		mapElementSimilarities.clear();
+		mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1));
+		
+		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, aimElements, 0);
+		
+		assertEquals(1, distance);
+		
+		
+		//C- Number input difference
+		originFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
+		originInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
+		originInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
+		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+		
+		
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "40");
+		aimInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
+		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+		
+		mapElementSimilarities.clear();
+		mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1));
+		
+		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, aimElements, 0);
+		
+		assertEquals(0.25, distance);
+		
+		
+		//D- Number and String inputs difference
+		originFieldInput1 = new PedagogicalSoftwareField("STR", "b");
+		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
+		originInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
+		originInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
+		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+		
+		
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "40");
+		aimInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
+		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+		
+		mapElementSimilarities.clear();
+		mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1));
+		
+		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, aimElements, 0);
+		
+		assertEquals(1.25, distance);
+		
 	}
 }
 
