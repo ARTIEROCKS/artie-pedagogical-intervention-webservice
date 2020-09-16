@@ -517,6 +517,83 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(1.25, distance);
 		
 	}
+
+
+	@Test
+	void positionDistanceCalculationTest() {
+	
+		//Setup
+		PedagogicalSoftwareElementDTO origin1; 
+		PedagogicalSoftwareElementDTO origin2; 
+		PedagogicalSoftwareElementDTO origin3; 
+		
+		PedagogicalSoftwareElementDTO aim1;
+		PedagogicalSoftwareElementDTO aim2;
+		PedagogicalSoftwareElementDTO aim3;
+		
+		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
+		List<PedagogicalSoftwareElementDTO> aimElements;
+		
+		//A- Same positions in origin and aim
+		origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null), 0);
+		origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family1", null, null), 1);
+		origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element3", "family1", null, null), 2);
+		
+		aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null), 0);
+		aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family1", null, null), 1);
+		aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element3", "family1", null, null), 2);
+		
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
+		mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+		mapElementSimilarities.put("element2", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin2)));
+		mapElementSimilarities.put("element3", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin3)));
+	
+		double distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, aimElements, 0);
+		
+		assertEquals(0, distance);
+		
+		
+		//B- Different positions in origin and aim with same elements
+		mapElementSimilarities.clear();
+		
+		origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null), 0);
+		origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family1", null, null), 2);
+		origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element3", "family1", null, null), 3);
+		
+		aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null), 0);
+		aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family1", null, null), 1);
+		aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element3", "family1", null, null), 2);
+		
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
+		mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+		mapElementSimilarities.put("element2", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin2)));
+		mapElementSimilarities.put("element3", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin3)));
+	
+		distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, aimElements, 0);
+		
+		assertEquals(2, distance);
+		
+		
+		//C- More elements in aim than in origin
+		mapElementSimilarities.clear();
+		
+		origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null), 0);
+		origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family1", null, null), 1);
+		
+		aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null), 0);
+		aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null), 1);
+		aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family1", null, null), 2);
+		
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim1, aim3));
+		mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+		mapElementSimilarities.put("element2", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin2)));
+	
+		distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, aimElements, 0);
+		
+		assertEquals(2, distance);
+
+
+	}
 }
 
 

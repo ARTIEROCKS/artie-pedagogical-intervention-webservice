@@ -373,9 +373,36 @@ public class PedagogicalSoftwareService {
 			//4.2- Gets the elements in the origin
 			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
 			
-			//4.3- Checks if the origin has more elements than the aim
-			if(elementOriginElements.size() > elementAimElements.size()) {
+			int nearestPosition = -1;
+			int tmpDiff=0;
+			PedagogicalSoftwareElementDTO nearestElement = null;
+			
+			//4.3- For each aim element, we look for the nearest origin element
+			for(PedagogicalSoftwareElementDTO aimElement : elementAimElements) {
 				
+				if(elementOriginElements.size()> 0) {
+					
+					for(PedagogicalSoftwareElementDTO originElement : elementOriginElements) {
+						
+						tmpDiff = Math.abs(aimElement.getElementPosition() - originElement.getElementPosition());
+						if(nearestPosition == -1) {
+							nearestPosition = tmpDiff;
+							nearestElement = originElement;
+						}
+						else if(nearestPosition > tmpDiff) {
+							nearestPosition = tmpDiff;
+							nearestElement = originElement;
+						}
+					}
+					
+					diffPosition += nearestPosition;
+					elementOriginElements.remove(nearestElement);
+					
+				}else {
+					diffPosition += (aimElement.getElementPosition()==0?1:aimElement.getElementPosition());
+				}
+				
+				nearestPosition = -1;
 			}
 			
 		}
