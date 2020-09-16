@@ -134,7 +134,7 @@ public class PedagogicalSoftwareService {
 		mapFamilySimilarities = null;
 		
 		//4- Position similarities from the element similarities
-		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, aimElements, originElements, diffPosition);
+		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, aimElements, diffPosition);
 		
 		//5- Input element similarities from the element similarities
 		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, diffInput);
@@ -237,32 +237,52 @@ public class PedagogicalSoftwareService {
 			for(PedagogicalSoftwareElementDTO familyAimElement : familyAimElements) {
 				
 				//3.3.1- Counts how many aim elements are the same element
-				long countAimElements = familyAimElements
-													.stream()
-													.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
-													.count();
+				List<PedagogicalSoftwareElementDTO> tmpAimElements = familyAimElements
+																			.stream()
+																			.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
+																			.collect(Collectors.toList());
 				
 				//3.3.2 - Counts the number of elements similar to the aim element for the family
-				long countOriginElements = familyOriginElements
-													.stream()
-													.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
-													.count();
+				List<PedagogicalSoftwareElementDTO> tmpOriginElements = familyOriginElements
+																			.stream()
+																			.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
+																			.collect(Collectors.toList());
 				
-				diffElements += Math.abs(countAimElements - countOriginElements);				
+				diffElements += Math.abs(tmpAimElements.size() - tmpOriginElements.size());				
 				
 				//3.3.3- Adds to the element result
-				if(countOriginElements > 0) {
+				if(tmpOriginElements.size() > 0) {
 					
-					List<PedagogicalSoftwareElementDTO> existingElements = familyOriginElements
-																				.stream()
-																				.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
-																				.collect(Collectors.toList());
+					int nearestPosition = -1;
+					int diffPosition = 0;
+					PedagogicalSoftwareElementDTO nearest = null;
+					List<PedagogicalSoftwareElementDTO> nearestElements = new ArrayList<>();
 					
-					//Once the elements have been added to the map, we delete them from the list to avoid repeat them
-					familyOriginElements.removeAll(existingElements);
+					//For each aim, we insert the nearest origin element in the map
+					for(PedagogicalSoftwareElementDTO tmpAimElement : tmpAimElements) {
+						
+						nearestPosition = -1;
+						
+						for(PedagogicalSoftwareElementDTO tmpOriginElement : tmpOriginElements) {
+							
+							diffPosition = Math.abs(tmpAimElement.getElementPosition() - tmpOriginElement.getElementPosition());
+							
+							if(nearestPosition==-1) {
+								nearestPosition = diffPosition;
+								nearest = tmpOriginElement;
+							}else if(nearestPosition > diffPosition) {
+								nearestPosition = diffPosition;
+								nearest = tmpOriginElement;
+							}
+							
+							nearestElements.add(nearest);
+							familyOriginElements.remove(nearest);
+						}
+						
+					}
 					
 					//If there are similarities, we add these similarities to the element map
-					mapElementSimilarities.put(familyAimElement.getElementName(), existingElements);
+					mapElementSimilarities.put(familyAimElement.getElementName(), nearestElements);
 				}
 			}
 			
@@ -278,7 +298,6 @@ public class PedagogicalSoftwareService {
 	 * Function to get the input distance between the inputs from the same elements
 	 * @param mapElementSimilarities
 	 * @param aimElements
-	 * @param originElements
 	 * @param diffInputValues
 	 * @return
 	 */
@@ -336,13 +355,11 @@ public class PedagogicalSoftwareService {
 	 * Function to calculate the distance between the positions
 	 * @param mapElementSimilarities
 	 * @param aimElements
-	 * @param originElements
 	 * @param diffPosition
 	 * @return
 	 */
-	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, double diffPosition) {
+	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, double diffPosition) {
 		
-		long nearestPosition= -1;
 		
 		for(String element : mapElementSimilarities.keySet()) {
 			
@@ -356,24 +373,11 @@ public class PedagogicalSoftwareService {
 			//4.2- Gets the elements in the origin
 			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
 			
-			//4.3- From the correct elements we get the less distance in the position between then aim and the origin
-			for(PedagogicalSoftwareElementDTO elementAimElement : elementAimElements) {
+			//4.3- Checks if the origin has more elements than the aim
+			if(elementOriginElements.size() > elementAimElements.size()) {
 				
-				nearestPosition = -1;
-				
-				for(PedagogicalSoftwareElementDTO elementOriginElement : elementOriginElements) {
-					
-					if(nearestPosition == -1) {
-						nearestPosition = Math.abs(elementAimElement.getElementPosition() - elementOriginElement.getElementPosition());
-					}else if (nearestPosition > Math.abs(elementAimElement.getElementPosition() - elementOriginElement.getElementPosition())) {
-						nearestPosition = Math.abs(elementAimElement.getElementPosition() - elementOriginElement.getElementPosition());
-					}
-				}
-				
-				if(nearestPosition > -1) {
-					diffPosition += nearestPosition;
-				}
 			}
+			
 		}
 		
 		return diffPosition;
