@@ -2,8 +2,9 @@ package artie.pedagogicalintervention.webservice.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class PedagogicalSoftwareInput {
+public class PedagogicalSoftwareInput implements Cloneable {
 
 	private String name;
 	private List<PedagogicalSoftwareField> fields = new ArrayList<>();
@@ -36,7 +37,10 @@ public class PedagogicalSoftwareInput {
 	public PedagogicalSoftwareInput(String name, List<PedagogicalSoftwareField> fields) {
 		super();
 		this.name = name;
-		this.fields = fields;
+		
+		if(fields != null) {
+			this.fields = fields;
+		}
 	}
 
 	/**
@@ -57,5 +61,15 @@ public class PedagogicalSoftwareInput {
 	    }
 		
 		return result;
+	}
+	
+	
+	/**
+	 * Overrides clone
+	 */
+	public PedagogicalSoftwareInput clone() {
+		
+		List<PedagogicalSoftwareField> cloneFields = this.fields.stream().map(f -> f.clone()).collect(Collectors.toList());
+		return new PedagogicalSoftwareInput(name, cloneFields);
 	}
 }

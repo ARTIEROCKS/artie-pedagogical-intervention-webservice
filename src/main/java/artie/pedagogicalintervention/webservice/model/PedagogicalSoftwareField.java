@@ -2,7 +2,7 @@ package artie.pedagogicalintervention.webservice.model;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class PedagogicalSoftwareField {
+public class PedagogicalSoftwareField implements Cloneable {
 	
 	//Attributes
 	private String name;
@@ -45,6 +45,14 @@ public class PedagogicalSoftwareField {
 		
 		return (this.name.equals(objField.getName()) && this.value.equals(objField.getValue()));
 	}
+	
+	/**
+	 * Overrides clone
+	 */
+	public PedagogicalSoftwareField clone() {
+		return new PedagogicalSoftwareField(name, value);
+	}
+	
 	
 	/**
 	 * Checks if the value is numeric or not

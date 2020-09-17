@@ -1,6 +1,7 @@
 package artie.pedagogicalintervention.webservice.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,11 +134,11 @@ public class PedagogicalSoftwareService {
 		mapFamilySimilarities.clear();
 		mapFamilySimilarities = null;
 		
-		//4- Input element similarities from the element similarities
-		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, diffInput);
-		
-		//5- Position similarities from the element similarities
+		//4- Position similarities from the element similarities
 		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, aimElements, diffPosition);
+		
+		//5- Input element similarities from the element similarities
+		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, diffInput);
 		
 		//6- Calculates the total distance in base of the coefficients
 		totalDistance = (diffFamily/DistanceEnum.FAMILY.getValue()) + (diffElements/DistanceEnum.ELEMENT.getValue()) + (diffPosition/DistanceEnum.POSITION.getValue()) + (diffInput/DistanceEnum.INPUT.getValue());
@@ -342,7 +343,7 @@ public class PedagogicalSoftwareService {
 							//If the field of the input of the aim element is equal of the field of the input of the origin element and the elements are the same short
 							if(!solutionField.equals(workspaceField) && elementOriginElement.getElementName().equals(elementAimElement.getElementName())) {
 								
-								if(solutionField.isNumeric()) {
+								if(solutionField.isNumeric() && workspaceField.isNumeric()) {
 									
 									double difference = Math.abs(solutionField.getDoubleValue() - workspaceField.getDoubleValue());
 									double ratio = difference / solutionField.getDoubleValue();
@@ -385,7 +386,7 @@ public class PedagogicalSoftwareService {
 																		.collect(Collectors.toList());
 	
 			//4.2- Gets the elements in the origin
-			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
+			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element).stream().map(mes -> mes.clone()).collect(Collectors.toList());
 			
 			int nearestPosition = -1;
 			int tmpDiff=0;

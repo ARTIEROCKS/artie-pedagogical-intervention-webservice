@@ -2,8 +2,9 @@ package artie.pedagogicalintervention.webservice.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class PedagogicalSoftwareElement {
+public class PedagogicalSoftwareElement implements Cloneable {
 
 	//Attributes
 	private String elementName;
@@ -70,6 +71,29 @@ public class PedagogicalSoftwareElement {
 		}
 	}
 	
+	/**
+	 * Parameterized constructor
+	 * @param elementName
+	 * @param inputs
+	 */
+	public PedagogicalSoftwareElement(String elementName, String elementFamily, List<PedagogicalSoftwareInput> inputs, PedagogicalSoftwareElement next, List<PedagogicalSoftwareElement> nested) {
+		this.elementName = elementName;
+		this.elementFamily = elementFamily;
+		this.next = next;
+		
+		if(inputs==null){
+			this.inputs = new ArrayList<>();
+		}else {
+			this.inputs = inputs;
+		}
+		
+		if(nested==null) {
+			this.nested = new ArrayList<>();
+		}else {
+			this.nested = nested;
+		}
+	}
+	
 	
 	/**
 	 * Overrides equals
@@ -100,5 +124,21 @@ public class PedagogicalSoftwareElement {
 	    
 		return result;
 		
+	}
+	
+	/**
+	 * Overrides clone
+	 */
+	public PedagogicalSoftwareElement clone(){
+		
+		List<PedagogicalSoftwareInput> cloneInputs = this.inputs.stream().map(i -> i.clone()).collect(Collectors.toList());
+		List<PedagogicalSoftwareElement> cloneNested = this.nested.stream().map(n -> n.clone()).collect(Collectors.toList());
+		PedagogicalSoftwareElement cloneNext = null;
+		
+		if(this.next != null) {
+			cloneNext = this.next.clone();
+		}
+		
+		return new PedagogicalSoftwareElement(this.elementName, this.elementFamily, cloneInputs, cloneNext, cloneNested);
 	}
 }
