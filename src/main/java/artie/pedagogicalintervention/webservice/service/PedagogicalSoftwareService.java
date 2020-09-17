@@ -219,10 +219,14 @@ public class PedagogicalSoftwareService {
 	 * @return
 	 */
 	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, double diffElements) {
-		
+
+		List<String> elementsPassed = new ArrayList<>();;
 		
 		//For the similar families
 		for(String family : mapFamilySimilarities.keySet()) {
+			
+			//Control about the elements of the family that have been already taken into account
+			elementsPassed.clear();
 			
 			//3.1- Gets the elements in the aim for this family
 			List<PedagogicalSoftwareElementDTO> familyAimElements = aimElements
@@ -248,7 +252,12 @@ public class PedagogicalSoftwareService {
 																			.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
 																			.collect(Collectors.toList());
 				
-				diffElements += Math.abs(tmpAimElements.size() - tmpOriginElements.size());				
+				//we check if the element has been already taken into account
+				if(!elementsPassed.contains(familyAimElement.getElementName())) {
+					diffElements += Math.abs(tmpAimElements.size() - tmpOriginElements.size());
+					elementsPassed.add(familyAimElement.getElementName());
+				}
+				
 				
 				//3.3.3- Adds to the element result
 				if(tmpOriginElements.size() > 0) {
@@ -262,6 +271,7 @@ public class PedagogicalSoftwareService {
 					for(PedagogicalSoftwareElementDTO tmpAimElement : tmpAimElements) {
 						
 						nearestPosition = -1;
+						nearest = null;
 						
 						for(PedagogicalSoftwareElementDTO tmpOriginElement : tmpOriginElements) {
 							
@@ -276,12 +286,17 @@ public class PedagogicalSoftwareService {
 							}
 						}
 						
-						nearestElements.add(nearest);						
+						if(nearest!=null) {
+							nearestElements.add(nearest);
+							tmpOriginElements.remove(nearest);
+						}
 					}
 					
 					//If there are similarities, we add these similarities to the element map
 					mapElementSimilarities.put(familyAimElement.getElementName(), nearestElements);
-					familyOriginElements.removeAll(tmpOriginElements);
+					
+					//We avoid to repeat the same element
+					familyOriginElements.removeAll(nearestElements);
 				}
 			}
 			
