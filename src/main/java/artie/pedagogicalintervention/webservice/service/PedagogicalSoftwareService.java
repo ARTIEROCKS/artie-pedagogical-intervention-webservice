@@ -129,7 +129,7 @@ public class PedagogicalSoftwareService {
 		diffFamily = this.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, diffFamily);
 		
 		//3- Element similarities from the family similarities
-		diffElements = this.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElements);
+		diffElements = this.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, diffElements);
 		
 		//We can now delete the family similarities map
 		mapFamilySimilarities.clear();
@@ -153,6 +153,7 @@ public class PedagogicalSoftwareService {
 	 * @param aimElements
 	 * @param originElements
 	 * @param mapFamilySimilarities
+	 * @param mapFamilyDifferences
 	 * @param diffFamily
 	 * @return
 	 */
@@ -222,13 +223,19 @@ public class PedagogicalSoftwareService {
 	 * Function to get the element distance between two elements
 	 * @param mapFamilySimilarities
 	 * @param mapElementSimilarities
+	 * @param mapElementDifferences
 	 * @param aimElements
 	 * @param diffElements
 	 * @return
 	 */
-	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, double diffElements) {
+	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, List<PedagogicalSoftwareElementDTO> aimElements, double diffElements) {
 
-		List<String> elementsPassed = new ArrayList<>();;
+		List<String> elementsPassed = new ArrayList<>();
+		
+		//Adds the different elements from the different families to the distance calculation result
+		for(String family: mapFamilyDifferences.keySet()) {
+			diffElements += mapFamilyDifferences.get(family).size();
+		}
 		
 		//For the similar families
 		for(String family : mapFamilySimilarities.keySet()) {
