@@ -274,15 +274,14 @@ public class PedagogicalSoftwareService {
 								nearestPosition = diffPosition;
 								nearest = tmpOriginElement;
 							}
-							
-							nearestElements.add(nearest);
-							familyOriginElements.remove(nearest);
 						}
 						
+						nearestElements.add(nearest);						
 					}
 					
 					//If there are similarities, we add these similarities to the element map
 					mapElementSimilarities.put(familyAimElement.getElementName(), nearestElements);
+					familyOriginElements.removeAll(tmpOriginElements);
 				}
 			}
 			

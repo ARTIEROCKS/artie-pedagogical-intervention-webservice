@@ -61,8 +61,11 @@ public class PedagogicalSoftwareElement {
 	public PedagogicalSoftwareElement(String elementName, String elementFamily, List<PedagogicalSoftwareInput> inputs, PedagogicalSoftwareElement next) {
 		this.elementName = elementName;
 		this.elementFamily = elementFamily;
-		this.inputs = inputs;
 		this.next = next;
+		
+		if(inputs==null){
+			this.inputs = new ArrayList<>();
+		}
 	}
 	
 	
