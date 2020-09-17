@@ -252,13 +252,15 @@ class PedagogicalSoftwareServiceTest {
 		List<PedagogicalSoftwareElementDTO> originElements;
 		List<PedagogicalSoftwareElementDTO> aimElements;
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities;
+		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences;
 		
 		//A- Same origin and aim comparison		
 		originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3));
 		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
 		mapFamilySimilarities = new HashMap<>();
+		mapFamilyDifferences = new HashMap<>();
 		
-		double distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, 0);
+		double distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
 		
 		assertEquals(0, distance);
 		assertEquals(3, mapFamilySimilarities.size());
@@ -268,14 +270,16 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(1, mapFamilySimilarities.get("family1").size());
 		assertEquals(1, mapFamilySimilarities.get("family2").size());
 		assertEquals(1, mapFamilySimilarities.get("family3").size());
+		assertEquals(0, mapFamilyDifferences.size());
 		
 		
 		//B- More in origin
 		originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3));
 		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2));
 		mapFamilySimilarities = new HashMap<>();
+		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, 0);
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
 		
 		assertEquals(1, distance);
 		assertEquals(2, mapFamilySimilarities.size());
@@ -283,14 +287,18 @@ class PedagogicalSoftwareServiceTest {
 		assertTrue(mapFamilySimilarities.containsKey("family2"));
 		assertEquals(1, mapFamilySimilarities.get("family1").size());
 		assertEquals(1, mapFamilySimilarities.get("family2").size());
+		assertEquals(1, mapFamilyDifferences.size());
+		assertTrue(mapFamilyDifferences.containsKey("family3"));
+		assertEquals(1, mapFamilyDifferences.get("family3").size());
 		
 		
 		//C- More in aim comparison
 		originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2));
 		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
 		mapFamilySimilarities = new HashMap<>();
+		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, 0);
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
 		
 		assertEquals(1, distance);
 		assertEquals(2, mapFamilySimilarities.size());
@@ -298,21 +306,51 @@ class PedagogicalSoftwareServiceTest {
 		assertTrue(mapFamilySimilarities.containsKey("family2"));
 		assertEquals(1, mapFamilySimilarities.get("family1").size());
 		assertEquals(1, mapFamilySimilarities.get("family2").size());
+		assertEquals(1, mapFamilyDifferences.size());
+		assertTrue(mapFamilyDifferences.containsKey("family3"));
+		assertEquals(1, mapFamilyDifferences.get("family3").size());
 		
 		
-		//D- Difference in oriign and in aim
+		//D- Difference in origin and in aim
 		originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin4));
 		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
 		mapFamilySimilarities = new HashMap<>();
+		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, 0);
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
 		
 		assertEquals(2, distance);
 		assertEquals(2, mapFamilySimilarities.size());
 		assertTrue(mapFamilySimilarities.containsKey("family1"));
 		assertTrue(mapFamilySimilarities.containsKey("family2"));
 		assertEquals(1, mapFamilySimilarities.get("family1").size());
-		assertEquals(1, mapFamilySimilarities.get("family2").size());	
+		assertEquals(1, mapFamilySimilarities.get("family2").size());
+		assertEquals(2, mapFamilyDifferences.size());
+		assertTrue(mapFamilyDifferences.containsKey("family4"));
+		assertTrue(mapFamilyDifferences.containsKey("family5"));
+		assertEquals(1, mapFamilyDifferences.get("family4").size());
+		assertEquals(1, mapFamilyDifferences.get("family5").size());
+		
+		
+		//E- Difference in origin and in aim, but more (one element repeated) in origin
+		originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin4, origin4));
+		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+		mapFamilySimilarities = new HashMap<>();
+		mapFamilyDifferences = new HashMap<>();
+		
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
+		
+		assertEquals(2, distance);
+		assertEquals(2, mapFamilySimilarities.size());
+		assertTrue(mapFamilySimilarities.containsKey("family1"));
+		assertTrue(mapFamilySimilarities.containsKey("family2"));
+		assertEquals(1, mapFamilySimilarities.get("family1").size());
+		assertEquals(1, mapFamilySimilarities.get("family2").size());
+		assertEquals(2, mapFamilyDifferences.size());
+		assertTrue(mapFamilyDifferences.containsKey("family4"));
+		assertTrue(mapFamilyDifferences.containsKey("family5"));
+		assertEquals(2, mapFamilyDifferences.get("family4").size());
+		assertEquals(1, mapFamilyDifferences.get("family5").size());
 		
 	}
 	

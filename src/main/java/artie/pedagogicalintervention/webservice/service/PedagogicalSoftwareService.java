@@ -1,6 +1,7 @@
 package artie.pedagogicalintervention.webservice.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,7 @@ public class PedagogicalSoftwareService {
 		
 		//Family variables
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
+		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences = new HashMap<>();
 		double diffFamily = 0;
 		
 		//Element variables
@@ -124,7 +126,7 @@ public class PedagogicalSoftwareService {
 		}
 		
 		//2- Family differences and similarities
-		diffFamily = this.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, diffFamily);
+		diffFamily = this.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, diffFamily);
 		
 		//3- Element similarities from the family similarities
 		diffElements = this.elementDistanceCalculation(mapFamilySimilarities, mapElementSimilarities, aimElements, diffElements);
@@ -154,15 +156,13 @@ public class PedagogicalSoftwareService {
 	 * @param diffFamily
 	 * @return
 	 */
-	public double familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, double diffFamily) {
-		
-		List<String> listFamilyDifferences = new ArrayList<>();
+	public double familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements, List<PedagogicalSoftwareElementDTO> originElements, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, double diffFamily) {
 		
 		//Checks from the aim side
 		for(PedagogicalSoftwareElementDTO aimElement : aimElements) {
 			
 			//2.1- Checks that this family has not been already checked
-			if(!mapFamilySimilarities.containsKey(aimElement.getElementFamily()) && !listFamilyDifferences.contains(aimElement.getElementFamily())) {
+			if(!mapFamilySimilarities.containsKey(aimElement.getElementFamily()) && !mapFamilyDifferences.containsKey(aimElement.getElementFamily())) {
 				
 				//2.1.1- Counts the number of elements of this family existing in the origin
 				long countOriginFamilies = originElements
@@ -173,7 +173,12 @@ public class PedagogicalSoftwareService {
 				if(countOriginFamilies==0) {
 					//If there are no similar families, we count all the elements in the origin + the element in the aim that has not been included in the origin
 					diffFamily += 1;
-					listFamilyDifferences.add(aimElement.getElementFamily());
+					List<PedagogicalSoftwareElementDTO> tmpFamilyDifferences = aimElements
+																					.stream()
+																					.filter(f -> f.getElementFamily().equals(aimElement.getElementFamily()))
+																					.collect(Collectors.toList());
+					mapFamilyDifferences.put(aimElement.getElementFamily(), tmpFamilyDifferences);
+					
 					
 				}else {
 					//If there are similarities, we add these similarities to the family map
@@ -190,7 +195,7 @@ public class PedagogicalSoftwareService {
 		for(PedagogicalSoftwareElementDTO originElement : originElements) {
 			
 			//3.1- Checks that this family has not been already checked
-			if(!mapFamilySimilarities.containsKey(originElement.getElementFamily()) && !listFamilyDifferences.contains(originElement.getElementFamily())) {
+			if(!mapFamilySimilarities.containsKey(originElement.getElementFamily()) && !mapFamilyDifferences.containsKey(originElement.getElementFamily())) {
 				
 				//3.1.1- Counts the number of elements of this family existing in the origin
 				long countAimFamilies = aimElements
@@ -201,8 +206,11 @@ public class PedagogicalSoftwareService {
 				if(countAimFamilies==0) {
 					//If there are no similar families, we count all the elements in the origin + the element in the aim that has not been included in the origin
 					diffFamily += 1;
-					listFamilyDifferences.add(originElement.getElementFamily());
-					
+					List<PedagogicalSoftwareElementDTO> tmpFamilyDifferences = originElements
+																					.stream()
+																					.filter(f -> f.getElementFamily().equals(originElement.getElementFamily()))
+																					.collect(Collectors.toList());
+					mapFamilyDifferences.put(originElement.getElementFamily(), tmpFamilyDifferences);
 				}
 			}
 		}
