@@ -415,6 +415,8 @@ class PedagogicalSoftwareServiceTest {
 		assertTrue(mapElementSimilarities.containsKey("element2"));
 		assertEquals(1, mapElementSimilarities.get("element1").size());
 		assertEquals(1, mapElementSimilarities.get("element2").size());
+		assertEquals(0, mapElementSimilarities.get("element1").get(0).getElementPosition());
+		assertEquals(1, mapElementSimilarities.get("element2").get(0).getElementPosition());
 		
 		
 		//F- Repeated element in origin, but not in aim, and with different positions
