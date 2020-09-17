@@ -65,6 +65,8 @@ public class PedagogicalSoftwareElement {
 		
 		if(inputs==null){
 			this.inputs = new ArrayList<>();
+		}else {
+			this.inputs = inputs;
 		}
 	}
 	

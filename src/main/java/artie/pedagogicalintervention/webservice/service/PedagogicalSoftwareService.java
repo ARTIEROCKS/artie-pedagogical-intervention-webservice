@@ -133,11 +133,11 @@ public class PedagogicalSoftwareService {
 		mapFamilySimilarities.clear();
 		mapFamilySimilarities = null;
 		
-		//4- Position similarities from the element similarities
-		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, aimElements, diffPosition);
-		
-		//5- Input element similarities from the element similarities
+		//4- Input element similarities from the element similarities
 		diffInput = this.inputDistanceCalculation(mapElementSimilarities, aimElements, diffInput);
+		
+		//5- Position similarities from the element similarities
+		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, aimElements, diffPosition);
 		
 		//6- Calculates the total distance in base of the coefficients
 		totalDistance = (diffFamily/DistanceEnum.FAMILY.getValue()) + (diffElements/DistanceEnum.ELEMENT.getValue()) + (diffPosition/DistanceEnum.POSITION.getValue()) + (diffInput/DistanceEnum.INPUT.getValue());
