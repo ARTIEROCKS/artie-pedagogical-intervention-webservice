@@ -139,7 +139,7 @@ public class PedagogicalSoftwareService {
 		mapFamilySimilarities = null;
 
 		// 4- Position similarities from the element similarities
-		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, aimElements, diffPosition);
+		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, diffPosition);
 
 		// 5- Input element similarities from the element similarities
 		diffInput = this.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, diffInput);
@@ -409,9 +409,19 @@ public class PedagogicalSoftwareService {
 	 * @param diffPosition
 	 * @return
 	 */
-	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities,
-			List<PedagogicalSoftwareElementDTO> aimElements, double diffPosition) {
+	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, 
+											  Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, 
+											  List<PedagogicalSoftwareElementDTO> aimElements, 
+											  double diffPosition) {
 
+		
+		//Adds to the distance calculation result, the different position from the difference of the elements
+		for(List<PedagogicalSoftwareElementDTO> elements : mapFamilyDifferences.values()) {
+			for(PedagogicalSoftwareElementDTO element : elements) {
+				diffPosition += element.getElementPosition() + 1;
+			}
+		}
+		
 		for (String element : mapElementSimilarities.keySet()) {
 
 			// 4.1- Gets the elements in the aim for this element
@@ -447,7 +457,7 @@ public class PedagogicalSoftwareService {
 					elementOriginElements.remove(nearestElement);
 
 				} else {
-					diffPosition += (aimElement.getElementPosition() == 0 ? 1 : aimElement.getElementPosition());
+					diffPosition += aimElement.getElementPosition() + 1;
 				}
 
 				nearestPosition = -1;
