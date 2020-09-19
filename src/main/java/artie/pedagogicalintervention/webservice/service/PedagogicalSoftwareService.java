@@ -363,38 +363,50 @@ public class PedagogicalSoftwareService {
 																		.collect(Collectors.toList());
 			
 			//5.2- Gets the elements in the origin
-			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element);
+			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element).stream().map(eoe -> eoe.clone()).collect(Collectors.toList());
 			
-			//5.3- Checks all the inputs for each element
+			//5.3- Checks all the aim elements
 			for(PedagogicalSoftwareElementDTO elementAimElement : elementAimElements) {
 				
-				for(int input=0; input<elementAimElement.getInputs().size(); input++) {
-					for(int field=0; field<elementAimElement.getInputs().get(input).getFields().size(); field++) {
+				double nearestDifference = -1;
+				PedagogicalSoftwareElementDTO nearestOrigin = null;
+				
+				//5.3.1- Checks all the origin element for each aim element
+				for	(PedagogicalSoftwareElementDTO elementOriginElement : elementOriginElements) {
 					
-						for(PedagogicalSoftwareElementDTO elementOriginElement : elementOriginElements) {
+					double accumulatedOriginDifference = 0;
+					
+					//5.3.1.1 - Compares all the inputs for the origin and the aim elements
+					for(int input=0; input < elementOriginElement.getInputs().size(); input++) {
+						for(int field=0; field < elementOriginElement.getInputs().get(input).getFields().size(); field++)
+						{
+							PedagogicalSoftwareField originField = elementOriginElement.getInputs().get(input).getFields().get(field);
+							PedagogicalSoftwareField aimField = elementAimElement.getInputs().get(input).getFields().get(field);
 							
-							PedagogicalSoftwareField solutionField = elementAimElement.getInputs().get(input).getFields().get(field);
-							PedagogicalSoftwareField workspaceField = elementOriginElement.getInputs().get(input).getFields().get(field);
-							
-							//If the field of the input of the aim element is equal of the field of the input of the origin element and the elements are the same short
-							if(!solutionField.equals(workspaceField) && elementOriginElement.getElementName().equals(elementAimElement.getElementName())) {
-								
-								if(solutionField.isNumeric() && workspaceField.isNumeric()) {
-									
-									double difference = Math.abs(solutionField.getDoubleValue() - workspaceField.getDoubleValue());
-									double ratio = difference / solutionField.getDoubleValue();
-									diffInputValues += ratio;
-									
- 								}else {
-									diffInputValues += 1;
-								}
-							}							
+							if(originField.isNumeric()) {
+								double difference = Math.abs(originField.getDoubleValue() - aimField.getDoubleValue());
+								double ratio = difference / aimField.getDoubleValue();
+								accumulatedOriginDifference += ratio;
+							}else if(originField.getValue() != aimField.getValue()) {
+								accumulatedOriginDifference += 1;
+							}
 						}
-						
 					}
+					
+					//5.3.1.2 - Checks if the origin element is the nearest element of the aim
+					if(nearestDifference == -1 || nearestDifference > accumulatedOriginDifference) {
+						nearestDifference = accumulatedOriginDifference;
+						nearestOrigin = elementOriginElement;
+					}
+					
 				}
 				
-			}		
+				//5.4- Deletes the nearest element origin and we add the nearest difference 
+				if(nearestDifference > -1 && nearestOrigin != null) {
+					diffInputValues += nearestDifference;
+					elementOriginElements.remove(nearestOrigin);
+				}
+			}
 			
 		}
 		
