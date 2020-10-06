@@ -8,11 +8,14 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import artie.common.web.dto.Student;
+
 @Document(collection="PedagogicalSoftwareData")
 public class PedagogicalSoftwareData {
 	
 	@Id
 	private String id;
+	private Student student;
 	private String exercise;
 	private double solutionDistance;
 	private LocalDateTime dateTime;
@@ -24,6 +27,13 @@ public class PedagogicalSoftwareData {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public Student getStudent() {
+		return this.student;
+	}
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 	
 	public String getExercise() {
@@ -72,13 +82,16 @@ public class PedagogicalSoftwareData {
 	
 	/**
 	 * Parameterized constructor
+	 * @student student
 	 * @param exercise
 	 * @param solutionDistance
 	 * @param elements
 	 * @param requestHelp
 	 */
-	public PedagogicalSoftwareData(String exercise, double solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
+	public PedagogicalSoftwareData(Student student, String exercise, double solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
+		this.student = student;
 		this.exercise = exercise;
+		this.solutionDistance = solutionDistance;
 		this.elements = elements;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
