@@ -7,15 +7,14 @@ import java.util.List;
 import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import artie.common.web.dto.Student;
+import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 
 @Document(collection="PedagogicalSoftwareData")
 public class PedagogicalSoftwareData {
 	
 	@Id
 	private String id;
-	private Student student;
+	private StudentDTO student;
 	private String exercise;
 	private double solutionDistance;
 	private LocalDateTime dateTime;
@@ -29,10 +28,10 @@ public class PedagogicalSoftwareData {
 		this.id = id;
 	}
 	
-	public Student getStudent() {
+	public StudentDTO getStudent() {
 		return this.student;
 	}
-	public void setStudent(Student student) {
+	public void setStudent(StudentDTO student) {
 		this.student = student;
 	}
 	
@@ -88,7 +87,7 @@ public class PedagogicalSoftwareData {
 	 * @param elements
 	 * @param requestHelp
 	 */
-	public PedagogicalSoftwareData(Student student, String exercise, double solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
+	public PedagogicalSoftwareData(StudentDTO student, String exercise, double solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
