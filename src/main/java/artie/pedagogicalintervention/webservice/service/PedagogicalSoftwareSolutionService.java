@@ -48,7 +48,7 @@ public class PedagogicalSoftwareSolutionService {
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new ObjectMapper().readValue(pse, PedagogicalSoftwareSolution.class);
 			
 			//2- Searches if there is a solution for this exercise
-			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExercise(pedagogicalSoftwareSolution.getExercise());
+			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseAndUserId(pedagogicalSoftwareSolution.getExercise(), pedagogicalSoftwareSolution.getUserId());
 			
 			//3- If there is an existing pedagogical software solution, we update its data
 			if(pedagogicalSoftwareSolutions.size() > 0 ) {
@@ -77,6 +77,17 @@ public class PedagogicalSoftwareSolutionService {
 	 */
 	public PedagogicalSoftwareSolution findByExercise(String exercise) {
 		List<PedagogicalSoftwareSolution> solutions = this.pedagogicalSoftwareSolutionRepository.findByExercise(exercise);
+		return (solutions.size() > 0 ? solutions.get(0) : null);
+	}
+	
+	/**
+	 * Function to find the solution of an exercise and an user
+	 * @param exercise
+	 * @param userId
+	 * @return
+	 */
+	public PedagogicalSoftwareSolution findByExerciseAndUserId(String exercise, String userId) {
+		List<PedagogicalSoftwareSolution> solutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseAndUserId(exercise, userId);
 		return (solutions.size() > 0 ? solutions.get(0) : null);
 	}
 

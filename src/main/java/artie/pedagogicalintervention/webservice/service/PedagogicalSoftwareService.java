@@ -67,7 +67,7 @@ public class PedagogicalSoftwareService {
 
 			// 2- Looks for the solution to the exercise
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService
-					.findByExercise(pedagogicalSoftwareData.getExercise());
+					.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
 
 			// 3- If there at least 1 solution, we get the distances
 			if (pedagogicalSoftwareSolution != null) {
