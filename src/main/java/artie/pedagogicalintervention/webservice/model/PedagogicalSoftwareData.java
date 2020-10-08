@@ -16,7 +16,7 @@ public class PedagogicalSoftwareData {
 	private String id;
 	private StudentDTO student;
 	private String exercise;
-	private double solutionDistance;
+	private PedagogicalSoftwareDistance solutionDistance = new PedagogicalSoftwareDistance();
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
@@ -42,10 +42,10 @@ public class PedagogicalSoftwareData {
 		this.exercise = exercise;
 	}
 	
-	public double getSolutionDistance() {
+	public PedagogicalSoftwareDistance getSolutionDistance() {
 		return solutionDistance;
 	}
-	public void setSolutionDistance(double solutionDistance) {
+	public void setSolutionDistance(PedagogicalSoftwareDistance solutionDistance) {
 		this.solutionDistance = solutionDistance;
 	}
 	
@@ -74,7 +74,6 @@ public class PedagogicalSoftwareData {
 	 * Default Constructor
 	 */
 	public PedagogicalSoftwareData() {
-		this.solutionDistance = -1;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = false;
 	}
@@ -87,7 +86,7 @@ public class PedagogicalSoftwareData {
 	 * @param elements
 	 * @param requestHelp
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, String exercise, double solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
+	public PedagogicalSoftwareData(StudentDTO student, String exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;

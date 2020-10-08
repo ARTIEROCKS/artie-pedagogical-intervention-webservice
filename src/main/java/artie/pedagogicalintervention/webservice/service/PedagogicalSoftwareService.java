@@ -18,6 +18,7 @@ import artie.pedagogicalintervention.webservice.dto.ResponseBodyDTO;
 import artie.pedagogicalintervention.webservice.dto.ResponseDTO;
 import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareDistance;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
@@ -71,7 +72,7 @@ public class PedagogicalSoftwareService {
 
 			// 3- If there at least 1 solution, we get the distances
 			if (pedagogicalSoftwareSolution != null) {
-				double distance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
+				PedagogicalSoftwareDistance distance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
 				pedagogicalSoftwareData.setSolutionDistance(distance);
 			}
 
@@ -95,7 +96,7 @@ public class PedagogicalSoftwareService {
 	 * @param aim
 	 * @return
 	 */
-	public double distanceCalculation(PedagogicalSoftwareData origin, PedagogicalSoftwareSolution aim) {
+	public PedagogicalSoftwareDistance distanceCalculation(PedagogicalSoftwareData origin, PedagogicalSoftwareSolution aim) {
 
 		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
 		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
@@ -147,7 +148,7 @@ public class PedagogicalSoftwareService {
 		totalDistance = (diffFamily / DistanceEnum.FAMILY.getValue()) + (diffElements / DistanceEnum.ELEMENT.getValue())
 				+ (diffPosition / DistanceEnum.POSITION.getValue()) + (diffInput / DistanceEnum.INPUT.getValue());
 
-		return totalDistance;
+		return new PedagogicalSoftwareDistance(diffFamily, diffElements, diffPosition, diffInput, totalDistance);
 	}
 
 	/**
