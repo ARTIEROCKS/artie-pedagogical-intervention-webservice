@@ -54,7 +54,7 @@ public class PedagogicalSoftwareService {
 	/**
 	 * Function to transform a pedagogical software data from string to object
 	 * 
-	 * @param pse
+	 * @param psd
 	 */
 	public String add(String psd) {
 

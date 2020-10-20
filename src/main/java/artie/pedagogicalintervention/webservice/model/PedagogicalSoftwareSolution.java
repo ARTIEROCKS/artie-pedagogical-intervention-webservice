@@ -7,13 +7,16 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import artie.common.web.dto.Exercise;
+
 @Document(collection="PedagogicalSoftwareSolution")
 public class PedagogicalSoftwareSolution {
 	
 	@Id
 	private String id;
 	private String userId;
-	private String exercise;
+	private String exerciseId;
+	private Exercise exercise;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
 	public String getId() {
@@ -28,11 +31,23 @@ public class PedagogicalSoftwareSolution {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getExercise() {
+	public String getExerciseId() {
+		return this.exerciseId;
+	}
+	public void setexerciseId(String exerciseId) {
+		this.exerciseId = exerciseId;
+	}
+	public Exercise getExercise() {
 		return this.exercise;
 	}
-	public void setExercise(String exercise) {
+	public void setExercise(Exercise exercise) {
 		this.exercise = exercise;
+		
+		if(exercise != null) {
+			this.exerciseId = exercise.getId();
+		}else{
+			this.exerciseId = null;
+		}
 	}
 	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
@@ -51,9 +66,15 @@ public class PedagogicalSoftwareSolution {
 	 * @param exercise
 	 * @param elements
 	 */
-	public PedagogicalSoftwareSolution(String exercise, List<PedagogicalSoftwareElement> elements) {
+	public PedagogicalSoftwareSolution(Exercise exercise, List<PedagogicalSoftwareElement> elements) {
 		this.exercise = exercise;
 		this.elements = elements;
+		
+		if(exercise != null) {
+			this.exerciseId = exercise.getId();
+		}else{
+			this.exerciseId = null;
+		}
 	}
 	
 	public void addElement(PedagogicalSoftwareElement element) {

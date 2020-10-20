@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import artie.common.web.dto.Exercise;
 import artie.pedagogicalintervention.webservice.dto.ResponseBodyDTO;
 import artie.pedagogicalintervention.webservice.dto.ResponseDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
@@ -48,7 +49,7 @@ public class PedagogicalSoftwareSolutionService {
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new ObjectMapper().readValue(pse, PedagogicalSoftwareSolution.class);
 			
 			//2- Searches if there is a solution for this exercise
-			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseAndUserId(pedagogicalSoftwareSolution.getExercise(), pedagogicalSoftwareSolution.getUserId());
+			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseIdAndUserId(pedagogicalSoftwareSolution.getExercise().getId(), pedagogicalSoftwareSolution.getUserId());
 			
 			//3- If there is an existing pedagogical software solution, we update its data
 			if(pedagogicalSoftwareSolutions.size() > 0 ) {
@@ -86,8 +87,8 @@ public class PedagogicalSoftwareSolutionService {
 	 * @param userId
 	 * @return
 	 */
-	public PedagogicalSoftwareSolution findByExerciseAndUserId(String exercise, String userId) {
-		List<PedagogicalSoftwareSolution> solutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseAndUserId(exercise, userId);
+	public PedagogicalSoftwareSolution findByExerciseAndUserId(Exercise exercise, String userId) {
+		List<PedagogicalSoftwareSolution> solutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseIdAndUserId(exercise.getId(), userId);
 		return (solutions.size() > 0 ? solutions.get(0) : null);
 	}
 

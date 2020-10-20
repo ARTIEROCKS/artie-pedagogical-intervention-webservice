@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import artie.common.web.dto.Exercise;
 import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 
 @Document(collection="PedagogicalSoftwareData")
@@ -15,7 +17,8 @@ public class PedagogicalSoftwareData {
 	@Id
 	private String id;
 	private StudentDTO student;
-	private String exercise;
+	private String exerciseId;
+	private Exercise exercise;
 	private PedagogicalSoftwareDistance solutionDistance = new PedagogicalSoftwareDistance();
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
@@ -35,11 +38,24 @@ public class PedagogicalSoftwareData {
 		this.student = student;
 	}
 	
-	public String getExercise() {
+	public String getExerciseId() {
+		return this.exerciseId;
+	}
+	public void setExerciseId(String exerciseId) {
+		this.exerciseId = exerciseId;
+	}
+	
+	public Exercise getExercise() {
 		return this.exercise;
 	}
-	public void setExercise(String exercise) {
+	public void setExercise(Exercise exercise) {
 		this.exercise = exercise;
+		
+		if(exercise != null) {
+			this.exerciseId = exercise.getId();
+		}else{
+			this.exerciseId = null;
+		}
 	}
 	
 	public PedagogicalSoftwareDistance getSolutionDistance() {
@@ -81,18 +97,24 @@ public class PedagogicalSoftwareData {
 	/**
 	 * Parameterized constructor
 	 * @student student
-	 * @param exercise
+	 * @exercise exercise
 	 * @param solutionDistance
 	 * @param elements
 	 * @param requestHelp
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, String exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
+	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
 		this.elements = elements;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
+		
+		if(exercise != null) {
+			this.exerciseId = exercise.getId();
+		}else{
+			this.exerciseId = null;
+		}
 	}
 	
 	public void addElement(PedagogicalSoftwareElement element) {
