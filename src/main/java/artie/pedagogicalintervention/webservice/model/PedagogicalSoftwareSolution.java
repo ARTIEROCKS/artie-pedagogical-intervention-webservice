@@ -17,6 +17,7 @@ public class PedagogicalSoftwareSolution {
 	private String userId;
 	private String exerciseId;
 	private Exercise exercise;
+	private String screenShot;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
 	public String getId() {
@@ -34,7 +35,7 @@ public class PedagogicalSoftwareSolution {
 	public String getExerciseId() {
 		return this.exerciseId;
 	}
-	public void setexerciseId(String exerciseId) {
+	public void setExerciseId(String exerciseId) {
 		this.exerciseId = exerciseId;
 	}
 	public Exercise getExercise() {
@@ -48,6 +49,12 @@ public class PedagogicalSoftwareSolution {
 		}else{
 			this.exerciseId = null;
 		}
+	}
+	public String getScreenShot() {
+		return this.screenShot;
+	}
+	public void setScreenShot(String screenShot) {
+		this.screenShot = screenShot;
 	}
 	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
