@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Id;
 
+import artie.pedagogicalintervention.webservice.enums.ValidSolutionEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import artie.common.web.dto.Exercise;
@@ -22,6 +23,9 @@ public class PedagogicalSoftwareData {
 	private PedagogicalSoftwareDistance solutionDistance = new PedagogicalSoftwareDistance();
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
+	private boolean finishedExercise;
+	private int validSolution;
+	private String screenShot;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
 	public String getId() {
@@ -78,7 +82,16 @@ public class PedagogicalSoftwareData {
 	public void setRequestHelp(boolean requestHelp) {
 		this.requestHelp = requestHelp;
 	}
-	
+
+	public boolean getFinishedExercise(){return this.finishedExercise;}
+	public void setFinishedExercise(boolean finishedExercise){this.finishedExercise = finishedExercise;}
+
+	public int getValidSolution(){return this.validSolution;}
+	public void setValidSolution(int validSolution){this.validSolution = validSolution;}
+
+	public String getScreenShot(){return this.screenShot;}
+	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
+
 	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
 	}
@@ -92,6 +105,9 @@ public class PedagogicalSoftwareData {
 	public PedagogicalSoftwareData() {
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = false;
+		this.finishedExercise = false;
+		this.validSolution = ValidSolutionEnum.WAITING_APPROVAL.getValue();
+		this.screenShot = null;
 	}
 	
 	/**
@@ -101,14 +117,21 @@ public class PedagogicalSoftwareData {
 	 * @param solutionDistance
 	 * @param elements
 	 * @param requestHelp
+	 * @param finishedExercise
+	 * @param validSolution
+	 * @param screenShot
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements, boolean requestHelp) {
+	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
+								   boolean requestHelp, boolean finishedExercise, int validSolution, String screenShot) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
 		this.elements = elements;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
+		this.finishedExercise = finishedExercise;
+		this.validSolution = validSolution;
+		this.screenShot = screenShot;
 		
 		if(exercise != null) {
 			this.exerciseId = exercise.getId();
