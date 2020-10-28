@@ -90,6 +90,26 @@ public class PedagogicalSoftwareService {
 	}
 
 	/**
+	 * Function to get the finished exercises of a user ID
+	 * @param userId
+	 * @return
+	 */
+	public String findFinishedExercisesByUserId(String userId){
+		ResponseDTO response = new ResponseDTO(null);
+
+		//1- Gets the finished exercises of the user ID
+		List <PedagogicalSoftwareData> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
+																		.stream()
+																		.filter(fe -> fe.getStudent().getUserId().equals(userId))
+																		.collect(Collectors.toList());
+
+		//2- Sets the result in a response
+		response = new ResponseDTO(new ResponseBodyDTO(listFinishedExercises));
+
+		return response.toJSON();
+	}
+
+	/**
 	 * Distance calculation between an element and its aim
 	 * 
 	 * @param origin
@@ -227,7 +247,7 @@ public class PedagogicalSoftwareService {
 	 * 
 	 * @param mapFamilySimilarities
 	 * @param mapElementSimilarities
-	 * @param mapElementDifferences
+	 * @param mapFamilyDifferences
 	 * @param aimElements
 	 * @param diffElements
 	 * @return

@@ -29,10 +29,7 @@ public class SensorRestController {
 	
 	/**
 	 * Function to receive the sensor data
-	 * @param data
-	 * @param student
-	 * @param user
-	 * @param password
+	 * @param securitySensorData
 	 */
 	@PostMapping(path = "/sendSensorData",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})

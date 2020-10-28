@@ -24,11 +24,12 @@ public class ResponseDTO {
 	
 	/**
 	 * Parameterized constructor
-	 * @param statusCode
+	 * @param body
 	 */
 	public ResponseDTO(ResponseBodyDTO body) {
 		this.body = body;
 	}
+
 	
 	/**
 	 * Function to transform this object in a JSON

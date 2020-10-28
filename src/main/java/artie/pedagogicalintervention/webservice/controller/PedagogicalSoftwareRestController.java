@@ -4,12 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareSolutionService;
@@ -47,6 +42,18 @@ public class PedagogicalSoftwareRestController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public String sendPedagogicalSoftwareSolution(@RequestBody String data) {
 		return this.pedagogicalSoftwareSolutionService.add(data);
+	}
+
+	/**
+	 * Function to get the finished exercises by the students of an user
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping(path = "/finishedExercises",
+				produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseStatus(HttpStatus.FOUND)
+	public String getFinishedExercisesByUserId(@RequestParam String userId){
+		return this.pedagogicalSoftwareService.findFinishedExercisesByUserId(userId);
 	}
 	
 }
