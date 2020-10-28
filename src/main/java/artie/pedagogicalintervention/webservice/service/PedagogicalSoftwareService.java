@@ -90,7 +90,7 @@ public class PedagogicalSoftwareService {
 	}
 
 	/**
-	 * Function to get the finished exercises of a user ID
+	 * Function to get the finished exercises of a user ID and which total distance is > 0
 	 * @param userId
 	 * @return
 	 */
@@ -100,7 +100,7 @@ public class PedagogicalSoftwareService {
 		//1- Gets the finished exercises of the user ID
 		List <PedagogicalSoftwareData> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
 																		.stream()
-																		.filter(fe -> fe.getStudent().getUserId().equals(userId))
+																		.filter(fe -> fe.getStudent().getUserId().equals(userId) && fe.getSolutionDistance().getTotalDistance() > 0)
 																		.collect(Collectors.toList());
 
 		//2- Sets the result in a response
@@ -506,8 +506,6 @@ public class PedagogicalSoftwareService {
 	 * @param element     element to analyze its position
 	 * @param elementList cumulative element list
 	 * @param position    cumulative position
-	 * @param root        indicates whether the element is situated in the root or
-	 *                    not
 	 * @return
 	 */
 	public List<PedagogicalSoftwareElementDTO> getAllElements(PedagogicalSoftwareElement element,
