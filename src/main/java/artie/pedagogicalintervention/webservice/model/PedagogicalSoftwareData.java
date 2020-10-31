@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Id;
-
-import artie.pedagogicalintervention.webservice.enums.ValidSolutionEnum;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import artie.common.web.enums.ValidSolutionEnum;
 import artie.common.web.dto.Exercise;
 import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 

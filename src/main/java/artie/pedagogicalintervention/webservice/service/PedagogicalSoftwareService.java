@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import artie.common.web.dto.Exercise;
+import artie.common.web.dto.Response;
+import artie.common.web.dto.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +17,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDTO;
-import artie.pedagogicalintervention.webservice.dto.ResponseBodyDTO;
-import artie.pedagogicalintervention.webservice.dto.ResponseDTO;
 import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareDistance;
@@ -41,11 +42,11 @@ public class PedagogicalSoftwareService {
 	 */
 	public String add(PedagogicalSoftwareData psd) {
 
-		ResponseDTO response = new ResponseDTO(null);
+		Response response = new Response(null);
 		PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(psd);
 
 		if (objSaved != null) {
-			response = new ResponseDTO(new ResponseBodyDTO("OK"));
+			response = new Response(new ResponseBody("OK"));
 		}
 
 		return response.toJSON();
@@ -58,7 +59,7 @@ public class PedagogicalSoftwareService {
 	 */
 	public String add(String psd) {
 
-		ResponseDTO response = new ResponseDTO(null);
+		Response response = new Response(null);
 
 		try {
 
@@ -79,7 +80,7 @@ public class PedagogicalSoftwareService {
 			PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 
 			if (objSaved != null) {
-				response = new ResponseDTO(new ResponseBodyDTO("OK"));
+				response = new Response(new ResponseBody("OK"));
 			}
 
 		} catch (JsonProcessingException e) {
@@ -95,16 +96,19 @@ public class PedagogicalSoftwareService {
 	 * @return
 	 */
 	public String findFinishedExercisesByUserId(String userId){
-		ResponseDTO response = new ResponseDTO(null);
+		Response response;
 
 		//1- Gets the finished exercises of the user ID
-		List <PedagogicalSoftwareData> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
+		List<Exercise> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
 																		.stream()
 																		.filter(fe -> fe.getStudent().getUserId().equals(userId) && fe.getSolutionDistance().getTotalDistance() > 0)
+																		.map(e ->{
+																			return new Exercise(e.getId(), e.getExerciseId(), e.getScreenShot(), e.getValidSolution());
+																		})
 																		.collect(Collectors.toList());
 
 		//2- Sets the result in a response
-		response = new ResponseDTO(new ResponseBodyDTO(listFinishedExercises));
+		response = new Response(new ResponseBody(listFinishedExercises));
 
 		return response.toJSON();
 	}
