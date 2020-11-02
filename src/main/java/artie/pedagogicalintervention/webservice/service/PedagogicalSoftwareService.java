@@ -103,7 +103,7 @@ public class PedagogicalSoftwareService {
 																		.stream()
 																		.filter(fe -> fe.getStudent().getUserId().equals(userId) && fe.getSolutionDistance().getTotalDistance() > 0)
 																		.map(e ->{
-																			return new Exercise(e.getId(), e.getExerciseId(), e.getScreenShot(), e.getValidSolution());
+																			return new Exercise(e.getId(), e.getExerciseId(), e.getExercise().getName(), e.getExercise().getDescription(), e.getScreenShot(), e.getValidSolution());
 																		})
 																		.collect(Collectors.toList());
 
