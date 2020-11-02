@@ -1,5 +1,6 @@
 package artie.pedagogicalintervention.webservice.controller;
 
+import artie.common.web.dto.Exercise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareSolutionService;
+
+import java.util.List;
 
 
 @Controller
@@ -52,8 +55,9 @@ public class PedagogicalSoftwareRestController {
 	@GetMapping(path = "/finishedExercises",
 				produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.FOUND)
-	public String getFinishedExercisesByUserId(@RequestParam String userId){
-		return this.pedagogicalSoftwareService.findFinishedExercisesByUserId(userId);
+	public Exercise[] getFinishedExercisesByUserId(@RequestParam String userId){
+		List<Exercise> listExercises = this.pedagogicalSoftwareService.findFinishedExercisesByUserId(userId);
+		return listExercises.toArray(new Exercise[listExercises.size()]);
 	}
 
 	/**

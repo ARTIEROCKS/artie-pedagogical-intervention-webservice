@@ -95,8 +95,7 @@ public class PedagogicalSoftwareService {
 	 * @param userId
 	 * @return
 	 */
-	public String findFinishedExercisesByUserId(String userId){
-		Response response;
+	public List<Exercise> findFinishedExercisesByUserId(String userId){
 
 		//1- Gets the finished exercises of the user ID
 		List<Exercise> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
@@ -107,10 +106,7 @@ public class PedagogicalSoftwareService {
 																		})
 																		.collect(Collectors.toList());
 
-		//2- Sets the result in a response
-		response = new Response(new ResponseBody(listFinishedExercises));
-
-		return response.toJSON();
+		return listFinishedExercises;
 	}
 
 	/**
