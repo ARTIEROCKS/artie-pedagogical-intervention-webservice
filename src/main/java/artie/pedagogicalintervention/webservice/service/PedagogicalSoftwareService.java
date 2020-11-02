@@ -114,6 +114,23 @@ public class PedagogicalSoftwareService {
 	}
 
 	/**
+	 * Function to set if a finished exercise has been validated or not
+	 * @param pedagogicalDataId
+	 * @param validated
+	 */
+	public void setValidatedFinishedExerciseByPedagogicalDataId(String pedagogicalDataId, int validated){
+
+		//1- Searches the pedagogical software data by its ID
+		PedagogicalSoftwareData pedagogicalSoftwareData = this.pedagogicalSoftwareDataRepository.findById(pedagogicalDataId).orElse(null);
+
+		//2- Sets the validated value
+		if(pedagogicalSoftwareData != null){
+			pedagogicalSoftwareData.setValidSolution(validated);
+			this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
+		}
+	}
+
+	/**
 	 * Distance calculation between an element and its aim
 	 * 
 	 * @param origin

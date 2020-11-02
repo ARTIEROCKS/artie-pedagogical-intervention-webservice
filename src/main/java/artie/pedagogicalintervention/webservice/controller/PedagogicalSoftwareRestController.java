@@ -55,5 +55,17 @@ public class PedagogicalSoftwareRestController {
 	public String getFinishedExercisesByUserId(@RequestParam String userId){
 		return this.pedagogicalSoftwareService.findFinishedExercisesByUserId(userId);
 	}
+
+	/**
+	 * Function to set the validated value in a finished exercise
+	 * @param pedagogicalDataId
+	 * @param validated
+	 */
+	@GetMapping(path = "/finishedExercises/validate",
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseStatus(HttpStatus.FOUND)
+	public void setValidatedFinishedExerciseByPedagogicalDataId(@RequestParam String pedagogicalDataId, @RequestParam int validated){
+		this.pedagogicalSoftwareService.setValidatedFinishedExerciseByPedagogicalDataId(pedagogicalDataId, validated);
+	}
 	
 }
