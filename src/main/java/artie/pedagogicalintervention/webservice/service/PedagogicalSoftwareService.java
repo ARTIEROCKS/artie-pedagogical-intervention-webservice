@@ -101,7 +101,7 @@ public class PedagogicalSoftwareService {
 		//1- Gets the finished exercises of the user ID
 		List<Exercise> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
 																		.stream()
-																		.filter(fe -> fe.getStudent().getUserId().equals(userId) && fe.getSolutionDistance().getTotalDistance() == 0)
+																		.filter(fe -> fe.getStudent().getUserId().equals(userId) && fe.getSolutionDistance().getTotalDistance() > 0)
 																		.map(e ->{
 																			return new Exercise(e.getId(), e.getExercise().getName(), e.getExerciseId(), e.getExercise().getDescription(), e.getScreenShot(), e.getValidSolution());
 																		})
