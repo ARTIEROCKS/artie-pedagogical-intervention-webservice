@@ -15,6 +15,7 @@ public class PedagogicalSoftwareSolution {
 	@Id
 	private String id;
 	private String userId;
+	private String pedagogicalSoftwareDataId;
 	private String exerciseId;
 	private Exercise exercise;
 	private String screenShot;
@@ -32,6 +33,8 @@ public class PedagogicalSoftwareSolution {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	public String getPedagogicalSoftwareDataId(){return this.pedagogicalSoftwareDataId;}
+	public void setPedagogicalSoftwareDataId(String pedagogicalSoftwareDataId){this.pedagogicalSoftwareDataId=pedagogicalSoftwareDataId;}
 	public String getExerciseId() {
 		return this.exerciseId;
 	}
@@ -83,7 +86,29 @@ public class PedagogicalSoftwareSolution {
 			this.exerciseId = null;
 		}
 	}
-	
+
+	/**
+	 * Parameterized constructor
+	 * @param userId
+	 * @param pedagogicalSoftwareDataId
+	 * @param exercise
+	 * @param screenShot
+	 * @param elements
+	 */
+	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, List<PedagogicalSoftwareElement> elements){
+		this.userId=userId;
+		this.pedagogicalSoftwareDataId = pedagogicalSoftwareDataId;
+		this.exercise = exercise;
+		this.screenShot = screenShot;
+		this.elements = elements;
+
+		if(exercise != null) {
+			this.exerciseId = exercise.getId();
+		}else{
+			this.exerciseId = null;
+		}
+	}
+
 	public void addElement(PedagogicalSoftwareElement element) {
 		this.elements.add(element);
 	}

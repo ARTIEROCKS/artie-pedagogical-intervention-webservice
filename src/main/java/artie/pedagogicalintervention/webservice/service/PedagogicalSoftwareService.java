@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import artie.common.web.dto.Exercise;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
+import artie.common.web.enums.ValidSolutionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -121,6 +122,16 @@ public class PedagogicalSoftwareService {
 
 		//2- Sets the validated value
 		if(pedagogicalSoftwareData != null){
+
+			//2.1- If there is a validation
+			if(validated == ValidSolutionEnum.VALIDATED.getValue()){
+				//We register the new solution
+				this.pedagogicalSoftwareSolutionService.addFromPedagogicalSoftwareDataId(pedagogicalDataId);
+			}else{
+				//we delete the solution
+				this.pedagogicalSoftwareSolutionService.deleteFromPedagogicalSoftwareDataId(pedagogicalDataId);
+			}
+
 			pedagogicalSoftwareData.setValidSolution(validated);
 			this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 		}
