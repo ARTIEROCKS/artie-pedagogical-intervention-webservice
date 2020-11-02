@@ -64,8 +64,8 @@ public class PedagogicalSoftwareRestController {
 	@GetMapping(path = "/finishedExercises/validate",
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.FOUND)
-	public void setValidatedFinishedExerciseByPedagogicalDataId(@RequestParam String pedagogicalDataId, @RequestParam int validated){
-		this.pedagogicalSoftwareService.setValidatedFinishedExerciseByPedagogicalDataId(pedagogicalDataId, validated);
+	public void validateFinishedExerciseByPedagogicalDataId(@RequestParam String pedagogicalDataId, @RequestParam int validated){
+		this.pedagogicalSoftwareService.validateFinishedExerciseByPedagogicalDataId(pedagogicalDataId, validated);
 	}
 	
 }

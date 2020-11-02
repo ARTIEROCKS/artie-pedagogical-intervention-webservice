@@ -118,7 +118,7 @@ public class PedagogicalSoftwareService {
 	 * @param pedagogicalDataId
 	 * @param validated
 	 */
-	public void setValidatedFinishedExerciseByPedagogicalDataId(String pedagogicalDataId, int validated){
+	public void validateFinishedExerciseByPedagogicalDataId(String pedagogicalDataId, int validated){
 
 		//1- Searches the pedagogical software data by its ID
 		PedagogicalSoftwareData pedagogicalSoftwareData = this.pedagogicalSoftwareDataRepository.findById(pedagogicalDataId).orElse(null);
