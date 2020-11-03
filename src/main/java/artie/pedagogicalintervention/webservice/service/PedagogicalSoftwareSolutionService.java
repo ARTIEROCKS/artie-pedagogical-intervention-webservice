@@ -109,15 +109,13 @@ public class PedagogicalSoftwareSolutionService {
 		this.pedagogicalSoftwareSolutionRepository.deleteAll(pedagogicalSoftwareSolutions);
 	}
 
-
 	/**
-	 * Function to find the solution of an exercise
-	 * @param exercise
+	 * Function to return all the solutions of an user Id
+	 * @param userId
 	 * @return
 	 */
-	public PedagogicalSoftwareSolution findByExercise(String exercise) {
-		List<PedagogicalSoftwareSolution> solutions = this.pedagogicalSoftwareSolutionRepository.findByExercise(exercise);
-		return (solutions.size() > 0 ? solutions.get(0) : null);
+	public List<PedagogicalSoftwareSolution> findByUserId(String userId){
+		return this.pedagogicalSoftwareSolutionRepository.findByUserId(userId);
 	}
 	
 	/**

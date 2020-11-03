@@ -1,6 +1,8 @@
 package artie.pedagogicalintervention.webservice.controller;
 
 import artie.common.web.dto.Exercise;
+import artie.common.web.dto.Solution;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +13,7 @@ import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareServi
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareSolutionService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -70,6 +73,20 @@ public class PedagogicalSoftwareRestController {
 	@ResponseStatus(HttpStatus.FOUND)
 	public void validateFinishedExerciseByPedagogicalDataId(@RequestParam String pedagogicalDataId, @RequestParam int validated){
 		this.pedagogicalSoftwareService.validateFinishedExerciseByPedagogicalDataId(pedagogicalDataId, validated);
+	}
+
+	/**
+	 * Function to get the solutions of an user ID
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping(path = "/solutions",
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseStatus(HttpStatus.FOUND)
+	public Solution[] getSolutionsByUserId(@RequestParam String userId){
+		List<PedagogicalSoftwareSolution> tmpListSolutions = this.pedagogicalSoftwareSolutionService.findByUserId(userId);
+		List<Solution> listSolutions = tmpListSolutions.stream().map(s -> new Solution(s.getId(), s.getExerciseId(), s.getExercise().getName(), s.getExercise().getDescription(), s.getScreenShot())).collect(Collectors.toList());
+		return listSolutions.toArray(new Solution[listSolutions.size()]);
 	}
 	
 }

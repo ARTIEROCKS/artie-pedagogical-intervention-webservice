@@ -8,7 +8,7 @@ import artie.common.web.dto.Exercise;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 
 public interface PedagogicalSoftwareSolutionRepository extends MongoRepository<PedagogicalSoftwareSolution, String>{
-	List<PedagogicalSoftwareSolution> findByExercise(String exercise);
+	List<PedagogicalSoftwareSolution> findByUserId(String userId);
 	List<PedagogicalSoftwareSolution> findByExerciseIdAndUserId(String exerciseId, String userId);
 	List<PedagogicalSoftwareSolution> findByPedagogicalSoftwareDataId(String pedagogicalSoftwareDataId);
 }
