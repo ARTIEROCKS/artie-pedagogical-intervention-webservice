@@ -88,5 +88,17 @@ public class PedagogicalSoftwareRestController {
 		List<Solution> listSolutions = tmpListSolutions.stream().map(s -> new Solution(s.getId(), s.getExerciseId(), s.getExercise().getName(), s.getExercise().getDescription(), s.getScreenShot())).collect(Collectors.toList());
 		return listSolutions.toArray(new Solution[listSolutions.size()]);
 	}
+
+	/**
+	 * Function to get the solutions of an user ID
+	 * @param solutionId
+	 * @return
+	 */
+	@GetMapping(path = "/solutions/delete",
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseStatus(HttpStatus.FOUND)
+	public void deleteSolutionById(@RequestParam String solutionId){
+		this.pedagogicalSoftwareSolutionService.deleteSolutionById(solutionId);
+	}
 	
 }

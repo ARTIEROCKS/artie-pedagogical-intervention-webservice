@@ -2,6 +2,7 @@ package artie.pedagogicalintervention.webservice.service;
 
 import java.util.List;
 
+import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +111,31 @@ public class PedagogicalSoftwareSolutionService {
 	}
 
 	/**
+	 * Function to delete a solution and update its related software data in case that it exists
+	 * @param solutionId
+	 */
+	public void deleteSolutionById(String solutionId){
+
+		//1- Finds the solution in the database to know if the solution comes from the validation of an exercise
+		PedagogicalSoftwareSolution solution = this.pedagogicalSoftwareSolutionRepository.findById(solutionId).orElse(null);
+
+		if(solution != null){
+			//2- Checks if the solution comes from the validation of an exercise and we invalidate it
+			if(solution.getPedagogicalSoftwareDataId() != null && solution.getPedagogicalSoftwareDataId() != ""){
+
+				PedagogicalSoftwareData pedagogicalSoftwareData = this.pedagogicalSoftwareDataRepository.findById(solution.getPedagogicalSoftwareDataId()).orElse(null);
+				if(pedagogicalSoftwareData != null){
+					pedagogicalSoftwareData.setValidSolution(ValidSolutionEnum.REJECTED.getValue());
+					this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
+				}
+			}
+
+			//3- Deletes the solution from the database
+			this.pedagogicalSoftwareSolutionRepository.delete(solution);
+		}
+	}
+
+	/**
 	 * Function to return all the solutions of an user Id
 	 * @param userId
 	 * @return
@@ -128,5 +154,6 @@ public class PedagogicalSoftwareSolutionService {
 		List<PedagogicalSoftwareSolution> solutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseIdAndUserId(exercise.getId(), userId);
 		return (solutions.size() > 0 ? solutions.get(0) : null);
 	}
+
 
 }
