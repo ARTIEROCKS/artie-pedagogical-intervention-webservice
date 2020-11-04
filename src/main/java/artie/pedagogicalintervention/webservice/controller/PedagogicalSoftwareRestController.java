@@ -90,13 +90,13 @@ public class PedagogicalSoftwareRestController {
 	}
 
 	/**
-	 * Function to get the solutions of an user ID
+	 * Function to delete a solution
 	 * @param solutionId
 	 * @return
 	 */
 	@GetMapping(path = "/solutions/delete",
 			produces = {MediaType.APPLICATION_JSON_VALUE})
-	@ResponseStatus(HttpStatus.FOUND)
+	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void deleteSolutionById(@RequestParam String solutionId){
 		this.pedagogicalSoftwareSolutionService.deleteSolutionById(solutionId);
 	}
