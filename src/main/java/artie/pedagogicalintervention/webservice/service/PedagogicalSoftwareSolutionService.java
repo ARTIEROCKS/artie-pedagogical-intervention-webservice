@@ -150,9 +150,8 @@ public class PedagogicalSoftwareSolutionService {
 	 * @param userId
 	 * @return
 	 */
-	public PedagogicalSoftwareSolution findByExerciseAndUserId(Exercise exercise, String userId) {
-		List<PedagogicalSoftwareSolution> solutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseIdAndUserId(exercise.getId(), userId);
-		return (solutions.size() > 0 ? solutions.get(0) : null);
+	public List<PedagogicalSoftwareSolution> findByExerciseAndUserId(Exercise exercise, String userId) {
+		return this.pedagogicalSoftwareSolutionRepository.findByExerciseIdAndUserId(exercise.getId(), userId);
 	}
 
 

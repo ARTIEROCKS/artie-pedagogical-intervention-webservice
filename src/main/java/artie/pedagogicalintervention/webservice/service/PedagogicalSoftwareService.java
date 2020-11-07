@@ -69,8 +69,7 @@ public class PedagogicalSoftwareService {
 					PedagogicalSoftwareData.class);
 
 			// 2- Looks for the solution to the exercise
-			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService
-					.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
+			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
 
 			// 3- If there at least 1 solution, we get the distances
 			if (pedagogicalSoftwareSolution != null) {
@@ -135,6 +134,29 @@ public class PedagogicalSoftwareService {
 			pedagogicalSoftwareData.setValidSolution(validated);
 			this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 		}
+	}
+
+	/**
+	 * Nearest distance calculation between an element and a list of solutions
+	 * @param origin
+	 * @param aims
+	 * @return
+	 */
+	public PedagogicalSoftwareDistance distanceCalculation(PedagogicalSoftwareData origin, List<PedagogicalSoftwareSolution> aims){
+
+		PedagogicalSoftwareDistance nearestDistance = null;
+
+		//1- Gets the distance between all the solutions
+		for(PedagogicalSoftwareSolution aim : aims){
+			PedagogicalSoftwareDistance distance = this.distanceCalculation(origin, aim);
+
+			//2- Sets the nearest distance
+			if(nearestDistance != null && distance.getTotalDistance() < nearestDistance.getTotalDistance()){
+				nearestDistance = distance;
+			}
+		}
+
+		return nearestDistance;
 	}
 
 	/**
