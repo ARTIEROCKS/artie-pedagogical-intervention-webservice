@@ -77,7 +77,7 @@ public class PedagogicalSoftwareService {
 				pedagogicalSoftwareData.setSolutionDistance(distance);
 			}
 
-			PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
+ 			PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 
 			if (objSaved != null) {
 				response = new Response(new ResponseBody("OK"));
@@ -151,7 +151,7 @@ public class PedagogicalSoftwareService {
 			PedagogicalSoftwareDistance distance = this.distanceCalculation(origin, aim);
 
 			//2- Sets the nearest distance
-			if(nearestDistance != null && distance.getTotalDistance() < nearestDistance.getTotalDistance()){
+			if(nearestDistance == null || distance.getTotalDistance() < nearestDistance.getTotalDistance()){
 				nearestDistance = distance;
 			}
 		}
@@ -457,7 +457,7 @@ public class PedagogicalSoftwareService {
 								double difference = Math.abs(originField.getDoubleValue() - aimField.getDoubleValue());
 								double ratio = difference / aimField.getDoubleValue();
 								accumulatedOriginDifference += ratio;
-							}else if(originField.getValue() != aimField.getValue()) {
+							}else if(!originField.getValue().equals(aimField.getValue())) {
 								accumulatedOriginDifference += 1;
 							}
 						}
