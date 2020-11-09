@@ -100,7 +100,12 @@ public class PedagogicalSoftwareService {
 		//1- Gets the finished exercises of the user ID
 		List<Exercise> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
 																		.stream()
-																		.filter(fe -> fe.getStudent().getUserId().equals(userId) && fe.getSolutionDistance().getTotalDistance() > 0)
+																		.filter(fe -> (fe.getStudent().getUserId().equals(userId) &&
+																							(fe.getSolutionDistance().getTotalDistance() > 0 ||
+																									fe.getSolutionDistance().getTotalDistance() == -1 ||
+																									fe.getValidSolution() == ValidSolutionEnum.REJECTED.getValue() ||
+																									fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
+																		)
 																		.map(e ->{
 																			return new Exercise(e.getId(), e.getExercise().getName(), e.getExerciseId(), e.getExercise().getDescription(), e.getScreenShot(), e.getValidSolution());
 																		})
@@ -124,11 +129,21 @@ public class PedagogicalSoftwareService {
 
 			//2.1- If there is a validation
 			if(validated == ValidSolutionEnum.VALIDATED.getValue()){
+
+				//We set the distance of the pedagogical software data to 0
+				pedagogicalSoftwareData.setSolutionDistance(new PedagogicalSoftwareDistance(0,0,0,0,0));
+
 				//We register the new solution
 				this.pedagogicalSoftwareSolutionService.addFromPedagogicalSoftwareDataId(pedagogicalDataId);
 			}else{
+
 				//we delete the solution
 				this.pedagogicalSoftwareSolutionService.deleteFromPedagogicalSoftwareDataId(pedagogicalDataId);
+
+				//We calculate the distance of the pedagogical software data
+				List<PedagogicalSoftwareSolution> listSolutions = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
+				PedagogicalSoftwareDistance pedagogicalSoftwareDistance = this.distanceCalculation(pedagogicalSoftwareData, listSolutions);
+				pedagogicalSoftwareData.setSolutionDistance(pedagogicalSoftwareDistance);
 			}
 
 			pedagogicalSoftwareData.setValidSolution(validated);
