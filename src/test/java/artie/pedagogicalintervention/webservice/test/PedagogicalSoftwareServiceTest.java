@@ -569,7 +569,7 @@ class PedagogicalSoftwareServiceTest {
 		mapElementSimilarities.put("element1", new ArrayList<>(Arrays.asList(origin1)));
 		aimElements = new ArrayList<>(Arrays.asList(aim1));
 		
-		double distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0);
+		double distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 		
 		assertEquals(0, distance);
 		
@@ -605,7 +605,7 @@ class PedagogicalSoftwareServiceTest {
 		
 		aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1));
 		
-		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0);
+		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 		
 		assertEquals(22, distance); //Input difference from similar families: 1 + Input differences from different families: 20 + 1 (string)
 		
@@ -640,7 +640,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
 		mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
 		
-		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0);
+		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 		
 		assertEquals(16.25, distance); //Input difference from similar families: 0.25 + Input differences from different families: 15 + 1 (string)
 		
@@ -675,7 +675,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
 		mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
 		
-		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0);
+		distance = pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 		
 		assertEquals(92.25, distance); //Input difference from similar families: 1.25 + Input differences from different families: 90 + 1 (string)
 		

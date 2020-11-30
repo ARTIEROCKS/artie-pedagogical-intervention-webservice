@@ -231,7 +231,7 @@ public class PedagogicalSoftwareService {
 		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, diffPosition);
 
 		// 5- Input element similarities from the element similarities
-		diffInput = this.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, diffInput);
+		diffInput = this.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, diffInput, nextSteps);
 
 		// 6- Calculates the total distance in base of the coefficients
 		totalDistance = (diffFamily / DistanceEnum.FAMILY.getValue()) + (diffElements / DistanceEnum.ELEMENT.getValue())
@@ -490,7 +490,10 @@ public class PedagogicalSoftwareService {
 	 * @param diffInputValues
 	 * @return
 	 */
-	public double inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, List<PedagogicalSoftwareElementDTO> aimElements, double diffInputValues) {
+	public double inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities,
+										   Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences,
+										   List<PedagogicalSoftwareElementDTO> aimElements, double diffInputValues,
+										   NextStepHint nextSteps) {
 		
 		//Adds to the distance calculation result, the different inputs from the difference of the elements
 		for(List<PedagogicalSoftwareElementDTO> elements : mapFamilyDifferences.values()) {
@@ -542,8 +545,23 @@ public class PedagogicalSoftwareService {
 								double difference = Math.abs(originField.getDoubleValue() - aimField.getDoubleValue());
 								double ratio = difference / aimField.getDoubleValue();
 								accumulatedOriginDifference += ratio;
+
+								//5.3.1.1.1-Adding the next step hints for double values
+								if(nextSteps != null){
+									//TODO: Add the previous and the next elements
+									artie.common.web.dto.PedagogicalSoftwareElement tmpElement = new artie.common.web.dto.PedagogicalSoftwareElement(elementOriginElement.getElementName(), null,null);
+									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(originField.getName(), tmpElement, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));
+								}
+
 							}else if(!originField.getValue().equals(aimField.getValue())) {
 								accumulatedOriginDifference += 1;
+
+								//5.3.1.1.2-Adding the next step hints for string values
+								if(nextSteps != null){
+									//TODO: Add the previous and the next elements
+									artie.common.web.dto.PedagogicalSoftwareElement tmpElement = new artie.common.web.dto.PedagogicalSoftwareElement(elementOriginElement.getElementName(), null,null);
+									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(originField.getName(), tmpElement, originField.getValue(), aimField.getValue()));
+								}
 							}
 						}
 					}
