@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import artie.common.web.dto.Exercise;
+import artie.common.web.dto.NextStepHint;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
 import artie.common.web.enums.ValidSolutionEnum;
@@ -131,7 +132,7 @@ public class PedagogicalSoftwareService {
 			if(validated == ValidSolutionEnum.VALIDATED.getValue()){
 
 				//We set the distance of the pedagogical software data to 0
-				pedagogicalSoftwareData.setSolutionDistance(new PedagogicalSoftwareDistance(0,0,0,0,0));
+				pedagogicalSoftwareData.setSolutionDistance(new PedagogicalSoftwareDistance(0,0,0,0,0, null));
 
 				//We register the new solution
 				this.pedagogicalSoftwareSolutionService.addFromPedagogicalSoftwareDataId(pedagogicalDataId);
@@ -186,6 +187,9 @@ public class PedagogicalSoftwareService {
 		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
 		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
 
+		//Preparing the next steps in base if the user has requested help or not
+		NextStepHint nextSteps = (origin.getRequestHelp() ? new NextStepHint() : null);
+
 		// Family variables
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
 		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences = new HashMap<>();
@@ -214,10 +218,10 @@ public class PedagogicalSoftwareService {
 		}
 
 		// 2- Family differences and similarities
-		diffFamily = this.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, diffFamily);
+		diffFamily = this.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, diffFamily, nextSteps);
 
 		// 3- Element similarities from the family similarities
-		diffElements = this.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, diffElements);
+		diffElements = this.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, diffElements, nextSteps);
 
 		// We can now delete the family similarities map
 		mapFamilySimilarities.clear();
@@ -233,7 +237,7 @@ public class PedagogicalSoftwareService {
 		totalDistance = (diffFamily / DistanceEnum.FAMILY.getValue()) + (diffElements / DistanceEnum.ELEMENT.getValue())
 				+ (diffPosition / DistanceEnum.POSITION.getValue()) + (diffInput / DistanceEnum.INPUT.getValue());
 
-		return new PedagogicalSoftwareDistance(diffFamily, diffElements, diffPosition, diffInput, totalDistance);
+		return new PedagogicalSoftwareDistance(diffFamily, diffElements, diffPosition, diffInput, totalDistance, nextSteps);
 	}
 
 	/**
@@ -244,12 +248,14 @@ public class PedagogicalSoftwareService {
 	 * @param mapFamilySimilarities
 	 * @param mapFamilyDifferences
 	 * @param diffFamily
+	 * @param nextSteps
 	 * @return
 	 */
 	public double familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements,
 			List<PedagogicalSoftwareElementDTO> originElements,
 			Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities,
-			Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, double diffFamily) {
+			Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, double diffFamily,
+			NextStepHint nextSteps) {
 
 		// Checks from the aim side
 		for (PedagogicalSoftwareElementDTO aimElement : aimElements) {
@@ -263,13 +269,25 @@ public class PedagogicalSoftwareService {
 						.filter(c -> c.getElementFamily().equals(aimElement.getElementFamily())).count();
 				// 2.1.2- Adds to the family result
 				if (countOriginFamilies == 0) {
-					// If there are no similar families, we count all the elements in the origin +
+					// If there are no similar families, we count all the elements in the aim +
 					// the element in the aim that has not been included in the origin
 					diffFamily += 1;
 					List<PedagogicalSoftwareElementDTO> tmpFamilyDifferences = aimElements.stream()
 							.filter(f -> f.getElementFamily().equals(aimElement.getElementFamily()))
 							.collect(Collectors.toList());
 					mapFamilyDifferences.put(aimElement.getElementFamily(), tmpFamilyDifferences);
+
+					//Checks if the help has been requested and then insert the next steps
+					//TODO: add the previous element and the next element to the hint
+					if(nextSteps != null){
+						//We insert all the elements to add in the next step
+						List<artie.common.web.dto.PedagogicalSoftwareElement> tmpDTOElementList = tmpFamilyDifferences.stream()
+																									.map(fd -> {
+																										return new artie.common.web.dto.PedagogicalSoftwareElement(fd.getElementName(), null, null);
+																									}).collect(Collectors.toList());
+						tmpDTOElementList.add(new artie.common.web.dto.PedagogicalSoftwareElement(aimElement.getElementName(), null, null));
+						nextSteps.putAddElements(tmpDTOElementList);
+					}
 
 				} else {
 					// If there are similarities, we add these similarities to the family map
@@ -300,6 +318,18 @@ public class PedagogicalSoftwareService {
 							.filter(f -> f.getElementFamily().equals(originElement.getElementFamily()))
 							.collect(Collectors.toList());
 					mapFamilyDifferences.put(originElement.getElementFamily(), tmpFamilyDifferences);
+
+					//Checks if the help has been requested and then insert the next steps
+					//TODO: add the previous element and the next element to the hint
+					if(nextSteps != null){
+						//We insert all the elements to delete in the next step
+						List<artie.common.web.dto.PedagogicalSoftwareElement> tmpDTOElementList = tmpFamilyDifferences.stream()
+																									.map(fd -> {
+																										return new artie.common.web.dto.PedagogicalSoftwareElement(fd.getElementName(), null, null);
+																									}).collect(Collectors.toList());
+						tmpDTOElementList.add(new artie.common.web.dto.PedagogicalSoftwareElement(originElement.getElementName(), null, null));
+						nextSteps.putDeleteElements(tmpDTOElementList);
+					}
 				}
 			}
 		}
@@ -315,12 +345,14 @@ public class PedagogicalSoftwareService {
 	 * @param mapFamilyDifferences
 	 * @param aimElements
 	 * @param diffElements
+	 * @param nextSteps
 	 * @return
 	 */
 	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities,
-			Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences,
-			Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities,
-			List<PedagogicalSoftwareElementDTO> aimElements, double diffElements) {
+											 Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences,
+											 Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities,
+											 List<PedagogicalSoftwareElementDTO> aimElements, double diffElements,
+											 NextStepHint nextSteps) {
 
 		List<String> elementsPassed = new ArrayList<>();
 
@@ -376,6 +408,44 @@ public class PedagogicalSoftwareService {
 
 						nearestPosition = -1;
 						nearest = null;
+
+						//If we want to set the next steps
+						if(nextSteps != null) {
+							// 3.3.3.1- Checks if we have to add the aim element to the next hints or delete an origin element
+							List<PedagogicalSoftwareElementDTO> listTmpOriginElements = tmpOriginElements.stream()
+									.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
+									.collect(Collectors.toList());
+
+							//3.3.3.2- We have to add the element to the next hint
+							if (listTmpOriginElements.size() == 0) {
+								//TODO: Set the next and the previous element
+								nextSteps.putAddElements(new artie.common.web.dto.PedagogicalSoftwareElement(tmpAimElement.getElementName(), null, null));
+							}else{
+								//3.3.3.3- We check if the number of elements with the same name are equals in the origin and the aim
+								List<PedagogicalSoftwareElementDTO> listTmpAimElements = tmpAimElements.stream()
+																										.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
+																										.collect(Collectors.toList());
+								int elementDifference = Math.abs(listTmpOriginElements.size() - listTmpAimElements.size());
+
+								if(listTmpOriginElements.size() > listTmpAimElements.size()){
+									//3.3.3.4- Elements to be deleted (the farther)
+									nextSteps.putDeleteElements(
+											listTmpOriginElements.subList(0, elementDifference).stream().map( toe ->{
+												//TODO: Set the next and previous element
+												return new artie.common.web.dto.PedagogicalSoftwareElement(toe.getElementName(), null, null);
+											}).collect(Collectors.toList())
+									);
+								}else if(listTmpOriginElements.size() < listTmpAimElements.size()){
+									//3.3.3.5- Elements to be added
+									nextSteps.putAddElements(
+											listTmpAimElements.subList(0, elementDifference).stream().map( tae ->{
+												//TODO: Set the next and previous element
+												return new artie.common.web.dto.PedagogicalSoftwareElement(tae.getElementName(), null, null);
+											}).collect(Collectors.toList())
+									);
+								}
+							}
+						}
 
 						for (PedagogicalSoftwareElementDTO tmpOriginElement : tmpOriginElements) {
 

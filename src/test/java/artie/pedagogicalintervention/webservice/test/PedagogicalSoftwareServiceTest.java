@@ -260,7 +260,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilySimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		double distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
+		double distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, null);
 		
 		assertEquals(0, distance);
 		assertEquals(3, mapFamilySimilarities.size());
@@ -279,7 +279,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilySimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, null);
 		
 		assertEquals(1, distance);
 		assertEquals(2, mapFamilySimilarities.size());
@@ -298,7 +298,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilySimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, null);
 		
 		assertEquals(1, distance);
 		assertEquals(2, mapFamilySimilarities.size());
@@ -317,7 +317,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilySimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, null);
 		
 		assertEquals(2, distance);
 		assertEquals(2, mapFamilySimilarities.size());
@@ -338,7 +338,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilySimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0);
+		distance = pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, null);
 		
 		assertEquals(2, distance);
 		assertEquals(2, mapFamilySimilarities.size());
@@ -381,7 +381,7 @@ class PedagogicalSoftwareServiceTest {
 		mapElementSimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		double distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0);
+		double distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 		
 		assertEquals(0, distance);
 		assertEquals(3, mapElementSimilarities.size());
@@ -401,7 +401,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilyDifferences = new HashMap<>();
 		
 		mapFamilyDifferences.put("family4", new ArrayList<>(Arrays.asList(origin4)));
-		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0);
+		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 		
 		assertEquals(2, distance); //Element distance = 1 + Family difference distance = 1
 		assertEquals(2, mapElementSimilarities.size());
@@ -420,7 +420,7 @@ class PedagogicalSoftwareServiceTest {
 		
 		mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3)));
 		mapFamilyDifferences.put("family4", new ArrayList<>(Arrays.asList(origin4)));
-		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0);
+		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 		
 		assertEquals(3, distance); //Element distance = 1 + Family difference distance = 2
 		assertEquals(2, mapElementSimilarities.size());
@@ -438,7 +438,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilyDifferences = new HashMap<>();
 		
 		mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3, aim3)));
-		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0);
+		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 		
 		assertEquals(4, distance); //Element distance = 2 + Family difference distance = 2
 		assertEquals(2, mapElementSimilarities.size());
@@ -455,7 +455,7 @@ class PedagogicalSoftwareServiceTest {
 		mapElementSimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0);
+		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 		
 		assertEquals(2, distance);
 		assertEquals(2, mapElementSimilarities.size());
@@ -477,7 +477,7 @@ class PedagogicalSoftwareServiceTest {
 		mapElementSimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0);
+		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 		
 		assertEquals(2, distance);
 		assertEquals(2, mapElementSimilarities.size());
@@ -500,7 +500,7 @@ class PedagogicalSoftwareServiceTest {
 		mapElementSimilarities = new HashMap<>();
 		mapFamilyDifferences = new HashMap<>();
 		
-		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0);
+		distance = pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 		
 		assertEquals(2, distance);
 		assertEquals(2, mapElementSimilarities.size());
