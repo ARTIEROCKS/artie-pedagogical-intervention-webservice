@@ -40,15 +40,34 @@ public class PedagogicalSoftwareService {
 	/**
 	 * Function to add the pedagogical software data in the database
 	 * 
-	 * @param psd
+	 * @param pedagogicalSoftwareData
 	 */
-	public String add(PedagogicalSoftwareData psd) {
+	public String add(PedagogicalSoftwareData pedagogicalSoftwareData) {
 
 		Response response = new Response(null);
-		PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(psd);
 
-		if (objSaved != null) {
+		// 1- Looks for the solution to the exercise
+		List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
+
+		// 2- If there at least 1 solution, we get the distances
+		PedagogicalSoftwareDistance distance = null;
+		if (pedagogicalSoftwareSolution != null) {
+			distance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
+			pedagogicalSoftwareData.setSolutionDistance(distance);
+		}
+
+		PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
+
+		//3- Creating the return object
+		if (objSaved != null && pedagogicalSoftwareData.getRequestHelp() == false) {
+			//3.1- If we haven't requested any kind of help, we just return if the element has been saved or not
 			response = new Response(new ResponseBody("OK"));
+		}else if(pedagogicalSoftwareData.getRequestHelp() && distance != null){
+			//3.2- If we have requested help, we return the next hints
+			response = new Response(new ResponseBody(distance));
+		}else if(pedagogicalSoftwareData.getRequestHelp() && distance == null){
+			//3.3- If the distance is null and we have requested help, there must be an error
+			response = new Response(new ResponseBody("ERROR"));
 		}
 
 		return response.toJSON();
@@ -61,7 +80,7 @@ public class PedagogicalSoftwareService {
 	 */
 	public String add(String psd) {
 
-		Response response = new Response(null);
+		String response = "";
 
 		try {
 
@@ -69,26 +88,13 @@ public class PedagogicalSoftwareService {
 			PedagogicalSoftwareData pedagogicalSoftwareData = new ObjectMapper().readValue(psd,
 					PedagogicalSoftwareData.class);
 
-			// 2- Looks for the solution to the exercise
-			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
-
-			// 3- If there at least 1 solution, we get the distances
-			if (pedagogicalSoftwareSolution != null) {
-				PedagogicalSoftwareDistance distance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
-				pedagogicalSoftwareData.setSolutionDistance(distance);
-			}
-
- 			PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
-
-			if (objSaved != null) {
-				response = new Response(new ResponseBody("OK"));
-			}
+			response = this.add(pedagogicalSoftwareData);
 
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 
-		return response.toJSON();
+		return response;
 	}
 
 	/**
