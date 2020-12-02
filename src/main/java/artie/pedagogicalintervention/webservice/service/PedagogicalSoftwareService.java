@@ -291,7 +291,6 @@ public class PedagogicalSoftwareService {
 																									.map(fd -> {
 																										return new artie.common.web.dto.PedagogicalSoftwareElement(fd.getElementName(), null, null);
 																									}).collect(Collectors.toList());
-						tmpDTOElementList.add(new artie.common.web.dto.PedagogicalSoftwareElement(aimElement.getElementName(), null, null));
 						nextSteps.putAddElements(tmpDTOElementList);
 					}
 
@@ -333,7 +332,6 @@ public class PedagogicalSoftwareService {
 																									.map(fd -> {
 																										return new artie.common.web.dto.PedagogicalSoftwareElement(fd.getElementName(), null, null);
 																									}).collect(Collectors.toList());
-						tmpDTOElementList.add(new artie.common.web.dto.PedagogicalSoftwareElement(originElement.getElementName(), null, null));
 						nextSteps.putDeleteElements(tmpDTOElementList);
 					}
 				}
