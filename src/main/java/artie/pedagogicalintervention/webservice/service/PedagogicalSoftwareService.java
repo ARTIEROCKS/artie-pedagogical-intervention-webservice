@@ -551,7 +551,7 @@ public class PedagogicalSoftwareService {
 								accumulatedOriginDifference += ratio;
 
 								//5.3.1.1.1-Adding the next step hints for double values
-								if(nextSteps != null){
+								if(nextSteps != null && difference != 0){
 									//TODO: Add the previous and the next elements
 									artie.common.web.dto.PedagogicalSoftwareElement tmpElement = new artie.common.web.dto.PedagogicalSoftwareElement(elementOriginElement.getElementName(), null,null);
 									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(originField.getName(), tmpElement, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));

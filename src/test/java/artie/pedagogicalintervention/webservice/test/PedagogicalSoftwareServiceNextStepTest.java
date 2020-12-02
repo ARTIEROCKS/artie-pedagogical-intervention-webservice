@@ -183,6 +183,10 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
+        assertEquals(0, nextSteps.getAddElements().size());
+        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(0, nextSteps.getReplaceInputs().size());
+
 
         //B- String input difference
         mapFamilyDifferences = new HashMap<>();
@@ -218,6 +222,13 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
+        assertEquals(0, nextSteps.getAddElements().size());
+        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getReplaceInputs().size());
+
+        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getElementName());
+        assertEquals("b", nextSteps.getReplaceInputs().get(0).getInputValue());
+        assertEquals("a", nextSteps.getReplaceInputs().get(0).getSolutionValue());
 
 
         //C- Number input difference
@@ -253,6 +264,14 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
+        assertEquals(0, nextSteps.getAddElements().size());
+        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getReplaceInputs().size());
+
+        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getElementName());
+        assertEquals("30.0", nextSteps.getReplaceInputs().get(0).getInputValue());
+        assertEquals("40.0", nextSteps.getReplaceInputs().get(0).getSolutionValue());
+
 
         //D- Number and String inputs difference
         mapFamilyDifferences = new HashMap<>();
@@ -286,6 +305,18 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
+
+        assertEquals(0, nextSteps.getAddElements().size());
+        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(2, nextSteps.getReplaceInputs().size());
+
+        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getElementName());
+        assertEquals("b", nextSteps.getReplaceInputs().get(0).getInputValue());
+        assertEquals("a", nextSteps.getReplaceInputs().get(0).getSolutionValue());
+
+        assertEquals("element1", nextSteps.getReplaceInputs().get(1).getElement().getElementName());
+        assertEquals("30.0", nextSteps.getReplaceInputs().get(1).getInputValue());
+        assertEquals("40.0", nextSteps.getReplaceInputs().get(1).getSolutionValue());
 
     }
 }
