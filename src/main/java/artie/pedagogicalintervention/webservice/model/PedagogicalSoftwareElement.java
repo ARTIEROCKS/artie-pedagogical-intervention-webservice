@@ -7,14 +7,20 @@ import java.util.stream.Collectors;
 public class PedagogicalSoftwareElement implements Cloneable {
 
 	//Attributes
+	private String id;
 	private String elementName;
 	private String elementFamily;
 	private List<PedagogicalSoftwareInput> inputs = new ArrayList<>();
 	private PedagogicalSoftwareElement next;
 	private List<PedagogicalSoftwareElement> nested = new ArrayList<>();
+	private PedagogicalSoftwareElement previous;
+	private PedagogicalSoftwareElement parent;
 	
 	
 	//Properties
+	public String getId(){ return id; }
+	public void setId(String id){ this.id = id; }
+
 	public String getElementName() {
 		return elementName;
 	}
@@ -49,6 +55,12 @@ public class PedagogicalSoftwareElement implements Cloneable {
 	public void setNested(List<PedagogicalSoftwareElement> nested) {
 		this.nested = nested;
 	}
+
+	public PedagogicalSoftwareElement getPrevious(){return this.previous;}
+	public void setPrevious(PedagogicalSoftwareElement previous){this.previous = previous;}
+
+	public PedagogicalSoftwareElement getParent(){return this.parent;}
+	public void setParent(PedagogicalSoftwareElement parent){this.parent = parent;}
 	
 	
 	//Default constructor
@@ -73,13 +85,22 @@ public class PedagogicalSoftwareElement implements Cloneable {
 	
 	/**
 	 * Parameterized constructor
+	 * @param id
 	 * @param elementName
+	 * @param elementFamily
 	 * @param inputs
+	 * @param next
+	 * @param nested
 	 */
-	public PedagogicalSoftwareElement(String elementName, String elementFamily, List<PedagogicalSoftwareInput> inputs, PedagogicalSoftwareElement next, List<PedagogicalSoftwareElement> nested) {
+	public PedagogicalSoftwareElement(String id, String elementName, String elementFamily, List<PedagogicalSoftwareInput> inputs,
+									  PedagogicalSoftwareElement next, List<PedagogicalSoftwareElement> nested,
+									  PedagogicalSoftwareElement previous, PedagogicalSoftwareElement parent) {
+		this.id = id;
 		this.elementName = elementName;
 		this.elementFamily = elementFamily;
 		this.next = next;
+		this.previous = previous;
+		this.parent = parent;
 		
 		if(inputs==null){
 			this.inputs = new ArrayList<>();
@@ -116,7 +137,7 @@ public class PedagogicalSoftwareElement implements Cloneable {
 	    	result = result && (objElement.getInputs().stream().filter(oi -> oi.equals(i)).count() > 0);
 	    }
 	    
-	    //Checks id all the nested elements are equals
+	    //Checks if all the nested elements are equals
 	    result = result && this.nested.size() == objElement.getNested().size();
 	    for(PedagogicalSoftwareElement e : this.nested) {
 	    	result = result && (objElement.getNested().stream().filter(oe -> oe.equals(e)).count() > 0);
@@ -134,11 +155,19 @@ public class PedagogicalSoftwareElement implements Cloneable {
 		List<PedagogicalSoftwareInput> cloneInputs = this.inputs.stream().map(i -> i.clone()).collect(Collectors.toList());
 		List<PedagogicalSoftwareElement> cloneNested = this.nested.stream().map(n -> n.clone()).collect(Collectors.toList());
 		PedagogicalSoftwareElement cloneNext = null;
-		
+		PedagogicalSoftwareElement clonePrevious = null;
+		PedagogicalSoftwareElement cloneParent = null;
+
 		if(this.next != null) {
 			cloneNext = this.next.clone();
 		}
+		if(this.previous != null){
+			clonePrevious = this.previous.clone();
+		}
+		if(this.parent != null){
+			cloneParent = this.parent.clone();
+		}
 		
-		return new PedagogicalSoftwareElement(this.elementName, this.elementFamily, cloneInputs, cloneNext, cloneNested);
+		return new PedagogicalSoftwareElement(this.id, this.elementName, this.elementFamily, cloneInputs, cloneNext, cloneNested, clonePrevious, cloneParent);
 	}
 }
