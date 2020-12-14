@@ -65,23 +65,7 @@ public class PedagogicalSoftwareElement implements Cloneable {
 	
 	//Default constructor
 	public PedagogicalSoftwareElement() {}
-	
-	/**
-	 * Parameterized constructor
-	 * @param elementName
-	 * @param inputs
-	 */
-	public PedagogicalSoftwareElement(String elementName, String elementFamily, List<PedagogicalSoftwareInput> inputs, PedagogicalSoftwareElement next) {
-		this.elementName = elementName;
-		this.elementFamily = elementFamily;
-		this.next = next;
-		
-		if(inputs==null){
-			this.inputs = new ArrayList<>();
-		}else {
-			this.inputs = inputs;
-		}
-	}
+
 	
 	/**
 	 * Parameterized constructor

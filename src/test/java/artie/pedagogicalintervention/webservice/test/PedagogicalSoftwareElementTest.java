@@ -44,11 +44,11 @@ class PedagogicalSoftwareElementTest {
 		
 		inputs1.add(new PedagogicalSoftwareInput("input1", fields1));
 		
-		nested1.add(new PedagogicalSoftwareElement("nested1", "nestedFamily1", inputs1, null));
+		nested1.add(new PedagogicalSoftwareElement("","nested1", "nestedFamily1", inputs1, null, null, null, null));
 		
 		
-		this.element1 = new PedagogicalSoftwareElement("name1", "family1", inputs1, null);
-		this.element11 = new PedagogicalSoftwareElement("name1", "family1", inputs1, null);
+		this.element1 = new PedagogicalSoftwareElement("","name1", "family1", inputs1, null, null, null, null);
+		this.element11 = new PedagogicalSoftwareElement("","name1", "family1", inputs1, null, null, null, null);
 		
 		this.element1.setNested(nested1);
 		this.element11.setNested(nested1);
@@ -64,13 +64,13 @@ class PedagogicalSoftwareElementTest {
 		inputs2.add(new PedagogicalSoftwareInput("input2", fields2));
 		inputs21.add(new PedagogicalSoftwareInput("input2", fields21));
 		
-		nested2.add(new PedagogicalSoftwareElement("nested2", "nestedFamily2", inputs2, null));
-		nested21.add(new PedagogicalSoftwareElement("nested21", "nestedFamily21", inputs21, null));
+		nested2.add(new PedagogicalSoftwareElement("","nested2", "nestedFamily2", inputs2, null, null, null, null));
+		nested21.add(new PedagogicalSoftwareElement("","nested21", "nestedFamily21", inputs21, null, null, null, null));
 		
-		this.element2 = new PedagogicalSoftwareElement("name2", "family2", inputs2, null);
-		this.element21 = new PedagogicalSoftwareElement("name2", "family2", inputs21, null);
-		this.element22 = new PedagogicalSoftwareElement("name2", "family22", inputs21, null);
-		this.element23 = new PedagogicalSoftwareElement("name23", "family22", inputs21, null);
+		this.element2 = new PedagogicalSoftwareElement("","name2", "family2", inputs2, null, null, null, null);
+		this.element21 = new PedagogicalSoftwareElement("","name2", "family2", inputs21, null, null, null, null);
+		this.element22 = new PedagogicalSoftwareElement("","name2", "family22", inputs21, null, null, null, null);
+		this.element23 = new PedagogicalSoftwareElement("","name23", "family22", inputs21, null, null, null, null);
 		
 		this.element2.setNested(nested2);
 		this.element21.setNested(nested21);

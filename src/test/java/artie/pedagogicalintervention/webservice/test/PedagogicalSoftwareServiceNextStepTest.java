@@ -28,15 +28,15 @@ public class PedagogicalSoftwareServiceNextStepTest {
     void familyNextStepsCalculationTest() {
 
         //Setup
-        PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1","family1", null, null));
-        PedagogicalSoftwareElementDTO origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family2", null, null));
-        PedagogicalSoftwareElementDTO origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element3", "family3", null, null));
-        PedagogicalSoftwareElementDTO origin4 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element4", "family4", null, null));
+        PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1","family1", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family2", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element3", "family3", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO origin4 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element4", "family4", null, null, null, null, null));
 
-        PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1","family1", null, null));
-        PedagogicalSoftwareElementDTO aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family2", null, null));
-        PedagogicalSoftwareElementDTO aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element3", "family3", null, null));
-        PedagogicalSoftwareElementDTO aim5 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element5", "family5", null, null));
+        PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1","family1", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family2", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element3", "family3", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO aim5 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element5", "family5", null, null, null, null, null));
 
         List<PedagogicalSoftwareElementDTO> originElements;
         List<PedagogicalSoftwareElementDTO> aimElements;
@@ -129,10 +129,10 @@ public class PedagogicalSoftwareServiceNextStepTest {
     void inputNextStepsCalculationTest() {
 
         //Setup
-        PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null));
-        PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family1", null, null));
-        PedagogicalSoftwareElementDTO diff1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element1", "family2", null, null));
-        PedagogicalSoftwareElementDTO diff2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("element2", "family3", null, null));
+        PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO diff1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family2", null, null, null, null, null));
+        PedagogicalSoftwareElementDTO diff2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family3", null, null, null, null, null));
 
         PedagogicalSoftwareInput originInput1;
         PedagogicalSoftwareField originFieldInput1;

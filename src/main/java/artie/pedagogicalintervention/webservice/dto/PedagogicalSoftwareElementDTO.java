@@ -1,6 +1,7 @@
 package artie.pedagogicalintervention.webservice.dto;
 
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
 
 public class PedagogicalSoftwareElementDTO extends PedagogicalSoftwareElement implements Cloneable{
 	
@@ -25,9 +26,7 @@ public class PedagogicalSoftwareElementDTO extends PedagogicalSoftwareElement im
 	 * @param element
 	 */
 	public PedagogicalSoftwareElementDTO(PedagogicalSoftwareElement element) {
-		
-		super(element.getElementName(), element.getElementFamily(), element.getInputs(), null);
-		
+		super(element.getId(), element.getElementName(), element.getElementFamily(), element.getInputs(), element.getNext(), element.getNested(), element.getPrevious(), element.getParent());
 	}
 	
 	/**
@@ -35,9 +34,9 @@ public class PedagogicalSoftwareElementDTO extends PedagogicalSoftwareElement im
 	 * @param element
 	 * @param position
 	 */
-	public PedagogicalSoftwareElementDTO(PedagogicalSoftwareElement element,int position) {
+	public PedagogicalSoftwareElementDTO(PedagogicalSoftwareElement element, int position) {
 		
-		super(element.getElementName(), element.getElementFamily(), element.getInputs(), null);
+		super(element.getId(), element.getElementName(), element.getElementFamily(), element.getInputs(), element.getNext(), element.getNested(), element.getPrevious(), element.getParent());
 		this.elementPosition = position;
 		
 	}
