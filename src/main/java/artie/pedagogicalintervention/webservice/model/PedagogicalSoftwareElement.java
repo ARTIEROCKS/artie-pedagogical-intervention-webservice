@@ -136,8 +136,8 @@ public class PedagogicalSoftwareElement implements Cloneable {
 	 */
 	public PedagogicalSoftwareElement clone(){
 		
-		List<PedagogicalSoftwareInput> cloneInputs = this.inputs.stream().map(i -> i.clone()).collect(Collectors.toList());
-		List<PedagogicalSoftwareElement> cloneNested = this.nested.stream().map(n -> n.clone()).collect(Collectors.toList());
+		List<PedagogicalSoftwareInput> cloneInputs = (this.inputs != null ? this.inputs.stream().map(i -> i.clone()).collect(Collectors.toList()) : null);
+		List<PedagogicalSoftwareElement> cloneNested = (this.nested != null ? this.nested.stream().map(n -> n.clone()).collect(Collectors.toList()) : null);
 		PedagogicalSoftwareElement cloneNext = null;
 		PedagogicalSoftwareElement clonePrevious = null;
 		PedagogicalSoftwareElement cloneParent = null;

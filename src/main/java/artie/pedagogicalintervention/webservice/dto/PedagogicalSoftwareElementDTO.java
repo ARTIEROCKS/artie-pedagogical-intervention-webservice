@@ -46,7 +46,6 @@ public class PedagogicalSoftwareElementDTO extends PedagogicalSoftwareElement im
 	 * Overrides clone
 	 */
 	public PedagogicalSoftwareElementDTO clone() {
-		
 		PedagogicalSoftwareElement cloneSuper = super.clone();
 		return new PedagogicalSoftwareElementDTO(cloneSuper, this.elementPosition);
 	}
