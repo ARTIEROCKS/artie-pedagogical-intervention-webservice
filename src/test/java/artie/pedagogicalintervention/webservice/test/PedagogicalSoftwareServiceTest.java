@@ -489,7 +489,7 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(1, mapElementSimilarities.get("element2").get(0).getElementPosition());
 
 
-		//F- Repeated element in aim, but not in origin, and with different positions
+		//G- Repeated element in aim, but not in origin, and with different positions
 		PedagogicalSoftwareElementDTO aim1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
 		PedagogicalSoftwareElementDTO aim1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),1);
 		aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),2);

@@ -172,6 +172,95 @@ public class PedagogicalSoftwareServiceNextStepTest {
         assertEquals(0, nextSteps.getDeleteElements().size());
         assertEquals("element2", nextSteps.getAddElements().get(0).getElementName());
 
+
+        //C- More in aim with 2 family difference distance
+        mapFamilySimilarities.clear();
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3)));
+        mapFamilyDifferences.put("family4", new ArrayList<>(Arrays.asList(origin4)));
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(1, nextSteps.getAddElements().size());
+        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals("element3", nextSteps.getAddElements().get(0).getElementName());
+
+
+        //D- Difference in origin and aim with 2 family difference distance
+        mapFamilySimilarities.clear();
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin4)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3, aim3)));
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(1, nextSteps.getAddElements().size());
+        assertEquals(1, nextSteps.getDeleteElements().size());
+        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals("element4", nextSteps.getDeleteElements().get(0).getElementName());
+
+
+        //E- Repeated element in origin but not in aim
+        mapFamilySimilarities.clear();
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin1, origin2)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(1, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getAddElements().size());
+        assertEquals("element1", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
+
+
+        //F- Repeated element in origin, but not in aim, and with different positions
+        PedagogicalSoftwareElementDTO origin1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),2);
+        PedagogicalSoftwareElementDTO origin1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),3);
+
+        mapFamilySimilarities.clear();
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1bis, origin1bis2, origin2)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(1, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getAddElements().size());
+        assertEquals("element1", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
+
+
+        //G- Repeated element in aim, but not in origin, and with different positions
+        PedagogicalSoftwareElementDTO aim1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
+        PedagogicalSoftwareElementDTO aim1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),1);
+        aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),2);
+
+        mapFamilySimilarities.clear();
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1bis, aim1bis2, aim2));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(1, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getAddElements().size());
+        assertEquals("element3", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals("element1", nextSteps.getAddElements().get(0).getElementName());
+
     }
 
     @Test

@@ -522,33 +522,6 @@ public class PedagogicalSoftwareService {
 					// If there are similarities, we add these similarities to the element map
 					mapElementSimilarities.put(familyAimElement.getElementName(), nearestElements);
 
-					//If we want the next steps
-					if(nextSteps != null){
-						//We look if there are some elements in the origin that don't exist in the aim
-						for(PedagogicalSoftwareElementDTO tmpOriginElement : familyOriginElements){
-
-							//Checks if the element exists or not in the aim
-							long numberTmpAimElements = familyAimElements.stream()
-										.filter(tae -> tae.getElementName().equals(tmpOriginElement.getElementName()))
-										.count();
-
-							//Adds the element for delete
-							if(numberTmpAimElements == 0){
-
-								artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
-								artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
-
-								if (tmpOriginElement.getNext() != null) {
-									nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(tmpOriginElement.getNext().getElementName(), null, null);
-								}
-								if (tmpOriginElement.getPrevious() != null) {
-									previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(tmpOriginElement.getPrevious().getElementName(), null, null);
-								}
-								nextSteps.putDeleteElements(new artie.common.web.dto.PedagogicalSoftwareElement(tmpOriginElement.getElementName(), previousElement, nextElement));
-							}
-						}
-					}
-
 					// We avoid to repeat the same element
 					familyOriginElements.removeAll(nearestElements);
 				}
@@ -567,7 +540,32 @@ public class PedagogicalSoftwareService {
 				}
 			}
 
-			// 3.4- Once we got all the aim elements, we check how many elements of this
+			if(nextSteps != null) {
+
+				//3.4- If we want the next elements, for each origin element we look for the aim element
+				for (PedagogicalSoftwareElementDTO familyOriginElement : familyOriginElements) {
+
+					//3.4.1- Counts the number of this element in the aim
+					long tmpAimElements = familyAimElements.stream().filter(c -> c.getElementName().equals(familyOriginElement.getElementName())).count();
+
+					//If there are no elements in the aim, we have to delete it from the origin
+					if(tmpAimElements==0){
+
+						artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
+						artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
+
+						if (familyOriginElement.getNext() != null) {
+							nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(familyOriginElement.getNext().getElementName(), null, null);
+						}
+						if (familyOriginElement.getPrevious() != null) {
+							previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(familyOriginElement.getPrevious().getElementName(), null, null);
+						}
+						nextSteps.putDeleteElements(new artie.common.web.dto.PedagogicalSoftwareElement(familyOriginElement.getElementName(), previousElement, nextElement));
+					}
+				}
+			}
+
+			// 3.5- Once we got all the aim elements, we check how many elements of this
 			// family remain in the origin
 			diffElements += familyOriginElements.size();
 		}
