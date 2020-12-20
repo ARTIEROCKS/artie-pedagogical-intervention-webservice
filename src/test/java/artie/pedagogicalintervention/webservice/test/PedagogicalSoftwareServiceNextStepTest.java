@@ -126,6 +126,54 @@ public class PedagogicalSoftwareServiceNextStepTest {
     }
 
     @Test
+    void elementNextStepsCalculationTest(){
+        //Setup
+        PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
+        PedagogicalSoftwareElementDTO origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),1);
+        PedagogicalSoftwareElementDTO origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element3", "family1", null, null, null, null, null),2);
+        PedagogicalSoftwareElementDTO origin4 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element4", "family1", null, null, null, null, null),3);
+
+        PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
+        PedagogicalSoftwareElementDTO aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),1);
+        PedagogicalSoftwareElementDTO aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element3", "family1", null, null, null, null, null),2);
+        PedagogicalSoftwareElementDTO aim5 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element5", "family1", null, null, null, null, null),3);
+
+        List<PedagogicalSoftwareElementDTO> aimElements;
+        Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
+        Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences = new HashMap<>();
+        Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities;
+
+        NextStepHint nextSteps = null;
+
+
+        //A- Same origin and aim comparison
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(0, nextSteps.getAddElements().size());
+        assertEquals(0, nextSteps.getDeleteElements().size());
+
+
+        //B- More in aim than in origin
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(1, nextSteps.getAddElements().size());
+        assertEquals(0, nextSteps.getDeleteElements().size());
+
+    }
+
+    @Test
     void inputNextStepsCalculationTest() {
 
         //Setup

@@ -284,7 +284,6 @@ public class PedagogicalSoftwareService {
 					mapFamilyDifferences.put(aimElement.getElementFamily(), tmpFamilyDifferences);
 
 					//Checks if the help has been requested and then insert the next steps
-					//TODO: add the previous element to the hint
 					if(nextSteps != null){
 						//We insert all the elements to add in the next step
 						List<artie.common.web.dto.PedagogicalSoftwareElement> tmpDTOElementList = tmpFamilyDifferences.stream()
@@ -338,7 +337,6 @@ public class PedagogicalSoftwareService {
 					mapFamilyDifferences.put(originElement.getElementFamily(), tmpFamilyDifferences);
 
 					//Checks if the help has been requested and then insert the next steps
-					//TODO: add the previous element to the hint
 					if(nextSteps != null){
 						//We insert all the elements to delete in the next step
 						List<artie.common.web.dto.PedagogicalSoftwareElement> tmpDTOElementList = tmpFamilyDifferences.stream()
@@ -440,7 +438,7 @@ public class PedagogicalSoftwareService {
 						nearest = null;
 
 						//If we want to set the next steps
-						if(nextSteps != null) {
+						if (nextSteps != null) {
 							// 3.3.3.1- Checks if we have to add the aim element to the next hints or delete an origin element
 							List<PedagogicalSoftwareElementDTO> listTmpOriginElements = tmpOriginElements.stream()
 									.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
@@ -448,53 +446,52 @@ public class PedagogicalSoftwareService {
 
 							//3.3.3.2- We have to add the element to the next hint
 							if (listTmpOriginElements.size() == 0) {
-								//TODO: Set the previous element
 								artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
 								artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
 
-								if(tmpAimElement.getNext() != null){
+								if (tmpAimElement.getNext() != null) {
 									nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(tmpAimElement.getNext().getElementName(), null, null);
 								}
-								if(tmpAimElement.getPrevious() != null){
+								if (tmpAimElement.getPrevious() != null) {
 									previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(tmpAimElement.getPrevious().getElementName(), null, null);
 								}
 								nextSteps.putAddElements(new artie.common.web.dto.PedagogicalSoftwareElement(tmpAimElement.getElementName(), previousElement, nextElement));
-							}else{
+							}
+							else {
 								//3.3.3.3- We check if the number of elements with the same name are equals in the origin and the aim
 								List<PedagogicalSoftwareElementDTO> listTmpAimElements = tmpAimElements.stream()
-																										.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
-																										.collect(Collectors.toList());
+										.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
+										.collect(Collectors.toList());
 								int elementDifference = Math.abs(listTmpOriginElements.size() - listTmpAimElements.size());
 
-								if(listTmpOriginElements.size() > listTmpAimElements.size()){
+								if (listTmpOriginElements.size() > listTmpAimElements.size()) {
 									//3.3.3.4- Elements to be deleted (the farther)
 									nextSteps.putDeleteElements(
-											listTmpOriginElements.subList(0, elementDifference).stream().map( toe ->{
+											listTmpOriginElements.subList(0, elementDifference).stream().map(toe -> {
 												artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
 												artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
-												if(toe.getNext() != null){
+												if (toe.getNext() != null) {
 													nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(toe.getNext().getElementName(), null, null);
 												}
-												if(toe.getPrevious() != null){
+												if (toe.getPrevious() != null) {
 													previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(toe.getPrevious().getElementName(), null, null);
 												}
-												//TODO: Set the previous element
 												return new artie.common.web.dto.PedagogicalSoftwareElement(toe.getElementName(), previousElement, nextElement);
 											}).collect(Collectors.toList())
 									);
-								}else if(listTmpOriginElements.size() < listTmpAimElements.size()){
+								}
+								else if (listTmpOriginElements.size() < listTmpAimElements.size()) {
 									//3.3.3.5- Elements to be added
 									nextSteps.putAddElements(
-											listTmpAimElements.subList(0, elementDifference).stream().map( tae ->{
+											listTmpAimElements.subList(0, elementDifference).stream().map(tae -> {
 												artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
 												artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
-												if(tae.getNext() != null){
+												if (tae.getNext() != null) {
 													nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(tae.getNext().getElementName(), null, null);
 												}
-												if(tae.getPrevious() != null){
+												if (tae.getPrevious() != null) {
 													previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(tae.getPrevious().getElementName(), null, null);
 												}
-												//TODO: Set the previous element
 												return new artie.common.web.dto.PedagogicalSoftwareElement(tae.getElementName(), previousElement, nextElement);
 											}).collect(Collectors.toList())
 									);
@@ -525,8 +522,47 @@ public class PedagogicalSoftwareService {
 					// If there are similarities, we add these similarities to the element map
 					mapElementSimilarities.put(familyAimElement.getElementName(), nearestElements);
 
+					//If we want the next steps
+					if(nextSteps != null){
+						//We look if there are some elements in the origin that don't exist in the aim
+						for(PedagogicalSoftwareElementDTO tmpOriginElement : familyOriginElements){
+
+							//Checks if the element exists or not in the aim
+							long numberTmpAimElements = familyAimElements.stream()
+										.filter(tae -> tae.getElementName().equals(tmpOriginElement.getElementName()))
+										.count();
+
+							//Adds the element for delete
+							if(numberTmpAimElements == 0){
+
+								artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
+								artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
+
+								if (tmpOriginElement.getNext() != null) {
+									nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(tmpOriginElement.getNext().getElementName(), null, null);
+								}
+								if (tmpOriginElement.getPrevious() != null) {
+									previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(tmpOriginElement.getPrevious().getElementName(), null, null);
+								}
+								nextSteps.putDeleteElements(new artie.common.web.dto.PedagogicalSoftwareElement(tmpOriginElement.getElementName(), previousElement, nextElement));
+							}
+						}
+					}
+
 					// We avoid to repeat the same element
 					familyOriginElements.removeAll(nearestElements);
+				}
+				else if(tmpOriginElements.size() == 0){
+					artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
+					artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
+
+					if (familyAimElement.getNext() != null) {
+						nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(familyAimElement.getNext().getElementName(), null, null);
+					}
+					if (familyAimElement.getPrevious() != null) {
+						previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(familyAimElement.getPrevious().getElementName(), null, null);
+					}
+					nextSteps.putAddElements(new artie.common.web.dto.PedagogicalSoftwareElement(familyAimElement.getElementName(), previousElement, nextElement));
 				}
 			}
 
@@ -603,7 +639,6 @@ public class PedagogicalSoftwareService {
 
 								//5.3.1.1.1-Adding the next step hints for double values
 								if(nextSteps != null && difference != 0){
-									//TODO: Add the previous and the next elements
 									artie.common.web.dto.PedagogicalSoftwareElement tmpNextElement = null;
 									artie.common.web.dto.PedagogicalSoftwareElement tmpPreviousElement = null;
 
@@ -623,7 +658,6 @@ public class PedagogicalSoftwareService {
 
 								//5.3.1.1.2-Adding the next step hints for string values
 								if(nextSteps != null){
-									//TODO: Add the previous and the next elements
 									artie.common.web.dto.PedagogicalSoftwareElement tmpNextElement = null;
 									artie.common.web.dto.PedagogicalSoftwareElement tmpPreviousElement = null;
 
