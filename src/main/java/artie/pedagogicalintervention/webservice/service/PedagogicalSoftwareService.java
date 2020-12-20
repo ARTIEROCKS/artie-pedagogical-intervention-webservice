@@ -552,7 +552,8 @@ public class PedagogicalSoftwareService {
 					// We avoid to repeat the same element
 					familyOriginElements.removeAll(nearestElements);
 				}
-				else if(tmpOriginElements.size() == 0){
+				//If there are no origin elements that correspond with the aim, and we want to get the next steps
+				else if(nextSteps != null && tmpOriginElements.size() == 0){
 					artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
 					artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
 

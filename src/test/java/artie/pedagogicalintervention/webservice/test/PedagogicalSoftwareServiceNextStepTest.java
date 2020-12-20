@@ -170,6 +170,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         assertEquals(1, nextSteps.getAddElements().size());
         assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals("element2", nextSteps.getAddElements().get(0).getElementName());
 
     }
 
