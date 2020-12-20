@@ -402,6 +402,7 @@ public class PedagogicalSoftwareService {
 					.filter(c -> c.getElementFamily().equals(family)).collect(Collectors.toList());
 			// 3.2- Gets the elements in the origin for this family
 			List<PedagogicalSoftwareElementDTO> familyOriginElements = mapFamilySimilarities.get(family);
+			List<String> familyOriginTakenAccountElementsAdd = new ArrayList<>();
 
 			// 3.3- For each aim element we look for the origin element
 			for (PedagogicalSoftwareElementDTO familyAimElement : familyAimElements) {
@@ -444,8 +445,8 @@ public class PedagogicalSoftwareService {
 									.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
 									.collect(Collectors.toList());
 
-							//3.3.3.2- We have to add the element to the next hint
-							if (listTmpOriginElements.size() == 0) {
+							//3.3.3.2- We have to add the element to the next hint and the element has not been taken into account
+							if (listTmpOriginElements.size() == 0 && !familyOriginTakenAccountElementsAdd.contains(familyAimElement.getElementName())) {
 								artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
 								artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
 
@@ -464,6 +465,7 @@ public class PedagogicalSoftwareService {
 										.collect(Collectors.toList());
 								int elementDifference = Math.abs(listTmpOriginElements.size() - listTmpAimElements.size());
 
+
 								if (listTmpOriginElements.size() > listTmpAimElements.size()) {
 									//3.3.3.4- Elements to be deleted (the farther)
 									nextSteps.putDeleteElements(
@@ -480,9 +482,9 @@ public class PedagogicalSoftwareService {
 											}).collect(Collectors.toList())
 									);
 								}
-								else if (listTmpOriginElements.size() < listTmpAimElements.size()) {
+								else if (listTmpOriginElements.size() < listTmpAimElements.size() && !familyOriginTakenAccountElementsAdd.contains(listTmpAimElements.get(0).getElementName())) {
 									//3.3.3.5- Elements to be added
-									nextSteps.putAddElements(
+									List<artie.common.web.dto.PedagogicalSoftwareElement> tmpFilteredList =
 											listTmpAimElements.subList(0, elementDifference).stream().map(tae -> {
 												artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
 												artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
@@ -493,8 +495,10 @@ public class PedagogicalSoftwareService {
 													previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(tae.getPrevious().getElementName(), null, null);
 												}
 												return new artie.common.web.dto.PedagogicalSoftwareElement(tae.getElementName(), previousElement, nextElement);
-											}).collect(Collectors.toList())
-									);
+											}).collect(Collectors.toList());
+
+									nextSteps.putAddElements(tmpFilteredList);
+									familyOriginTakenAccountElementsAdd.addAll(tmpFilteredList.stream().map(fl -> fl.getElementName()).collect(Collectors.toList()));
 								}
 							}
 						}
@@ -524,9 +528,11 @@ public class PedagogicalSoftwareService {
 
 					// We avoid to repeat the same element
 					familyOriginElements.removeAll(nearestElements);
+					familyOriginTakenAccountElementsAdd.addAll(nearestElements.stream().map(e -> {return e.getElementName();}).collect(Collectors.toList()));
 				}
-				//If there are no origin elements that correspond with the aim, and we want to get the next steps
-				else if(nextSteps != null && tmpOriginElements.size() == 0){
+				//If there are no origin elements that correspond with the aim,
+				// we want to get the next steps and we have not yet taken the element into account
+				else if(nextSteps != null && tmpOriginElements.size() == 0 && !familyOriginTakenAccountElementsAdd.contains(familyAimElement.getElementName())){
 					artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
 					artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
 
