@@ -242,7 +242,28 @@ public class PedagogicalSoftwareServiceNextStepTest {
         assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
 
 
-        //G- Repeated element in aim, but not in origin, and with different positions
+        //G- Repeated element 3 times in origin, but not in aim, and with different positions
+        origin1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),2);
+        origin1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),3);
+        PedagogicalSoftwareElementDTO aim1bis3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),2);
+
+        mapFamilySimilarities.clear();
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1bis, origin1bis2, aim1bis3, origin2)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(2, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getAddElements().size());
+        assertEquals("element1", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals("element1", nextSteps.getDeleteElements().get(1).getElementName());
+        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
+
+
+        //H- Repeated element in aim, but not in origin, and with different positions
         PedagogicalSoftwareElementDTO aim1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
         PedagogicalSoftwareElementDTO aim1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),1);
         aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),2);
@@ -260,6 +281,28 @@ public class PedagogicalSoftwareServiceNextStepTest {
         assertEquals(1, nextSteps.getAddElements().size());
         assertEquals("element3", nextSteps.getDeleteElements().get(0).getElementName());
         assertEquals("element1", nextSteps.getAddElements().get(0).getElementName());
+
+
+        //I- Repeated element 3 times in aim, but not in origin, and with different positions
+        aim1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
+        aim1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),1);
+        aim1bis3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),2);
+        aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),3);
+
+        mapFamilySimilarities.clear();
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3)));
+        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1bis, aim1bis2, aim1bis3, aim2));
+        mapElementSimilarities = new HashMap<>();
+        mapFamilyDifferences = new HashMap<>();
+        nextSteps = new NextStepHint();
+
+        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+
+        assertEquals(1, nextSteps.getDeleteElements().size());
+        assertEquals(2, nextSteps.getAddElements().size());
+        assertEquals("element3", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals("element1", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals("element1", nextSteps.getAddElements().get(1).getElementName());
 
     }
 
