@@ -445,7 +445,10 @@ public class PedagogicalSoftwareService {
 									.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
 									.collect(Collectors.toList());
 
-							//3.3.3.2- We have to add the element to the next hint and the element has not been taken into account
+							// 3.3.3.2- Taking into account the origin elements that have been deleted before
+							listTmpOriginElements.addAll(nearestElements);
+
+							//3.3.3.3- We have to add the element to the next hint and the element has not been taken into account
 							if (listTmpOriginElements.size() == 0 && !familyOriginTakenAccountElementsAdd.contains(familyAimElement.getElementName())) {
 								artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
 								artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
@@ -459,7 +462,7 @@ public class PedagogicalSoftwareService {
 								nextSteps.putAddElements(new artie.common.web.dto.PedagogicalSoftwareElement(tmpAimElement.getElementName(), previousElement, nextElement));
 							}
 							else {
-								//3.3.3.3- We check if the number of elements with the same name are equals in the origin and the aim
+								//3.3.3.4- We check if the number of elements with the same name are equals in the origin and the aim
 								List<PedagogicalSoftwareElementDTO> listTmpAimElements = tmpAimElements.stream()
 										.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
 										.collect(Collectors.toList());
@@ -467,7 +470,7 @@ public class PedagogicalSoftwareService {
 
 
 								if (listTmpOriginElements.size() > listTmpAimElements.size()) {
-									//3.3.3.4- Elements to be deleted (the farther)
+									//3.3.3.5- Elements to be deleted (the farther)
 									nextSteps.putDeleteElements(
 											listTmpOriginElements.subList(0, elementDifference).stream().map(toe -> {
 												artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
@@ -483,7 +486,7 @@ public class PedagogicalSoftwareService {
 									);
 								}
 								else if (listTmpOriginElements.size() < listTmpAimElements.size() && !familyOriginTakenAccountElementsAdd.contains(listTmpAimElements.get(0).getElementName())) {
-									//3.3.3.5- Elements to be added
+									//3.3.3.6- Elements to be added
 									List<artie.common.web.dto.PedagogicalSoftwareElement> tmpFilteredList =
 											listTmpAimElements.subList(0, elementDifference).stream().map(tae -> {
 												artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
