@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class PedagogicalSoftwareInput implements Cloneable {
 
 	private String name;
+	private String opcode;
 	private List<PedagogicalSoftwareField> fields = new ArrayList<>();
 	
 	
@@ -16,6 +17,8 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getOpCode() { return this.opcode; }
+	public void setOpcode(String opcode) { this.opcode = opcode; }
 	public List<PedagogicalSoftwareField> getFields() {
 		return fields;
 	}
@@ -32,11 +35,13 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	/**
 	 * Parameterized constructor
 	 * @param name
+	 * @param opcode
 	 * @param fields
 	 */
-	public PedagogicalSoftwareInput(String name, List<PedagogicalSoftwareField> fields) {
+	public PedagogicalSoftwareInput(String name, String opcode, List<PedagogicalSoftwareField> fields) {
 		super();
 		this.name = name;
+		this.opcode = opcode;
 		
 		if(fields != null) {
 			this.fields = fields;
@@ -54,6 +59,7 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	    PedagogicalSoftwareInput objInput = (PedagogicalSoftwareInput) obj;
 
 	    if(!this.name.equals(objInput.getName())) return false;
+	    if(!this.opcode.equals(objInput.getOpCode())) return false;
 	    
 	    boolean result = this.fields.size()== objInput.getFields().size();
 	    for(PedagogicalSoftwareField field : this.fields) {
@@ -70,6 +76,6 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	public PedagogicalSoftwareInput clone() {
 		
 		List<PedagogicalSoftwareField> cloneFields = this.fields.stream().map(f -> f.clone()).collect(Collectors.toList());
-		return new PedagogicalSoftwareInput(name, cloneFields);
+		return new PedagogicalSoftwareInput(name, opcode, cloneFields);
 	}
 }

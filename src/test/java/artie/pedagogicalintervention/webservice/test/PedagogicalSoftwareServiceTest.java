@@ -554,15 +554,15 @@ class PedagogicalSoftwareServiceTest {
 		
 		originFieldInput1 = new PedagogicalSoftwareField("STR", "a");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-		originInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-		originInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
+		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
+		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 		
 		
 		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-		aimInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-		aimInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
+		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 		
 		
@@ -579,21 +579,21 @@ class PedagogicalSoftwareServiceTest {
 		
 		originFieldInput1 = new PedagogicalSoftwareField("STR", "b");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-		originInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-		originInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
+		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
+		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 		
 		
 		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-		aimInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-		aimInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
+		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 		
 		diffFieldInput1 = new PedagogicalSoftwareField("STR", "a");
 		diffFieldInput2 = new PedagogicalSoftwareField("NUM", "20");
-		diffInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
-		diffInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
+		diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
+		diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
 		diff1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput1)));
 		diff2.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput2)));
 		
@@ -615,15 +615,15 @@ class PedagogicalSoftwareServiceTest {
 		
 		originFieldInput1 = new PedagogicalSoftwareField("STR", "a");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-		originInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-		originInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
+		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
+		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 		
 		
 		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "40");
-		aimInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-		aimInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
+		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 		
 		mapElementSimilarities.clear();
@@ -632,8 +632,8 @@ class PedagogicalSoftwareServiceTest {
 		
 		diffFieldInput1 = new PedagogicalSoftwareField("STR", "string");
 		diffFieldInput2 = new PedagogicalSoftwareField("NUM", "15");
-		diffInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
-		diffInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
+		diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
+		diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
 		diff1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput1)));
 		diff2.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput2)));
 		
@@ -650,15 +650,15 @@ class PedagogicalSoftwareServiceTest {
 		
 		originFieldInput1 = new PedagogicalSoftwareField("STR", "b");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-		originInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-		originInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
+		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
+		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 		
 		
 		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "40");
-		aimInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-		aimInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
+		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 		
 		mapElementSimilarities.clear();
@@ -667,8 +667,8 @@ class PedagogicalSoftwareServiceTest {
 		
 		diffFieldInput1 = new PedagogicalSoftwareField("STR", "string");
 		diffFieldInput2 = new PedagogicalSoftwareField("NUM", "90");
-		diffInput1 = new PedagogicalSoftwareInput("Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
-		diffInput2 = new PedagogicalSoftwareInput("Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
+		diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
+		diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
 		diff1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput1)));
 		diff2.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput2)));
 		

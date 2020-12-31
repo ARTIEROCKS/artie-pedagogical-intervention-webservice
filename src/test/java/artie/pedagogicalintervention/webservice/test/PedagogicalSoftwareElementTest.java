@@ -42,7 +42,7 @@ class PedagogicalSoftwareElementTest {
 		fields1.add(new PedagogicalSoftwareField("field1", "value1"));
 		fields1.add(new PedagogicalSoftwareField("field11", "value11"));
 		
-		inputs1.add(new PedagogicalSoftwareInput("input1", fields1));
+		inputs1.add(new PedagogicalSoftwareInput("input1", "input1", fields1));
 		
 		nested1.add(new PedagogicalSoftwareElement("","nested1", "nestedFamily1", inputs1, null, null, null, null));
 		
@@ -61,8 +61,8 @@ class PedagogicalSoftwareElementTest {
 		fields21.add(new PedagogicalSoftwareField("field21", "value21"));
 		fields21.add(new PedagogicalSoftwareField("field211", "value211"));
 		
-		inputs2.add(new PedagogicalSoftwareInput("input2", fields2));
-		inputs21.add(new PedagogicalSoftwareInput("input2", fields21));
+		inputs2.add(new PedagogicalSoftwareInput("input2", "input2", fields2));
+		inputs21.add(new PedagogicalSoftwareInput("input2", "input2", fields21));
 		
 		nested2.add(new PedagogicalSoftwareElement("","nested2", "nestedFamily2", inputs2, null, null, null, null));
 		nested21.add(new PedagogicalSoftwareElement("","nested21", "nestedFamily21", inputs21, null, null, null, null));

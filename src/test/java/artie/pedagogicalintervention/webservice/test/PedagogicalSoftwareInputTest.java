@@ -31,12 +31,12 @@ class PedagogicalSoftwareInputTest {
 		fields2.add(new PedagogicalSoftwareField("name21", "value21"));
 		
 		
-		this.input1 = new PedagogicalSoftwareInput("name1", fields1);
-		this.input11 = new PedagogicalSoftwareInput("name1", fields1);
+		this.input1 = new PedagogicalSoftwareInput("name1", "name1", fields1);
+		this.input11 = new PedagogicalSoftwareInput("name1", "name1", fields1);
 		
-		this.input2 = new PedagogicalSoftwareInput("name2", fields2);
-		this.input21 = new PedagogicalSoftwareInput("name21", fields2);
-		this.input22 = new PedagogicalSoftwareInput("name21", fields1);
+		this.input2 = new PedagogicalSoftwareInput("name2", "name2", fields2);
+		this.input21 = new PedagogicalSoftwareInput("name21", "name21", fields2);
+		this.input22 = new PedagogicalSoftwareInput("name21", "name21", fields1);
 		
 	}
 
