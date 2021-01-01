@@ -621,7 +621,11 @@ public class PedagogicalSoftwareService {
 			
 			//5.2- Gets the elements in the origin
 			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element).stream().map(eoe -> eoe.clone()).collect(Collectors.toList());
-			
+
+			//List to avoid insert many times the same element for the help hints
+			//Here we will insert the origin elements to know if exactly if an element has been added or not
+			List<PedagogicalSoftwareElementDTO> elementsAlreadyAddedForHints = new ArrayList<>();
+
 			//5.3- Checks all the aim elements
 			for(PedagogicalSoftwareElementDTO elementAimElement : elementAimElements) {
 				
@@ -646,7 +650,7 @@ public class PedagogicalSoftwareService {
 								accumulatedOriginDifference += ratio;
 
 								//5.3.1.1.1-Adding the next step hints for double values
-								if(nextSteps != null && difference != 0){
+								if(nextSteps != null && difference != 0 && !elementsAlreadyAddedForHints.contains(elementOriginElement)){
 									artie.common.web.dto.PedagogicalSoftwareElement tmpNextElement = null;
 									artie.common.web.dto.PedagogicalSoftwareElement tmpPreviousElement = null;
 
@@ -659,6 +663,7 @@ public class PedagogicalSoftwareService {
 
 									artie.common.web.dto.PedagogicalSoftwareElement tmpElement = new artie.common.web.dto.PedagogicalSoftwareElement(elementOriginElement.getElementName(), tmpPreviousElement, tmpNextElement);
 									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(originField.getName(),elementOriginElement.getInputs().get(input).getOpCode(), tmpElement, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));
+									elementsAlreadyAddedForHints.add(elementOriginElement);
 								}
 
 							}else if(!originField.getValue().equals(aimField.getValue())) {
@@ -688,7 +693,6 @@ public class PedagogicalSoftwareService {
 						nearestDifference = accumulatedOriginDifference;
 						nearestOrigin = elementOriginElement;
 					}
-					
 				}
 				
 				//5.4- Deletes the nearest element origin and we add the nearest difference 
