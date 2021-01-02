@@ -662,7 +662,7 @@ public class PedagogicalSoftwareService {
 									}
 
 									artie.common.web.dto.PedagogicalSoftwareElement tmpElement = new artie.common.web.dto.PedagogicalSoftwareElement(elementOriginElement.getElementName(), tmpPreviousElement, tmpNextElement);
-									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(originField.getName(),elementOriginElement.getInputs().get(input).getOpCode(), tmpElement, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));
+									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(elementOriginElement.getInputs().get(input).getName(), originField.getName(),elementOriginElement.getInputs().get(input).getOpCode(), tmpElement, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));
 									elementsAlreadyAddedForHints.add(elementOriginElement);
 								}
 
@@ -682,7 +682,7 @@ public class PedagogicalSoftwareService {
 									}
 
 									artie.common.web.dto.PedagogicalSoftwareElement tmpElement = new artie.common.web.dto.PedagogicalSoftwareElement(elementOriginElement.getElementName(), tmpPreviousElement,tmpNextElement);
-									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(originField.getName(), elementOriginElement.getInputs().get(input).getOpCode(), tmpElement, originField.getValue(), aimField.getValue()));
+									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(elementOriginElement.getInputs().get(input).getName(), originField.getName(), elementOriginElement.getInputs().get(input).getOpCode(), tmpElement, originField.getValue(), aimField.getValue()));
 								}
 							}
 						}
