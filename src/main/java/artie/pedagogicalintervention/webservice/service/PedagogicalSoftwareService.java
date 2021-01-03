@@ -234,7 +234,7 @@ public class PedagogicalSoftwareService {
 		mapFamilySimilarities = null;
 
 		// 4- Position similarities from the element similarities
-		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, diffPosition);
+		diffPosition = this.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, diffPosition, nextSteps);
 
 		// 5- Input element similarities from the element similarities
 		diffInput = this.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, diffInput, nextSteps);
@@ -587,6 +587,7 @@ public class PedagogicalSoftwareService {
 	 * @param mapElementSimilarities
 	 * @param aimElements
 	 * @param diffInputValues
+	 * @param nextSteps
 	 * @return
 	 */
 	public double inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities,
@@ -711,14 +712,17 @@ public class PedagogicalSoftwareService {
 	 * Function to calculate the distance between the positions
 	 * 
 	 * @param mapElementSimilarities
+	 * @param mapFamilyDifferences
 	 * @param aimElements
 	 * @param diffPosition
+	 * @param nextSteps
 	 * @return
 	 */
 	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, 
 											  Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, 
 											  List<PedagogicalSoftwareElementDTO> aimElements, 
-											  double diffPosition) {
+											  double diffPosition,
+											  NextStepHint nextSteps) {
 
 		
 		//Adds to the distance calculation result, the different position from the difference of the elements
@@ -759,6 +763,20 @@ public class PedagogicalSoftwareService {
 						}
 					}
 
+					//If the help is requested
+					if(nextSteps != null && aimElement.getElementPosition() != nearestElement.getElementPosition()){
+						artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
+						artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
+
+						if(nearestElement.getNext() != null){
+							nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(nearestElement.getNext().getElementName(), null, null);
+						}
+						if(nearestElement.getPrevious() != null){
+							previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(nearestElement.getPrevious().getElementName(), null, null);
+						}
+
+						nextSteps.putReplacePositions(new artie.common.web.dto.PedagogicalSoftwareElement(nearestElement.getElementName(), previousElement, nextElement));
+					}
 					diffPosition += nearestPosition;
 					elementOriginElements.remove(nearestElement);
 

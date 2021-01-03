@@ -715,7 +715,7 @@ class PedagogicalSoftwareServiceTest {
 		mapElementSimilarities.put("element2", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin2)));
 		mapElementSimilarities.put("element3", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin3)));
 	
-		double distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0);
+		double distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 		
 		assertEquals(0, distance);
 		
@@ -743,7 +743,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
 		mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
 	
-		distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0);
+		distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 		
 		assertEquals(9, distance); //Position difference from similar families: 2 + Position differences from different families: (2+1) + (3+1)
 		
@@ -769,7 +769,7 @@ class PedagogicalSoftwareServiceTest {
 		mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
 		mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
 	
-		distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0);
+		distance = pedagogicalSoftwareService.positionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 		
 		assertEquals(5, distance); //Position difference from similar families: 2 + Position differences from different families: (0+1) + (1+1)
 
