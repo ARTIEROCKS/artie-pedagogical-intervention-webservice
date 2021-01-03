@@ -30,6 +30,18 @@
       		<url>http://nexus.ai-mind.com:8081/nexus/repository/maven-releases/</url>
     	</repository>
   	</repositories>
+	<distributionManagement>
+		<repository>
+			<id>release</id>
+			<name>ARTIE repository</name>
+			<url>http://nexus.ai-mind.com:8081/nexus/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshot</id>
+			<name>ARTIE repository</name>
+			<url>http://nexus.ai-mind.com:8081/nexus/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
