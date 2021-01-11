@@ -17,7 +17,7 @@ jobs:
       name: Server Configuration
       with:
         githubServer: false,
-        servers: '[{"id": "snapshot", "username": ${{ secrets.NEXUS_PREPROD_USERNAME }}, "password": ${{ secrets.NEXUS_PREPROD_PASSWORD }} }, {"id": "release", "username": ${{ secrets.NEXUS_PROD_USERNAME }}, "password": ${{ secrets.NEXUS_PROD_PASSWORD }} }]'
+        servers: '[{"id": "snapshot", "username": "nexus", "password": "NexuS123@" }, {"id": "release", "username": "nexus", "password": "NexuS123@" }]'
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
