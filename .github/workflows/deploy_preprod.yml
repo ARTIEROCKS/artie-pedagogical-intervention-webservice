@@ -16,6 +16,7 @@ jobs:
     - uses: s4u/maven-settings-action@v2.3.0
       name: Server Configuration
       with:
+        githubServer: false,
         servers: '[{"id": "snapshot", "username": "nexus", "password": "NexuS123@"}, {"id": "release", "username": "nexus", "password": "NexuS123@"}]'
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
