@@ -19,8 +19,8 @@ jobs:
       with:
         java-version: 1.8
         server-id: snapshot
-        server-username: nexus
-        server-password: NexuS123@
+        server-username: leimbernon
+        server-password: a28130000
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Publish with Maven
