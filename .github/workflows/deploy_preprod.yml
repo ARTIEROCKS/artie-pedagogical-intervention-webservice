@@ -13,16 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: whelk-io/maven-settings-xml-action@v14
-      name: Server Configuration
-      with:
-        githubServer: false,
-        servers: '[{"id": "snapshot", "username": "nexus", "password": "NexuS123@" }, {"id": "release", "username": "nexus", "password": "NexuS123@" }]'
     - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
+    - name: Set up Maven Central Repository
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+        server-id: snapshot
+        server-username: nexus
+        server-password: NexuS123@
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Publish with Maven
