@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDTO;
+import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
 import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareDistance;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
@@ -190,19 +190,19 @@ public class PedagogicalSoftwareService {
 	 */
 	public PedagogicalSoftwareDistance distanceCalculation(PedagogicalSoftwareData origin, PedagogicalSoftwareSolution aim) {
 
-		List<PedagogicalSoftwareElementDTO> aimElements = new ArrayList<>();
-		List<PedagogicalSoftwareElementDTO> originElements = new ArrayList<>();
+		List<PedagogicalSoftwareBlockDTO> aimElements = new ArrayList<>();
+		List<PedagogicalSoftwareBlockDTO> originElements = new ArrayList<>();
 
 		//Preparing the next steps in base if the user has requested help or not
 		NextStepHint nextSteps = (origin.getRequestHelp() ? new NextStepHint() : null);
 
 		// Family variables
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences = new HashMap<>();
+		Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilySimilarities = new HashMap<>();
+		Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences = new HashMap<>();
 		double diffFamily = 0;
 
 		// Element variables
-		Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
+		Map<String, List<PedagogicalSoftwareBlockDTO>> mapElementSimilarities = new HashMap<>();
 		double diffElements = 0;
 
 		// Position variables
@@ -215,10 +215,10 @@ public class PedagogicalSoftwareService {
 		double totalDistance = 0;
 
 		// 1- Getting all the elements in a single list (not nested)
-		for (PedagogicalSoftwareElement element : aim.getElements()) {
+		for (PedagogicalSoftwareBlock element : aim.getElements()) {
 			aimElements = this.getAllElements(element, aimElements, new AtomicInteger(0));
 		}
-		for (PedagogicalSoftwareElement element : origin.getElements()) {
+		for (PedagogicalSoftwareBlock element : origin.getElements()) {
 			originElements = this.getAllElements(element, originElements, new AtomicInteger(0));
 
 		}
@@ -257,14 +257,14 @@ public class PedagogicalSoftwareService {
 	 * @param nextSteps
 	 * @return
 	 */
-	public double familyDistanceCalculation(List<PedagogicalSoftwareElementDTO> aimElements,
-			List<PedagogicalSoftwareElementDTO> originElements,
-			Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities,
-			Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, double diffFamily,
-			NextStepHint nextSteps) {
+	public double familyDistanceCalculation(List<PedagogicalSoftwareBlockDTO> aimElements,
+											List<PedagogicalSoftwareBlockDTO> originElements,
+											Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilySimilarities,
+											Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences, double diffFamily,
+											NextStepHint nextSteps) {
 
 		// Checks from the aim side
-		for (PedagogicalSoftwareElementDTO aimElement : aimElements) {
+		for (PedagogicalSoftwareBlockDTO aimElement : aimElements) {
 
 			// 2.1- Checks that this family has not been already checked
 			if (!mapFamilySimilarities.containsKey(aimElement.getElementFamily())
@@ -278,7 +278,7 @@ public class PedagogicalSoftwareService {
 					// If there are no similar families, we count all the elements in the aim +
 					// the element in the aim that has not been included in the origin
 					diffFamily += 1;
-					List<PedagogicalSoftwareElementDTO> tmpFamilyDifferences = aimElements.stream()
+					List<PedagogicalSoftwareBlockDTO> tmpFamilyDifferences = aimElements.stream()
 							.filter(f -> f.getElementFamily().equals(aimElement.getElementFamily()))
 							.collect(Collectors.toList());
 					mapFamilyDifferences.put(aimElement.getElementFamily(), tmpFamilyDifferences);
@@ -308,7 +308,7 @@ public class PedagogicalSoftwareService {
 
 				} else {
 					// If there are similarities, we add these similarities to the family map
-					List<PedagogicalSoftwareElementDTO> existingElements = originElements.stream()
+					List<PedagogicalSoftwareBlockDTO> existingElements = originElements.stream()
 							.filter(c -> c.getElementFamily().equals(aimElement.getElementFamily()))
 							.collect(Collectors.toList());
 					mapFamilySimilarities.put(aimElement.getElementFamily(), existingElements);
@@ -317,7 +317,7 @@ public class PedagogicalSoftwareService {
 		}
 
 		// Checks from the origin side
-		for (PedagogicalSoftwareElementDTO originElement : originElements) {
+		for (PedagogicalSoftwareBlockDTO originElement : originElements) {
 
 			// 3.1- Checks that this family has not been already checked
 			if (!mapFamilySimilarities.containsKey(originElement.getElementFamily())
@@ -331,7 +331,7 @@ public class PedagogicalSoftwareService {
 					// If there are no similar families, we count all the elements in the origin +
 					// the element in the aim that has not been included in the origin
 					diffFamily += 1;
-					List<PedagogicalSoftwareElementDTO> tmpFamilyDifferences = originElements.stream()
+					List<PedagogicalSoftwareBlockDTO> tmpFamilyDifferences = originElements.stream()
 							.filter(f -> f.getElementFamily().equals(originElement.getElementFamily()))
 							.collect(Collectors.toList());
 					mapFamilyDifferences.put(originElement.getElementFamily(), tmpFamilyDifferences);
@@ -376,10 +376,10 @@ public class PedagogicalSoftwareService {
 	 * @param nextSteps
 	 * @return
 	 */
-	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities,
-											 Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences,
-											 Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities,
-											 List<PedagogicalSoftwareElementDTO> aimElements, double diffElements,
+	public double elementDistanceCalculation(Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilySimilarities,
+											 Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences,
+											 Map<String, List<PedagogicalSoftwareBlockDTO>> mapElementSimilarities,
+											 List<PedagogicalSoftwareBlockDTO> aimElements, double diffElements,
 											 NextStepHint nextSteps) {
 
 		List<String> elementsPassed = new ArrayList<>();
@@ -398,23 +398,23 @@ public class PedagogicalSoftwareService {
 			elementsPassed.clear();
 
 			// 3.1- Gets the elements in the aim for this family
-			List<PedagogicalSoftwareElementDTO> familyAimElements = aimElements.stream()
+			List<PedagogicalSoftwareBlockDTO> familyAimElements = aimElements.stream()
 					.filter(c -> c.getElementFamily().equals(family)).collect(Collectors.toList());
 			// 3.2- Gets the elements in the origin for this family
-			List<PedagogicalSoftwareElementDTO> familyOriginElements = mapFamilySimilarities.get(family);
+			List<PedagogicalSoftwareBlockDTO> familyOriginElements = mapFamilySimilarities.get(family);
 			List<String> familyOriginTakenAccountElementsAdd = new ArrayList<>();
 
 			// 3.3- For each aim element we look for the origin element
-			for (PedagogicalSoftwareElementDTO familyAimElement : familyAimElements) {
+			for (PedagogicalSoftwareBlockDTO familyAimElement : familyAimElements) {
 
 				// 3.3.1- Counts how many aim elements are the same element
-				List<PedagogicalSoftwareElementDTO> tmpAimElements = familyAimElements.stream()
+				List<PedagogicalSoftwareBlockDTO> tmpAimElements = familyAimElements.stream()
 						.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
 						.collect(Collectors.toList());
 
 				// 3.3.2 - Counts the number of elements similar to the aim element for the
 				// family
-				List<PedagogicalSoftwareElementDTO> tmpOriginElements = familyOriginElements.stream()
+				List<PedagogicalSoftwareBlockDTO> tmpOriginElements = familyOriginElements.stream()
 						.filter(c -> c.getElementName().equals(familyAimElement.getElementName()))
 						.collect(Collectors.toList());
 
@@ -429,11 +429,11 @@ public class PedagogicalSoftwareService {
 
 					int nearestPosition = -1;
 					int diffPosition = 0;
-					PedagogicalSoftwareElementDTO nearest = null;
-					List<PedagogicalSoftwareElementDTO> nearestElements = new ArrayList<>();
+					PedagogicalSoftwareBlockDTO nearest = null;
+					List<PedagogicalSoftwareBlockDTO> nearestElements = new ArrayList<>();
 
 					// For each aim, we insert the nearest origin element in the map
-					for (PedagogicalSoftwareElementDTO tmpAimElement : tmpAimElements) {
+					for (PedagogicalSoftwareBlockDTO tmpAimElement : tmpAimElements) {
 
 						nearestPosition = -1;
 						nearest = null;
@@ -441,7 +441,7 @@ public class PedagogicalSoftwareService {
 						//If we want to set the next steps
 						if (nextSteps != null) {
 							// 3.3.3.1- Checks if we have to add the aim element to the next hints or delete an origin element
-							List<PedagogicalSoftwareElementDTO> listTmpOriginElements = tmpOriginElements.stream()
+							List<PedagogicalSoftwareBlockDTO> listTmpOriginElements = tmpOriginElements.stream()
 									.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
 									.collect(Collectors.toList());
 
@@ -463,7 +463,7 @@ public class PedagogicalSoftwareService {
 							}
 							else {
 								//3.3.3.4- We check if the number of elements with the same name are equals in the origin and the aim
-								List<PedagogicalSoftwareElementDTO> listTmpAimElements = tmpAimElements.stream()
+								List<PedagogicalSoftwareBlockDTO> listTmpAimElements = tmpAimElements.stream()
 										.filter(toe -> toe.getElementName().equals(tmpAimElement.getElementName()))
 										.collect(Collectors.toList());
 								int elementDifference = Math.abs(listTmpOriginElements.size() - listTmpAimElements.size());
@@ -506,7 +506,7 @@ public class PedagogicalSoftwareService {
 							}
 						}
 
-						for (PedagogicalSoftwareElementDTO tmpOriginElement : tmpOriginElements) {
+						for (PedagogicalSoftwareBlockDTO tmpOriginElement : tmpOriginElements) {
 
 							diffPosition = Math
 									.abs(tmpAimElement.getElementPosition() - tmpOriginElement.getElementPosition());
@@ -552,7 +552,7 @@ public class PedagogicalSoftwareService {
 			if(nextSteps != null) {
 
 				//3.4- If we want the next elements, for each origin element we look for the aim element
-				for (PedagogicalSoftwareElementDTO familyOriginElement : familyOriginElements) {
+				for (PedagogicalSoftwareBlockDTO familyOriginElement : familyOriginElements) {
 
 					//3.4.1- Counts the number of this element in the aim
 					long tmpAimElements = familyAimElements.stream().filter(c -> c.getElementName().equals(familyOriginElement.getElementName())).count();
@@ -590,14 +590,14 @@ public class PedagogicalSoftwareService {
 	 * @param nextSteps
 	 * @return
 	 */
-	public double inputDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities,
-										   Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences,
-										   List<PedagogicalSoftwareElementDTO> aimElements, double diffInputValues,
+	public double inputDistanceCalculation(Map<String, List<PedagogicalSoftwareBlockDTO>> mapElementSimilarities,
+										   Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences,
+										   List<PedagogicalSoftwareBlockDTO> aimElements, double diffInputValues,
 										   NextStepHint nextSteps) {
 		
 		//Adds to the distance calculation result, the different inputs from the difference of the elements
-		for(List<PedagogicalSoftwareElementDTO> elements : mapFamilyDifferences.values()) {
-			for(PedagogicalSoftwareElementDTO element : elements) {
+		for(List<PedagogicalSoftwareBlockDTO> elements : mapFamilyDifferences.values()) {
+			for(PedagogicalSoftwareBlockDTO element : elements) {
 				for(PedagogicalSoftwareInput input : element.getInputs()) {
 					for(PedagogicalSoftwareField field : input.getFields()) {
 						if(field.isNumeric()) {
@@ -615,26 +615,26 @@ public class PedagogicalSoftwareService {
 		for(String element : mapElementSimilarities.keySet()) {
 			
 			//5.1- Gets the elements in the aim for this element
-			List<PedagogicalSoftwareElementDTO> elementAimElements = aimElements
+			List<PedagogicalSoftwareBlockDTO> elementAimElements = aimElements
 																		.stream()
 																		.filter(c -> c.getElementName().equals(element))
 																		.collect(Collectors.toList());
 			
 			//5.2- Gets the elements in the origin
-			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element).stream().map(eoe -> eoe.clone()).collect(Collectors.toList());
+			List<PedagogicalSoftwareBlockDTO> elementOriginElements = mapElementSimilarities.get(element).stream().map(eoe -> eoe.clone()).collect(Collectors.toList());
 
 			//List to avoid insert many times the same element for the help hints
 			//Here we will insert the origin elements to know if exactly if an element has been added or not
-			List<PedagogicalSoftwareElementDTO> elementsAlreadyAddedForHints = new ArrayList<>();
+			List<PedagogicalSoftwareBlockDTO> elementsAlreadyAddedForHints = new ArrayList<>();
 
 			//5.3- Checks all the aim elements
-			for(PedagogicalSoftwareElementDTO elementAimElement : elementAimElements) {
+			for(PedagogicalSoftwareBlockDTO elementAimElement : elementAimElements) {
 				
 				double nearestDifference = -1;
-				PedagogicalSoftwareElementDTO nearestOrigin = null;
+				PedagogicalSoftwareBlockDTO nearestOrigin = null;
 				
 				//5.3.1- Checks all the origin element for each aim element
-				for	(PedagogicalSoftwareElementDTO elementOriginElement : elementOriginElements) {
+				for	(PedagogicalSoftwareBlockDTO elementOriginElement : elementOriginElements) {
 					
 					double accumulatedOriginDifference = 0;
 					
@@ -718,16 +718,16 @@ public class PedagogicalSoftwareService {
 	 * @param nextSteps
 	 * @return
 	 */
-	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities, 
-											  Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences, 
-											  List<PedagogicalSoftwareElementDTO> aimElements, 
+	public double positionDistanceCalculation(Map<String, List<PedagogicalSoftwareBlockDTO>> mapElementSimilarities,
+											  Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences,
+											  List<PedagogicalSoftwareBlockDTO> aimElements,
 											  double diffPosition,
 											  NextStepHint nextSteps) {
 
 		
 		//Adds to the distance calculation result, the different position from the difference of the elements
-		for(List<PedagogicalSoftwareElementDTO> elements : mapFamilyDifferences.values()) {
-			for(PedagogicalSoftwareElementDTO element : elements) {
+		for(List<PedagogicalSoftwareBlockDTO> elements : mapFamilyDifferences.values()) {
+			for(PedagogicalSoftwareBlockDTO element : elements) {
 				diffPosition += element.getElementPosition() + 1;
 			}
 		}
@@ -735,23 +735,23 @@ public class PedagogicalSoftwareService {
 		for (String element : mapElementSimilarities.keySet()) {
 
 			// 4.1- Gets the elements in the aim for this element
-			List<PedagogicalSoftwareElementDTO> elementAimElements = aimElements.stream()
+			List<PedagogicalSoftwareBlockDTO> elementAimElements = aimElements.stream()
 					.filter(c -> c.getElementName().equals(element)).collect(Collectors.toList());
 
 			// 4.2- Gets the elements in the origin
-			List<PedagogicalSoftwareElementDTO> elementOriginElements = mapElementSimilarities.get(element).stream()
+			List<PedagogicalSoftwareBlockDTO> elementOriginElements = mapElementSimilarities.get(element).stream()
 					.map(mes -> mes.clone()).collect(Collectors.toList());
 
 			int nearestPosition = -1;
 			int tmpDiff = 0;
-			PedagogicalSoftwareElementDTO nearestElement = null;
+			PedagogicalSoftwareBlockDTO nearestElement = null;
 
 			// 4.3- For each aim element, we look for the nearest origin element
-			for (PedagogicalSoftwareElementDTO aimElement : elementAimElements) {
+			for (PedagogicalSoftwareBlockDTO aimElement : elementAimElements) {
 
 				if (elementOriginElements.size() > 0) {
 
-					for (PedagogicalSoftwareElementDTO originElement : elementOriginElements) {
+					for (PedagogicalSoftwareBlockDTO originElement : elementOriginElements) {
 
 						tmpDiff = Math.abs(aimElement.getElementPosition() - originElement.getElementPosition());
 						if (nearestPosition == -1) {
@@ -800,17 +800,17 @@ public class PedagogicalSoftwareService {
 	 * @param position    cumulative position
 	 * @return
 	 */
-	public List<PedagogicalSoftwareElementDTO> getAllElements(PedagogicalSoftwareElement element,
-			List<PedagogicalSoftwareElementDTO> elementList, AtomicInteger position) {
+	public List<PedagogicalSoftwareBlockDTO> getAllElements(PedagogicalSoftwareBlock element,
+															List<PedagogicalSoftwareBlockDTO> elementList, AtomicInteger position) {
 
 		// Adds the element to the list
-		elementList.add(new PedagogicalSoftwareElementDTO(element, position.get()));
+		elementList.add(new PedagogicalSoftwareBlockDTO(element, position.get()));
 		position.incrementAndGet();
 
 		int numberOfSubElements = 0;
 
 		// Checks if the element has a nested element
-		for (PedagogicalSoftwareElement nestedElement : element.getNested()) {
+		for (PedagogicalSoftwareBlock nestedElement : element.getNested()) {
 
 			// Gets the number of elements of the nested element
 			numberOfSubElements = getElementsUnderNode(nestedElement, 0);
@@ -838,11 +838,11 @@ public class PedagogicalSoftwareService {
 	 * @param subElements
 	 * @return
 	 */
-	private int getElementsUnderNode(PedagogicalSoftwareElement element, int subElements) {
+	private int getElementsUnderNode(PedagogicalSoftwareBlock element, int subElements) {
 
 		// 1- Counts all the nested elements in the subtree
 		if (element.getNested().size() > 0) {
-			for (PedagogicalSoftwareElement nestedElement : element.getNested()) {
+			for (PedagogicalSoftwareBlock nestedElement : element.getNested()) {
 				subElements++;
 				subElements = getElementsUnderNode(nestedElement, subElements);
 			}

@@ -25,7 +25,7 @@ public class PedagogicalSoftwareData {
 	private boolean finishedExercise;
 	private int validSolution;
 	private String screenShot;
-	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
+	private List<PedagogicalSoftwareBlock> elements = new ArrayList<>();
 	
 	public String getId() {
 		return this.id;
@@ -91,10 +91,10 @@ public class PedagogicalSoftwareData {
 	public String getScreenShot(){return this.screenShot;}
 	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
 
-	public List<PedagogicalSoftwareElement> getElements(){
+	public List<PedagogicalSoftwareBlock> getElements(){
 		return this.elements;
 	}
-	public void setElements(List<PedagogicalSoftwareElement> elements) {
+	public void setElements(List<PedagogicalSoftwareBlock> elements) {
 		this.elements = elements;
 	}
 	
@@ -120,7 +120,7 @@ public class PedagogicalSoftwareData {
 	 * @param validSolution
 	 * @param screenShot
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
+	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareBlock> elements,
 								   boolean requestHelp, boolean finishedExercise, int validSolution, String screenShot) {
 		this.student = student;
 		this.exercise = exercise;
@@ -139,7 +139,7 @@ public class PedagogicalSoftwareData {
 		}
 	}
 	
-	public void addElement(PedagogicalSoftwareElement element) {
+	public void addElement(PedagogicalSoftwareBlock element) {
 		this.elements.add(element);
 	}
 }

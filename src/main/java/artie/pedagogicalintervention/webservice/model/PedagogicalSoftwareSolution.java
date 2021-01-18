@@ -19,7 +19,7 @@ public class PedagogicalSoftwareSolution {
 	private String exerciseId;
 	private Exercise exercise;
 	private String screenShot;
-	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
+	private List<PedagogicalSoftwareBlock> elements = new ArrayList<>();
 	
 	public String getId() {
 		return this.id;
@@ -59,10 +59,10 @@ public class PedagogicalSoftwareSolution {
 	public void setScreenShot(String screenShot) {
 		this.screenShot = screenShot;
 	}
-	public List<PedagogicalSoftwareElement> getElements(){
+	public List<PedagogicalSoftwareBlock> getElements(){
 		return this.elements;
 	}
-	public void setElements(List<PedagogicalSoftwareElement> elements) {
+	public void setElements(List<PedagogicalSoftwareBlock> elements) {
 		this.elements = elements;
 	}
 	
@@ -76,7 +76,7 @@ public class PedagogicalSoftwareSolution {
 	 * @param exercise
 	 * @param elements
 	 */
-	public PedagogicalSoftwareSolution(Exercise exercise, List<PedagogicalSoftwareElement> elements) {
+	public PedagogicalSoftwareSolution(Exercise exercise, List<PedagogicalSoftwareBlock> elements) {
 		this.exercise = exercise;
 		this.elements = elements;
 		
@@ -95,7 +95,7 @@ public class PedagogicalSoftwareSolution {
 	 * @param screenShot
 	 * @param elements
 	 */
-	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, List<PedagogicalSoftwareElement> elements){
+	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, List<PedagogicalSoftwareBlock> elements){
 		this.userId=userId;
 		this.pedagogicalSoftwareDataId = pedagogicalSoftwareDataId;
 		this.exercise = exercise;
@@ -109,7 +109,7 @@ public class PedagogicalSoftwareSolution {
 		}
 	}
 
-	public void addElement(PedagogicalSoftwareElement element) {
+	public void addElement(PedagogicalSoftwareBlock element) {
 		this.elements.add(element);
 	}
 }

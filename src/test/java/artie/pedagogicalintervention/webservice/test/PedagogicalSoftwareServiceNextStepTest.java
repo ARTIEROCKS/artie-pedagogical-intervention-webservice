@@ -1,14 +1,13 @@
 package artie.pedagogicalintervention.webservice.test;
 
 import artie.common.web.dto.NextStepHint;
-import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareElementDTO;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareElement;
+import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.mongodb.core.aggregation.ComparisonOperators;
 
 import java.util.*;
 
@@ -28,26 +27,26 @@ public class PedagogicalSoftwareServiceNextStepTest {
     void familyNextStepsCalculationTest() {
 
         //Setup
-        PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1","family1", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family2", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element3", "family3", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO origin4 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element4", "family4", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO origin1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1","family1", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO origin2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family2", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO origin3 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element3", "family3", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO origin4 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element4", "family4", null, null, null, null, null));
 
-        PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1","family1", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family2", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element3", "family3", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO aim5 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element5", "family5", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO aim1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1","family1", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO aim2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family2", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO aim3 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element3", "family3", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO aim5 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element5", "family5", null, null, null, null, null));
 
-        List<PedagogicalSoftwareElementDTO> originElements;
-        List<PedagogicalSoftwareElementDTO> aimElements;
-        Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities;
-        Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences;
+        List<PedagogicalSoftwareBlockDTO> originElements;
+        List<PedagogicalSoftwareBlockDTO> aimElements;
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilySimilarities;
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences;
 
         NextStepHint nextSteps = null;
 
         //A- Same origin and aim comparison
-        originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
+        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -59,8 +58,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
         assertEquals(0, nextSteps.getReplaceInputs().size());
 
         //B- More in origin
-        originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2));
+        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -75,8 +74,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
 
         //C- More in aim comparison
-        originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
+        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -90,8 +89,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
         assertEquals("element3", nextSteps.getAddElements().get(0).getElementName());
 
         //D- Difference in origin and in aim
-        originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin4));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin4));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -107,8 +106,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
 
         //E- Difference in origin and in aim, but more (one element repeated) in origin
-        originElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin4, origin4));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin4, origin4));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -128,27 +127,27 @@ public class PedagogicalSoftwareServiceNextStepTest {
     @Test
     void elementNextStepsCalculationTest(){
         //Setup
-        PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
-        PedagogicalSoftwareElementDTO origin2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),1);
-        PedagogicalSoftwareElementDTO origin3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element3", "family1", null, null, null, null, null),2);
-        PedagogicalSoftwareElementDTO origin4 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element4", "family1", null, null, null, null, null),3);
+        PedagogicalSoftwareBlockDTO origin1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),0);
+        PedagogicalSoftwareBlockDTO origin2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family1", null, null, null, null, null),1);
+        PedagogicalSoftwareBlockDTO origin3 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element3", "family1", null, null, null, null, null),2);
+        PedagogicalSoftwareBlockDTO origin4 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element4", "family1", null, null, null, null, null),3);
 
-        PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
-        PedagogicalSoftwareElementDTO aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),1);
-        PedagogicalSoftwareElementDTO aim3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element3", "family1", null, null, null, null, null),2);
-        PedagogicalSoftwareElementDTO aim5 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element5", "family1", null, null, null, null, null),3);
+        PedagogicalSoftwareBlockDTO aim1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),0);
+        PedagogicalSoftwareBlockDTO aim2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family1", null, null, null, null, null),1);
+        PedagogicalSoftwareBlockDTO aim3 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element3", "family1", null, null, null, null, null),2);
+        PedagogicalSoftwareBlockDTO aim5 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element5", "family1", null, null, null, null, null),3);
 
-        List<PedagogicalSoftwareElementDTO> aimElements;
-        Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilySimilarities = new HashMap<>();
-        Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences = new HashMap<>();
-        Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities;
+        List<PedagogicalSoftwareBlockDTO> aimElements;
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilySimilarities = new HashMap<>();
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences = new HashMap<>();
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapElementSimilarities;
 
         NextStepHint nextSteps = null;
 
 
         //A- Same origin and aim comparison
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -160,8 +159,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
 
         //B- More in aim than in origin
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -175,8 +174,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         //C- More in aim with 2 family difference distance
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim3));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -192,8 +191,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         //D- Difference in origin and aim with 2 family difference distance
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin4)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin4)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -209,8 +208,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         //E- Repeated element in origin but not in aim
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin1, origin2)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin1, origin2)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -224,12 +223,12 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
 
         //F- Repeated element in origin, but not in aim, and with different positions
-        PedagogicalSoftwareElementDTO origin1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),2);
-        PedagogicalSoftwareElementDTO origin1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),3);
+        PedagogicalSoftwareBlockDTO origin1bis = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),2);
+        PedagogicalSoftwareBlockDTO origin1bis2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),3);
 
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1bis, origin1bis2, origin2)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1bis, origin1bis2, origin2)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -243,13 +242,13 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
 
         //G- Repeated element 3 times in origin, but not in aim, and with different positions
-        origin1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),2);
-        origin1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),3);
-        PedagogicalSoftwareElementDTO aim1bis3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),2);
+        origin1bis = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),2);
+        origin1bis2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),3);
+        PedagogicalSoftwareBlockDTO aim1bis3 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),2);
 
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1bis, origin1bis2, aim1bis3, origin2)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1bis, origin1bis2, aim1bis3, origin2)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -264,13 +263,13 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
 
         //H- Repeated element in aim, but not in origin, and with different positions
-        PedagogicalSoftwareElementDTO aim1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
-        PedagogicalSoftwareElementDTO aim1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),1);
-        aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),2);
+        PedagogicalSoftwareBlockDTO aim1bis = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),0);
+        PedagogicalSoftwareBlockDTO aim1bis2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),1);
+        aim2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family1", null, null, null, null, null),2);
 
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1bis, aim1bis2, aim2));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1bis, aim1bis2, aim2));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -284,14 +283,14 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
 
         //I- Repeated element 3 times in aim, but not in origin, and with different positions
-        aim1bis = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),0);
-        aim1bis2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),1);
-        aim1bis3 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null),2);
-        aim2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family1", null, null, null, null, null),3);
+        aim1bis = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),0);
+        aim1bis2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),1);
+        aim1bis3 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),2);
+        aim2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family1", null, null, null, null, null),3);
 
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1, origin2, origin3)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1bis, aim1bis2, aim1bis3, aim2));
+        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1bis, aim1bis2, aim1bis3, aim2));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
@@ -310,10 +309,10 @@ public class PedagogicalSoftwareServiceNextStepTest {
     void inputNextStepsCalculationTest() {
 
         //Setup
-        PedagogicalSoftwareElementDTO origin1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO aim1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family1", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO diff1 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element1", "family2", null, null, null, null, null));
-        PedagogicalSoftwareElementDTO diff2 = new PedagogicalSoftwareElementDTO(new PedagogicalSoftwareElement("","element2", "family3", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO origin1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO aim1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO diff1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family2", null, null, null, null, null));
+        PedagogicalSoftwareBlockDTO diff2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family3", null, null, null, null, null));
 
         PedagogicalSoftwareInput originInput1;
         PedagogicalSoftwareField originFieldInput1;
@@ -335,9 +334,9 @@ public class PedagogicalSoftwareServiceNextStepTest {
         PedagogicalSoftwareField diffFieldInput2;
 
 
-        Map<String, List<PedagogicalSoftwareElementDTO>> mapElementSimilarities = new HashMap<>();
-        Map<String, List<PedagogicalSoftwareElementDTO>> mapFamilyDifferences = new HashMap<>();
-        List<PedagogicalSoftwareElementDTO> aimElements;
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapElementSimilarities = new HashMap<>();
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences = new HashMap<>();
+        List<PedagogicalSoftwareBlockDTO> aimElements;
         NextStepHint nextSteps = null;
 
 
@@ -395,11 +394,11 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
 
         mapElementSimilarities.clear();
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
+        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
         mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
         mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
 
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1));
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
@@ -430,8 +429,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
         aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 
         mapElementSimilarities.clear();
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1));
+        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1));
 
         diffFieldInput1 = new PedagogicalSoftwareField("STR", "string");
         diffFieldInput2 = new PedagogicalSoftwareField("NUM", "15");
@@ -472,8 +471,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
         aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 
         mapElementSimilarities.clear();
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(origin1)));
-        aimElements = new ArrayList<PedagogicalSoftwareElementDTO>(Arrays.asList(aim1));
+        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
+        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1));
 
         diffFieldInput1 = new PedagogicalSoftwareField("STR", "string");
         diffFieldInput2 = new PedagogicalSoftwareField("NUM", "90");
