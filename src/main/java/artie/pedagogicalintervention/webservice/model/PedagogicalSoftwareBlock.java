@@ -109,22 +109,22 @@ public class PedagogicalSoftwareBlock implements Cloneable {
 		if (this == obj) return true;
 	    if (obj == null) return false;
 	    if (this.getClass() != obj.getClass()) return false;
-	    PedagogicalSoftwareBlock objElement = (PedagogicalSoftwareBlock) obj;
+	    PedagogicalSoftwareBlock objBlock = (PedagogicalSoftwareBlock) obj;
 	    
 	    //Checks if the name and the family are equals
-	    if (!this.elementName.equals(objElement.getElementName())) return false;
-	    if (!this.elementFamily.equals(objElement.getElementFamily())) return false;
+	    if (!this.elementName.equals(objBlock.getElementName())) return false;
+	    if (!this.elementFamily.equals(objBlock.getElementFamily())) return false;
 	    
 	    //Checks if all the inputs are equals
-	    boolean result = this.inputs.size() == objElement.getInputs().size();
+	    boolean result = this.inputs.size() == objBlock.getInputs().size();
 	    for(PedagogicalSoftwareInput i : this.inputs) {
-	    	result = result && (objElement.getInputs().stream().filter(oi -> oi.equals(i)).count() > 0);
+	    	result = result && (objBlock.getInputs().stream().filter(oi -> oi.equals(i)).count() > 0);
 	    }
 	    
 	    //Checks if all the nested elements are equals
-	    result = result && this.nested.size() == objElement.getNested().size();
+	    result = result && this.nested.size() == objBlock.getNested().size();
 	    for(PedagogicalSoftwareBlock e : this.nested) {
-	    	result = result && (objElement.getNested().stream().filter(oe -> oe.equals(e)).count() > 0);
+	    	result = result && (objBlock.getNested().stream().filter(oe -> oe.equals(e)).count() > 0);
 	    }
 	    
 		return result;
