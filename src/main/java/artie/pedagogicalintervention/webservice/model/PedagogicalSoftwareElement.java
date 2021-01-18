@@ -81,4 +81,10 @@ public class PedagogicalSoftwareElement {
         List<PedagogicalSoftwareBlock> cloneBlocks = (this.blocks != null ? this.blocks.stream().map(b -> b.clone()).collect(Collectors.toList()) : null);
         return new PedagogicalSoftwareElement(this.id, this.name, cloneBlocks);
     }
+
+    /**
+     * Function to add a new block
+     * @param block
+     */
+    public void addBlock(PedagogicalSoftwareBlock block){this.blocks.add(block);}
 }

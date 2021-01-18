@@ -25,7 +25,7 @@ public class PedagogicalSoftwareData {
 	private boolean finishedExercise;
 	private int validSolution;
 	private String screenShot;
-	private List<PedagogicalSoftwareBlock> elements = new ArrayList<>();
+	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
 	public String getId() {
 		return this.id;
@@ -91,13 +91,23 @@ public class PedagogicalSoftwareData {
 	public String getScreenShot(){return this.screenShot;}
 	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
 
-	public List<PedagogicalSoftwareBlock> getElements(){
+	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
 	}
-	public void setElements(List<PedagogicalSoftwareBlock> elements) {
+	public void setElements(List<PedagogicalSoftwareElement> elements) {
 		this.elements = elements;
 	}
-	
+
+	/**
+	 * Function to get all the blocks from inside the elements
+	 * @return
+	 */
+	public List<PedagogicalSoftwareBlock> getAllBlocks(){
+		List<PedagogicalSoftwareBlock> allBlocks = new ArrayList<>();
+		this.elements.forEach(e -> allBlocks.addAll(e.getBlocks()));
+		return allBlocks;
+	}
+
 	/**
 	 * Default Constructor
 	 */
@@ -120,7 +130,7 @@ public class PedagogicalSoftwareData {
 	 * @param validSolution
 	 * @param screenShot
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareBlock> elements,
+	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
 								   boolean requestHelp, boolean finishedExercise, int validSolution, String screenShot) {
 		this.student = student;
 		this.exercise = exercise;
@@ -139,7 +149,7 @@ public class PedagogicalSoftwareData {
 		}
 	}
 	
-	public void addElement(PedagogicalSoftwareBlock element) {
+	public void addElement(PedagogicalSoftwareElement element) {
 		this.elements.add(element);
 	}
 }

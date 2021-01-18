@@ -19,7 +19,7 @@ public class PedagogicalSoftwareSolution {
 	private String exerciseId;
 	private Exercise exercise;
 	private String screenShot;
-	private List<PedagogicalSoftwareBlock> elements = new ArrayList<>();
+	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
 	public String getId() {
 		return this.id;
@@ -59,11 +59,20 @@ public class PedagogicalSoftwareSolution {
 	public void setScreenShot(String screenShot) {
 		this.screenShot = screenShot;
 	}
-	public List<PedagogicalSoftwareBlock> getElements(){
+	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
 	}
-	public void setElements(List<PedagogicalSoftwareBlock> elements) {
+	public void setElements(List<PedagogicalSoftwareElement> elements) {
 		this.elements = elements;
+	}
+	/**
+	 * Function to get all the blocks from inside the elements
+	 * @return
+	 */
+	public List<PedagogicalSoftwareBlock> getAllBlocks(){
+		List<PedagogicalSoftwareBlock> allBlocks = new ArrayList<>();
+		this.elements.forEach(e -> allBlocks.addAll(e.getBlocks()));
+		return allBlocks;
 	}
 	
 	/**
@@ -76,7 +85,7 @@ public class PedagogicalSoftwareSolution {
 	 * @param exercise
 	 * @param elements
 	 */
-	public PedagogicalSoftwareSolution(Exercise exercise, List<PedagogicalSoftwareBlock> elements) {
+	public PedagogicalSoftwareSolution(Exercise exercise, List<PedagogicalSoftwareElement> elements) {
 		this.exercise = exercise;
 		this.elements = elements;
 		
@@ -95,7 +104,7 @@ public class PedagogicalSoftwareSolution {
 	 * @param screenShot
 	 * @param elements
 	 */
-	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, List<PedagogicalSoftwareBlock> elements){
+	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, List<PedagogicalSoftwareElement> elements){
 		this.userId=userId;
 		this.pedagogicalSoftwareDataId = pedagogicalSoftwareDataId;
 		this.exercise = exercise;
@@ -109,7 +118,7 @@ public class PedagogicalSoftwareSolution {
 		}
 	}
 
-	public void addElement(PedagogicalSoftwareBlock element) {
+	public void addElement(PedagogicalSoftwareElement element) {
 		this.elements.add(element);
 	}
 }
