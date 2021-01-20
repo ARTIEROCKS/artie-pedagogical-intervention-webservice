@@ -53,8 +53,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
-        assertEquals(0, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(0, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
         assertEquals(0, nextSteps.getReplaceInputs().size());
 
         //B- More in origin
@@ -66,11 +66,11 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
-        assertEquals(0, nextSteps.getAddElements().size());
-        assertEquals(1, nextSteps.getDeleteElements().size());
+        assertEquals(0, nextSteps.getAddBlocks().size());
+        assertEquals(1, nextSteps.getDeleteBlocks().size());
         assertEquals(0, nextSteps.getReplaceInputs().size());
 
-        assertEquals("element3", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals("element3", nextSteps.getDeleteBlocks().get(0).getBlockName());
 
 
         //C- More in aim comparison
@@ -82,11 +82,11 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
         assertEquals(0, nextSteps.getReplaceInputs().size());
 
-        assertEquals("element3", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals("element3", nextSteps.getAddBlocks().get(0).getBlockName());
 
         //D- Difference in origin and in aim
         originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin4));
@@ -97,12 +97,12 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals(1, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals(1, nextSteps.getDeleteBlocks().size());
         assertEquals(0, nextSteps.getReplaceInputs().size());
 
-        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
-        assertEquals("element4", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals("element5", nextSteps.getAddBlocks().get(0).getBlockName());
+        assertEquals("element4", nextSteps.getDeleteBlocks().get(0).getBlockName());
 
 
         //E- Difference in origin and in aim, but more (one element repeated) in origin
@@ -114,13 +114,13 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals(2, nextSteps.getDeleteElements().size());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals(2, nextSteps.getDeleteBlocks().size());
         assertEquals(0, nextSteps.getReplaceInputs().size());
 
-        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
-        assertEquals("element4", nextSteps.getDeleteElements().get(0).getElementName());
-        assertEquals("element4", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals("element5", nextSteps.getAddBlocks().get(0).getBlockName());
+        assertEquals("element4", nextSteps.getDeleteBlocks().get(0).getBlockName());
+        assertEquals("element4", nextSteps.getDeleteBlocks().get(0).getBlockName());
 
     }
 
@@ -154,8 +154,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(0, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(0, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
 
 
         //B- More in aim than in origin
@@ -167,9 +167,9 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
-        assertEquals("element2", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
+        assertEquals("element2", nextSteps.getAddBlocks().get(0).getBlockName());
 
 
         //C- More in aim with 2 family difference distance
@@ -184,9 +184,9 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences.put("family4", new ArrayList<>(Arrays.asList(origin4)));
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
-        assertEquals("element3", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
+        assertEquals("element3", nextSteps.getAddBlocks().get(0).getBlockName());
 
 
         //D- Difference in origin and aim with 2 family difference distance
@@ -200,10 +200,10 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3, aim3)));
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals(1, nextSteps.getDeleteElements().size());
-        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
-        assertEquals("element4", nextSteps.getDeleteElements().get(0).getElementName());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals(1, nextSteps.getDeleteBlocks().size());
+        assertEquals("element5", nextSteps.getAddBlocks().get(0).getBlockName());
+        assertEquals("element4", nextSteps.getDeleteBlocks().get(0).getBlockName());
 
 
         //E- Repeated element in origin but not in aim
@@ -216,10 +216,10 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getDeleteElements().size());
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals("element1", nextSteps.getDeleteElements().get(0).getElementName());
-        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals(1, nextSteps.getDeleteBlocks().size());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals("element1", nextSteps.getDeleteBlocks().get(0).getBlockName());
+        assertEquals("element5", nextSteps.getAddBlocks().get(0).getBlockName());
 
 
         //F- Repeated element in origin, but not in aim, and with different positions
@@ -235,10 +235,10 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getDeleteElements().size());
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals("element1", nextSteps.getDeleteElements().get(0).getElementName());
-        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals(1, nextSteps.getDeleteBlocks().size());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals("element1", nextSteps.getDeleteBlocks().get(0).getBlockName());
+        assertEquals("element5", nextSteps.getAddBlocks().get(0).getBlockName());
 
 
         //G- Repeated element 3 times in origin, but not in aim, and with different positions
@@ -255,11 +255,11 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(2, nextSteps.getDeleteElements().size());
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals("element1", nextSteps.getDeleteElements().get(0).getElementName());
-        assertEquals("element1", nextSteps.getDeleteElements().get(1).getElementName());
-        assertEquals("element5", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals(2, nextSteps.getDeleteBlocks().size());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals("element1", nextSteps.getDeleteBlocks().get(0).getBlockName());
+        assertEquals("element1", nextSteps.getDeleteBlocks().get(1).getBlockName());
+        assertEquals("element5", nextSteps.getAddBlocks().get(0).getBlockName());
 
 
         //H- Repeated element in aim, but not in origin, and with different positions
@@ -276,10 +276,10 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getDeleteElements().size());
-        assertEquals(1, nextSteps.getAddElements().size());
-        assertEquals("element3", nextSteps.getDeleteElements().get(0).getElementName());
-        assertEquals("element1", nextSteps.getAddElements().get(0).getElementName());
+        assertEquals(1, nextSteps.getDeleteBlocks().size());
+        assertEquals(1, nextSteps.getAddBlocks().size());
+        assertEquals("element3", nextSteps.getDeleteBlocks().get(0).getBlockName());
+        assertEquals("element1", nextSteps.getAddBlocks().get(0).getBlockName());
 
 
         //I- Repeated element 3 times in aim, but not in origin, and with different positions
@@ -297,11 +297,11 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
-        assertEquals(1, nextSteps.getDeleteElements().size());
-        assertEquals(2, nextSteps.getAddElements().size());
-        assertEquals("element3", nextSteps.getDeleteElements().get(0).getElementName());
-        assertEquals("element1", nextSteps.getAddElements().get(0).getElementName());
-        assertEquals("element1", nextSteps.getAddElements().get(1).getElementName());
+        assertEquals(1, nextSteps.getDeleteBlocks().size());
+        assertEquals(2, nextSteps.getAddBlocks().size());
+        assertEquals("element3", nextSteps.getDeleteBlocks().get(0).getBlockName());
+        assertEquals("element1", nextSteps.getAddBlocks().get(0).getBlockName());
+        assertEquals("element1", nextSteps.getAddBlocks().get(1).getBlockName());
 
     }
 
@@ -363,8 +363,8 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
-        assertEquals(0, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(0, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
         assertEquals(0, nextSteps.getReplaceInputs().size());
 
 
@@ -402,11 +402,11 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
-        assertEquals(0, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(0, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
         assertEquals(1, nextSteps.getReplaceInputs().size());
 
-        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getElementName());
+        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getBlockName());
         assertEquals("b", nextSteps.getReplaceInputs().get(0).getInputValue());
         assertEquals("a", nextSteps.getReplaceInputs().get(0).getSolutionValue());
 
@@ -444,11 +444,11 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
-        assertEquals(0, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(0, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
         assertEquals(1, nextSteps.getReplaceInputs().size());
 
-        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getElementName());
+        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getBlockName());
         assertEquals("30.0", nextSteps.getReplaceInputs().get(0).getInputValue());
         assertEquals("40.0", nextSteps.getReplaceInputs().get(0).getSolutionValue());
 
@@ -486,15 +486,15 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
-        assertEquals(0, nextSteps.getAddElements().size());
-        assertEquals(0, nextSteps.getDeleteElements().size());
+        assertEquals(0, nextSteps.getAddBlocks().size());
+        assertEquals(0, nextSteps.getDeleteBlocks().size());
         assertEquals(2, nextSteps.getReplaceInputs().size());
 
-        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getElementName());
+        assertEquals("element1", nextSteps.getReplaceInputs().get(0).getElement().getBlockName());
         assertEquals("b", nextSteps.getReplaceInputs().get(0).getInputValue());
         assertEquals("a", nextSteps.getReplaceInputs().get(0).getSolutionValue());
 
-        assertEquals("element1", nextSteps.getReplaceInputs().get(1).getElement().getElementName());
+        assertEquals("element1", nextSteps.getReplaceInputs().get(1).getElement().getBlockName());
         assertEquals("30.0", nextSteps.getReplaceInputs().get(1).getInputValue());
         assertEquals("40.0", nextSteps.getReplaceInputs().get(1).getSolutionValue());
 

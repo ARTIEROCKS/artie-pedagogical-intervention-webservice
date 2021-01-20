@@ -286,24 +286,24 @@ public class PedagogicalSoftwareService {
 					//Checks if the help has been requested and then insert the next steps
 					if(nextSteps != null){
 						//We insert all the elements to add in the next step
-						List<artie.common.web.dto.PedagogicalSoftwareElement> tmpDTOBlockList = tmpFamilyDifferences.stream()
+						List<artie.common.web.dto.PedagogicalSoftwareBlock> tmpDTOBlockList = tmpFamilyDifferences.stream()
 																									.map(fd -> {
 
 																										//Creating the next and previous blocks
-																										artie.common.web.dto.PedagogicalSoftwareElement nextBlock = null;
-																										artie.common.web.dto.PedagogicalSoftwareElement previousBlock = null;
+																										artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
+																										artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 
 																										if(fd.getNext() != null){
-																											nextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(fd.getNext().getElementName(), null,  null);
+																											nextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(fd.getNext().getElementName(), null,  null);
 																										}
 
 																										if(fd.getPrevious() != null){
-																											previousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(fd.getPrevious().getElementName(), null,  null);
+																											previousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(fd.getPrevious().getElementName(), null,  null);
 																										}
 
-																										return new artie.common.web.dto.PedagogicalSoftwareElement(fd.getElementName(), previousBlock, nextBlock);
+																										return new artie.common.web.dto.PedagogicalSoftwareBlock(fd.getElementName(), previousBlock, nextBlock);
 																									}).collect(Collectors.toList());
-						nextSteps.putAddElements(tmpDTOBlockList);
+						nextSteps.putAddBlocks(tmpDTOBlockList);
 					}
 
 				} else {
@@ -339,24 +339,24 @@ public class PedagogicalSoftwareService {
 					//Checks if the help has been requested and then insert the next steps
 					if(nextSteps != null){
 						//We insert all the elements to delete in the next step
-						List<artie.common.web.dto.PedagogicalSoftwareElement> tmpDTOBlockList = tmpFamilyDifferences.stream()
+						List<artie.common.web.dto.PedagogicalSoftwareBlock> tmpDTOBlockList = tmpFamilyDifferences.stream()
 																									.map(fd -> {
 
 																										//Creating the next block
-																										artie.common.web.dto.PedagogicalSoftwareElement nextBlock = null;
-																										artie.common.web.dto.PedagogicalSoftwareElement previousBlock = null;
+																										artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
+																										artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 
 																										if(fd.getNext() != null){
-																											nextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(fd.getNext().getElementName(), null,  null);
+																											nextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(fd.getNext().getElementName(), null,  null);
 																										}
 
 																										if(fd.getPrevious() != null){
-																											previousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(fd.getPrevious().getElementName(), null,  null);
+																											previousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(fd.getPrevious().getElementName(), null,  null);
 																										}
 
-																										return new artie.common.web.dto.PedagogicalSoftwareElement(fd.getElementName(), previousBlock, nextBlock);
+																										return new artie.common.web.dto.PedagogicalSoftwareBlock(fd.getElementName(), previousBlock, nextBlock);
 																									}).collect(Collectors.toList());
-						nextSteps.putDeleteElements(tmpDTOBlockList);
+						nextSteps.putDeleteBlocks(tmpDTOBlockList);
 					}
 				}
 			}
@@ -450,16 +450,16 @@ public class PedagogicalSoftwareService {
 
 							//3.3.3.3- We have to add the block to the next hint and the element has not been taken into account
 							if (listTmpOriginBlocks.size() == 0 && !familyOriginTakenAccountBlocksAdd.contains(familyAimBlock.getElementName())) {
-								artie.common.web.dto.PedagogicalSoftwareElement nextBlock = null;
-								artie.common.web.dto.PedagogicalSoftwareElement previousBlock = null;
+								artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
+								artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 
 								if (tmpAimBlock.getNext() != null) {
-									nextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(tmpAimBlock.getNext().getElementName(), null, null);
+									nextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(tmpAimBlock.getNext().getElementName(), null, null);
 								}
 								if (tmpAimBlock.getPrevious() != null) {
-									previousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(tmpAimBlock.getPrevious().getElementName(), null, null);
+									previousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(tmpAimBlock.getPrevious().getElementName(), null, null);
 								}
-								nextSteps.putAddElements(new artie.common.web.dto.PedagogicalSoftwareElement(tmpAimBlock.getElementName(), previousBlock, nextBlock));
+								nextSteps.putAddBlocks(new artie.common.web.dto.PedagogicalSoftwareBlock(tmpAimBlock.getElementName(), previousBlock, nextBlock));
 							}
 							else {
 								//3.3.3.4- We check if the number of blocks with the same name are equals in the origin and the aim
@@ -471,37 +471,37 @@ public class PedagogicalSoftwareService {
 
 								if (listTmpOriginBlocks.size() > listTmpAimBlocks.size()) {
 									//3.3.3.5- Blocks to be deleted (the farther)
-									nextSteps.putDeleteElements(
+									nextSteps.putDeleteBlocks(
 											listTmpOriginBlocks.subList(0, blockDifference).stream().map(toe -> {
-												artie.common.web.dto.PedagogicalSoftwareElement nextBlock = null;
-												artie.common.web.dto.PedagogicalSoftwareElement previousBlock = null;
+												artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
+												artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 												if (toe.getNext() != null) {
-													nextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(toe.getNext().getElementName(), null, null);
+													nextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(toe.getNext().getElementName(), null, null);
 												}
 												if (toe.getPrevious() != null) {
-													previousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(toe.getPrevious().getElementName(), null, null);
+													previousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(toe.getPrevious().getElementName(), null, null);
 												}
-												return new artie.common.web.dto.PedagogicalSoftwareElement(toe.getElementName(), previousBlock, nextBlock);
+												return new artie.common.web.dto.PedagogicalSoftwareBlock(toe.getElementName(), previousBlock, nextBlock);
 											}).collect(Collectors.toList())
 									);
 								}
 								else if (listTmpOriginBlocks.size() < listTmpAimBlocks.size() && !familyOriginTakenAccountBlocksAdd.contains(listTmpAimBlocks.get(0).getElementName())) {
 									//3.3.3.6- Blocks to be added
-									List<artie.common.web.dto.PedagogicalSoftwareElement> tmpFilteredList =
+									List<artie.common.web.dto.PedagogicalSoftwareBlock> tmpFilteredList =
 											listTmpAimBlocks.subList(0, blockDifference).stream().map(tae -> {
-												artie.common.web.dto.PedagogicalSoftwareElement nextElement = null;
-												artie.common.web.dto.PedagogicalSoftwareElement previousElement = null;
+												artie.common.web.dto.PedagogicalSoftwareBlock nextElement = null;
+												artie.common.web.dto.PedagogicalSoftwareBlock previousElement = null;
 												if (tae.getNext() != null) {
-													nextElement = new artie.common.web.dto.PedagogicalSoftwareElement(tae.getNext().getElementName(), null, null);
+													nextElement = new artie.common.web.dto.PedagogicalSoftwareBlock(tae.getNext().getElementName(), null, null);
 												}
 												if (tae.getPrevious() != null) {
-													previousElement = new artie.common.web.dto.PedagogicalSoftwareElement(tae.getPrevious().getElementName(), null, null);
+													previousElement = new artie.common.web.dto.PedagogicalSoftwareBlock(tae.getPrevious().getElementName(), null, null);
 												}
-												return new artie.common.web.dto.PedagogicalSoftwareElement(tae.getElementName(), previousElement, nextElement);
+												return new artie.common.web.dto.PedagogicalSoftwareBlock(tae.getElementName(), previousElement, nextElement);
 											}).collect(Collectors.toList());
 
-									nextSteps.putAddElements(tmpFilteredList);
-									familyOriginTakenAccountBlocksAdd.addAll(tmpFilteredList.stream().map(fl -> fl.getElementName()).collect(Collectors.toList()));
+									nextSteps.putAddBlocks(tmpFilteredList);
+									familyOriginTakenAccountBlocksAdd.addAll(tmpFilteredList.stream().map(fl -> fl.getBlockName()).collect(Collectors.toList()));
 								}
 							}
 						}
@@ -536,16 +536,16 @@ public class PedagogicalSoftwareService {
 				//If there are no origin blocks that correspond with the aim,
 				// we want to get the next steps and we have not yet taken the block into account
 				else if(nextSteps != null && tmpOriginBlocks.size() == 0 && !familyOriginTakenAccountBlocksAdd.contains(familyAimBlock.getElementName())){
-					artie.common.web.dto.PedagogicalSoftwareElement nextBlock = null;
-					artie.common.web.dto.PedagogicalSoftwareElement previousBlock = null;
+					artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
+					artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 
 					if (familyAimBlock.getNext() != null) {
-						nextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(familyAimBlock.getNext().getElementName(), null, null);
+						nextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(familyAimBlock.getNext().getElementName(), null, null);
 					}
 					if (familyAimBlock.getPrevious() != null) {
-						previousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(familyAimBlock.getPrevious().getElementName(), null, null);
+						previousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(familyAimBlock.getPrevious().getElementName(), null, null);
 					}
-					nextSteps.putAddElements(new artie.common.web.dto.PedagogicalSoftwareElement(familyAimBlock.getElementName(), previousBlock, nextBlock));
+					nextSteps.putAddBlocks(new artie.common.web.dto.PedagogicalSoftwareBlock(familyAimBlock.getElementName(), previousBlock, nextBlock));
 				}
 			}
 
@@ -560,16 +560,16 @@ public class PedagogicalSoftwareService {
 					//If there are no blocks in the aim, we have to delete it from the origin
 					if(tmpAimBlocks==0){
 
-						artie.common.web.dto.PedagogicalSoftwareElement nextBlock = null;
-						artie.common.web.dto.PedagogicalSoftwareElement previousBlock = null;
+						artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
+						artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 
 						if (familyOriginBlock.getNext() != null) {
-							nextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(familyOriginBlock.getNext().getElementName(), null, null);
+							nextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(familyOriginBlock.getNext().getElementName(), null, null);
 						}
 						if (familyOriginBlock.getPrevious() != null) {
-							previousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(familyOriginBlock.getPrevious().getElementName(), null, null);
+							previousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(familyOriginBlock.getPrevious().getElementName(), null, null);
 						}
-						nextSteps.putDeleteElements(new artie.common.web.dto.PedagogicalSoftwareElement(familyOriginBlock.getElementName(), previousBlock, nextBlock));
+						nextSteps.putDeleteBlocks(new artie.common.web.dto.PedagogicalSoftwareBlock(familyOriginBlock.getElementName(), previousBlock, nextBlock));
 					}
 				}
 			}
@@ -652,17 +652,17 @@ public class PedagogicalSoftwareService {
 
 								//5.3.1.1.1-Adding the next step hints for double values
 								if(nextSteps != null && difference != 0 && !blocksAlreadyAddedForHints.contains(blockOriginBlock)){
-									artie.common.web.dto.PedagogicalSoftwareElement tmpNextBlock = null;
-									artie.common.web.dto.PedagogicalSoftwareElement tmpPreviousBlock = null;
+									artie.common.web.dto.PedagogicalSoftwareBlock tmpNextBlock = null;
+									artie.common.web.dto.PedagogicalSoftwareBlock tmpPreviousBlock = null;
 
 									if(blockOriginBlock.getNext() != null){
-										tmpNextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(blockOriginBlock.getNext().getElementName(), null, null);
+										tmpNextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(blockOriginBlock.getNext().getElementName(), null, null);
 									}
 									if(blockOriginBlock.getPrevious() != null){
-										tmpPreviousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(blockOriginBlock.getPrevious().getElementName(), null, null);
+										tmpPreviousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(blockOriginBlock.getPrevious().getElementName(), null, null);
 									}
 
-									artie.common.web.dto.PedagogicalSoftwareElement tmpBlock = new artie.common.web.dto.PedagogicalSoftwareElement(blockOriginBlock.getElementName(), tmpPreviousBlock, tmpNextBlock);
+									artie.common.web.dto.PedagogicalSoftwareBlock tmpBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(blockOriginBlock.getElementName(), tmpPreviousBlock, tmpNextBlock);
 									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(blockOriginBlock.getInputs().get(input).getName(), originField.getName(),blockOriginBlock.getInputs().get(input).getOpCode(), tmpBlock, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));
 									blocksAlreadyAddedForHints.add(blockOriginBlock);
 								}
@@ -672,17 +672,17 @@ public class PedagogicalSoftwareService {
 
 								//5.3.1.1.2-Adding the next step hints for string values
 								if(nextSteps != null){
-									artie.common.web.dto.PedagogicalSoftwareElement tmpNextBlock = null;
-									artie.common.web.dto.PedagogicalSoftwareElement tmpPreviousBlock = null;
+									artie.common.web.dto.PedagogicalSoftwareBlock tmpNextBlock = null;
+									artie.common.web.dto.PedagogicalSoftwareBlock tmpPreviousBlock = null;
 
 									if(blockOriginBlock.getNext() != null){
-										tmpNextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(blockOriginBlock.getNext().getElementName(), null, null);
+										tmpNextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(blockOriginBlock.getNext().getElementName(), null, null);
 									}
 									if(blockOriginBlock.getPrevious() != null){
-										tmpPreviousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(blockOriginBlock.getPrevious().getElementName(), null, null);
+										tmpPreviousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(blockOriginBlock.getPrevious().getElementName(), null, null);
 									}
 
-									artie.common.web.dto.PedagogicalSoftwareElement tmpElement = new artie.common.web.dto.PedagogicalSoftwareElement(blockOriginBlock.getElementName(), tmpPreviousBlock,tmpNextBlock);
+									artie.common.web.dto.PedagogicalSoftwareBlock tmpElement = new artie.common.web.dto.PedagogicalSoftwareBlock(blockOriginBlock.getElementName(), tmpPreviousBlock,tmpNextBlock);
 									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(blockOriginBlock.getInputs().get(input).getName(), originField.getName(), blockOriginBlock.getInputs().get(input).getOpCode(), tmpElement, originField.getValue(), aimField.getValue()));
 								}
 							}
@@ -765,17 +765,17 @@ public class PedagogicalSoftwareService {
 
 					//If the help is requested
 					if(nextSteps != null && aimBlock.getElementPosition() != nearestBlock.getElementPosition()){
-						artie.common.web.dto.PedagogicalSoftwareElement nextBlock = null;
-						artie.common.web.dto.PedagogicalSoftwareElement previousBlock = null;
+						artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
+						artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 
 						if(nearestBlock.getNext() != null){
-							nextBlock = new artie.common.web.dto.PedagogicalSoftwareElement(nearestBlock.getNext().getElementName(), null, null);
+							nextBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(nearestBlock.getNext().getElementName(), null, null);
 						}
 						if(nearestBlock.getPrevious() != null){
-							previousBlock = new artie.common.web.dto.PedagogicalSoftwareElement(nearestBlock.getPrevious().getElementName(), null, null);
+							previousBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(nearestBlock.getPrevious().getElementName(), null, null);
 						}
 
-						nextSteps.putReplacePositions(new artie.common.web.dto.PedagogicalSoftwareElement(nearestBlock.getElementName(), previousBlock, nextBlock));
+						nextSteps.putReplacePositions(new artie.common.web.dto.PedagogicalSoftwareBlock(nearestBlock.getElementName(), previousBlock, nextBlock));
 					}
 					diffPosition += nearestPosition;
 					elementOriginBlocks.remove(nearestBlock);
