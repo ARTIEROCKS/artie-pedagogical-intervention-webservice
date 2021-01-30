@@ -22,8 +22,8 @@ public class SensorData {
 	private long milliseconds;
 	private String sensorObjectType;
 	private String sensorName;
-	private String competence;
-	private String motivation;
+	private int competence;
+	private int motivation;
 	private String data;
 	
 	
@@ -63,17 +63,17 @@ public class SensorData {
 		this.sensorName = sensorName;
 	}
 	
-	public String getCompetence() {
+	public int getCompetence() {
 		return competence;
 	}
-	public void setCompetence(String competence) {
+	public void setCompetence(int competence) {
 		this.competence = competence;
 	}
 	
-	public String getMotivation() {
+	public int getMotivation() {
 		return motivation;
 	}
-	public void setMotivation(String motivation) {
+	public void setMotivation(int motivation) {
 		this.motivation = motivation;
 	}
 	
