@@ -13,6 +13,8 @@ import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
 import artie.common.web.enums.ValidSolutionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,15 +29,21 @@ import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PedagogicalSoftwareService {
+
+	private final RestTemplate restTemplate = new RestTemplate();
 
 	@Autowired
 	private PedagogicalSoftwareDataRepository pedagogicalSoftwareDataRepository;
 
 	@Autowired
 	private PedagogicalSoftwareSolutionService pedagogicalSoftwareSolutionService;
+
+	@Value("${artie.webservices.student.updateCompetence.url}")
+	private String updateCompetenceUrl;
 
 	/**
 	 * Function to add the pedagogical software data in the database
@@ -54,6 +62,19 @@ public class PedagogicalSoftwareService {
 		if (pedagogicalSoftwareSolution != null) {
 			distance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
 			pedagogicalSoftwareData.setSolutionDistance(distance);
+
+			//2.1- We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
+			if(pedagogicalSoftwareData.getExercise().getIsEvaluation() && distance.getTotalDistance() == 0 & pedagogicalSoftwareData.getStudent().getCompetence() == 0){
+				//We set the competence as the level of the exercise
+				pedagogicalSoftwareData.getStudent().setCompetence(pedagogicalSoftwareData.getExercise().getLevel());
+				ResponseEntity<Response> wsResponse = restTemplate.getForEntity(this.updateCompetenceUrl, Response.class, pedagogicalSoftwareData.getStudent().getId(), pedagogicalSoftwareData.getExercise().getLevel());
+
+			}else if (pedagogicalSoftwareData.getExercise().getIsEvaluation() && pedagogicalSoftwareData.getRequestHelp() && pedagogicalSoftwareData.getStudent().getCompetence() == 0){
+				//If the exercise is an evaluation, the user has requested help, and the student has not set the competence, we set the competence of the student
+				int level = (pedagogicalSoftwareData.getExercise().getLevel() - 1 == 0 ? pedagogicalSoftwareData.getExercise().getLevel() : pedagogicalSoftwareData.getExercise().getLevel() - 1);
+				pedagogicalSoftwareData.getStudent().setCompetence(level);
+				ResponseEntity<Response> wsResponse = restTemplate.getForEntity(this.updateCompetenceUrl, Response.class, pedagogicalSoftwareData.getStudent().getId(), level);
+			}
 		}
 
 		PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
@@ -117,7 +138,8 @@ public class PedagogicalSoftwareService {
 																									fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
 																		)
 																		.map(e ->{
-																			return new Exercise(e.getId(), e.getExercise().getName(), e.getExerciseId(), e.getExercise().getDescription(), e.getScreenShot(), e.getValidSolution());
+																			return new Exercise(e.getId(), e.getExercise().getName(), e.getExerciseId(), e.getExercise().getDescription(),
+																							    e.getScreenShot(), e.getValidSolution(), e.getExercise().getIsEvaluation(), e.getExercise().getLevel());
 																		})
 																		.collect(Collectors.toList());
 
