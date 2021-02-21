@@ -69,11 +69,16 @@ public class PedagogicalSoftwareService {
 				pedagogicalSoftwareData.getStudent().setCompetence(pedagogicalSoftwareData.getExercise().getLevel());
 				ResponseEntity<Response> wsResponse = restTemplate.getForEntity(this.updateCompetenceUrl, Response.class, pedagogicalSoftwareData.getStudent().getId(), pedagogicalSoftwareData.getExercise().getLevel());
 
-			}else if (pedagogicalSoftwareData.getExercise().getIsEvaluation() && pedagogicalSoftwareData.getRequestHelp() && pedagogicalSoftwareData.getStudent().getCompetence() == 0){
-				//If the exercise is an evaluation, the user has requested help, and the student has not set the competence, we set the competence of the student
+			}else if (pedagogicalSoftwareData.getExercise().getIsEvaluation() && distance.getTotalDistance() == 0){
+				//If the exercise is an evaluation, and the distance is 0, we set the competence of the student
 				int level = (pedagogicalSoftwareData.getExercise().getLevel() - 1 == 0 ? pedagogicalSoftwareData.getExercise().getLevel() : pedagogicalSoftwareData.getExercise().getLevel() - 1);
-				pedagogicalSoftwareData.getStudent().setCompetence(level);
-				ResponseEntity<Response> wsResponse = restTemplate.getForEntity(this.updateCompetenceUrl, Response.class, pedagogicalSoftwareData.getStudent().getId(), level);
+				boolean updateCompetence = level > pedagogicalSoftwareData.getStudent().getCompetence();
+
+				//We check if the level of the evaluation is higher than the student competence
+				if(updateCompetence) {
+					pedagogicalSoftwareData.getStudent().setCompetence(level);
+					ResponseEntity<Response> wsResponse = restTemplate.getForEntity(this.updateCompetenceUrl, Response.class, pedagogicalSoftwareData.getStudent().getId(), level);
+				}
 			}
 		}
 
