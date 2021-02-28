@@ -649,7 +649,7 @@ public class PedagogicalSoftwareService {
 			List<PedagogicalSoftwareBlockDTO> blockOriginBlocks = mapBlockSimilarities.get(block).stream().map(eoe -> eoe.clone()).collect(Collectors.toList());
 
 			//List to avoid insert many times the same block for the help hints
-			//Here we will insert the origin blocks to know if exactly if an block has been added or not
+			//Here we will insert the origin blocks to know exactly if a block has been added or not
 			List<PedagogicalSoftwareBlockDTO> blocksAlreadyAddedForHints = new ArrayList<>();
 
 			//5.3- Checks all the aim blocks
@@ -672,7 +672,7 @@ public class PedagogicalSoftwareService {
 							
 							if(originField.isNumeric()) {
 								double difference = Math.abs(originField.getDoubleValue() - aimField.getDoubleValue());
-								double ratio = difference / aimField.getDoubleValue();
+								double ratio = (aimField.getDoubleValue() != 0 ? difference / aimField.getDoubleValue() : difference);
 								accumulatedOriginDifference += ratio;
 
 								//5.3.1.1.1-Adding the next step hints for double values
