@@ -668,11 +668,27 @@ public class PedagogicalSoftwareService {
 						for(int field=0; field < blockOriginBlock.getInputs().get(input).getFields().size(); field++)
 						{
 							PedagogicalSoftwareField originField = blockOriginBlock.getInputs().get(input).getFields().get(field);
-							PedagogicalSoftwareField aimField = blockAimBlock.getInputs().get(input).getFields().get(field);
-							
-							if(originField.isNumeric()) {
-								double difference = Math.abs(originField.getDoubleValue() - aimField.getDoubleValue());
-								double ratio = (aimField.getDoubleValue() != 0 ? difference / aimField.getDoubleValue() : difference);
+
+							//Checks if the field exists in the aim
+							PedagogicalSoftwareField aimField = null;
+							if(blockAimBlock.getInputs().size() > input && blockAimBlock.getInputs().get(input).getFields().size() > field) {
+								aimField = blockAimBlock.getInputs().get(input).getFields().get(field);
+							}
+
+							//If the origin field in the origin is numeric
+							if(originField.isNumeric())
+							{
+								//Checks if the aim field is null or not to calculate the difference and the ratio
+								double difference = 0;
+								double ratio = 0;
+								if(aimField != null) {
+									difference = Math.abs(originField.getDoubleValue() - aimField.getDoubleValue());
+									ratio = (aimField.getDoubleValue() != 0 ? difference / aimField.getDoubleValue() : difference);
+								}else{
+									difference = Math.abs(originField.getDoubleValue());
+									ratio = difference;
+								}
+
 								accumulatedOriginDifference += ratio;
 
 								//5.3.1.1.1-Adding the next step hints for double values
@@ -692,7 +708,10 @@ public class PedagogicalSoftwareService {
 									blocksAlreadyAddedForHints.add(blockOriginBlock);
 								}
 
-							}else if(!originField.getValue().equals(aimField.getValue())) {
+							}
+							//If the value of the origin field is not equal to the aim field value
+							else if(aimField == null || !originField.getValue().equals(aimField.getValue()))
+							{
 								accumulatedOriginDifference += 1;
 
 								//5.3.1.1.2-Adding the next step hints for string values
