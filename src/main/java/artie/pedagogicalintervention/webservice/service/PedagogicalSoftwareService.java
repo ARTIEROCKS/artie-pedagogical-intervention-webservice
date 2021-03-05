@@ -1,9 +1,6 @@
 package artie.pedagogicalintervention.webservice.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -634,6 +631,9 @@ public class PedagogicalSoftwareService {
 				}
 			}
 		}
+
+		//Create the comparator to sort the blocks by position
+		Comparator<PedagogicalSoftwareBlockDTO> compareByElementPosition = (PedagogicalSoftwareBlockDTO b1, PedagogicalSoftwareBlockDTO b2) -> ((Integer)b1.getElementPosition()).compareTo(b2.getElementPosition());
 		
 		
 		//Checks the block similarities
@@ -643,18 +643,19 @@ public class PedagogicalSoftwareService {
 			List<PedagogicalSoftwareBlockDTO> blockAimBlocks = aimBlocks
 																.stream()
 																.filter(c -> c.getElementName().equals(block))
+																.sorted(compareByElementPosition)
 																.collect(Collectors.toList());
 			
 			//5.2- Gets the blocks in the origin
-			List<PedagogicalSoftwareBlockDTO> blockOriginBlocks = mapBlockSimilarities.get(block).stream().map(eoe -> eoe.clone()).collect(Collectors.toList());
-
-			//List to avoid insert many times the same block for the help hints
-			//Here we will insert the origin blocks to know exactly if a block has been added or not
-			List<PedagogicalSoftwareBlockDTO> blocksAlreadyAddedForHints = new ArrayList<>();
+			List<PedagogicalSoftwareBlockDTO> blockOriginBlocks = mapBlockSimilarities.get(block)
+					 																	.stream()
+																						.map(eoe -> eoe.clone())
+																						.sorted(compareByElementPosition)
+																						.collect(Collectors.toList());
 
 			//5.3- Checks all the aim blocks
 			for(PedagogicalSoftwareBlockDTO blockAimBlock : blockAimBlocks) {
-				
+
 				double nearestDifference = -1;
 				PedagogicalSoftwareBlockDTO nearestOrigin = null;
 				
@@ -691,8 +692,8 @@ public class PedagogicalSoftwareService {
 
 								accumulatedOriginDifference += ratio;
 
-								//5.3.1.1.1-Adding the next step hints for double values
-								if(nextSteps != null && difference != 0 && !blocksAlreadyAddedForHints.contains(blockOriginBlock)){
+								//5.3.1.1.1- Adding the next step hints for double values
+								if(nextSteps != null && difference != 0 && blockOriginBlock.getElementPosition() == blockAimBlock.getElementPosition()){
 									artie.common.web.dto.PedagogicalSoftwareBlock tmpNextBlock = null;
 									artie.common.web.dto.PedagogicalSoftwareBlock tmpPreviousBlock = null;
 
@@ -705,7 +706,6 @@ public class PedagogicalSoftwareService {
 
 									artie.common.web.dto.PedagogicalSoftwareBlock tmpBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(blockOriginBlock.getElementName(), tmpPreviousBlock, tmpNextBlock);
 									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(blockOriginBlock.getInputs().get(input).getName(), originField.getName(),blockOriginBlock.getInputs().get(input).getOpCode(), tmpBlock, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));
-									blocksAlreadyAddedForHints.add(blockOriginBlock);
 								}
 
 							}
@@ -715,7 +715,8 @@ public class PedagogicalSoftwareService {
 								accumulatedOriginDifference += 1;
 
 								//5.3.1.1.2-Adding the next step hints for string values
-								if(nextSteps != null){
+								if(nextSteps != null && blockOriginBlock.getElementPosition() == blockAimBlock.getElementPosition()){
+
 									artie.common.web.dto.PedagogicalSoftwareBlock tmpNextBlock = null;
 									artie.common.web.dto.PedagogicalSoftwareBlock tmpPreviousBlock = null;
 
