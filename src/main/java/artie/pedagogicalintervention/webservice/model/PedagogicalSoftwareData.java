@@ -24,6 +24,7 @@ public class PedagogicalSoftwareData {
 	private boolean requestHelp;
 	private boolean finishedExercise;
 	private int validSolution;
+	private double grade;
 	private String screenShot;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
@@ -88,6 +89,9 @@ public class PedagogicalSoftwareData {
 	public int getValidSolution(){return this.validSolution;}
 	public void setValidSolution(int validSolution){this.validSolution = validSolution;}
 
+	public double getGrade(){return this.grade;}
+	public void setGrade(double grade){this.grade = grade;}
+
 	public String getScreenShot(){return this.screenShot;}
 	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
 
@@ -128,10 +132,11 @@ public class PedagogicalSoftwareData {
 	 * @param requestHelp
 	 * @param finishedExercise
 	 * @param validSolution
+	 * @param grade
 	 * @param screenShot
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, boolean finishedExercise, int validSolution, String screenShot) {
+								   boolean requestHelp, boolean finishedExercise, int validSolution, double grade, String screenShot) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
@@ -140,6 +145,7 @@ public class PedagogicalSoftwareData {
 		this.requestHelp = requestHelp;
 		this.finishedExercise = finishedExercise;
 		this.validSolution = validSolution;
+		this.grade = grade;
 		this.screenShot = screenShot;
 		
 		if(exercise != null) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareDistance;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class PedagogicalSoftwareSolutionService {
 
 	@Autowired
 	private PedagogicalSoftwareDataRepository pedagogicalSoftwareDataRepository;
+
+	@Autowired
+	private PedagogicalSoftwareService pedagogicalSoftwareService;
 	
 	/**
 	 * Function to add the pedagogical software solution in the database
@@ -53,15 +57,20 @@ public class PedagogicalSoftwareSolutionService {
 		try {					
 			//1- Transforms the string in pedagogical software solution object
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new ObjectMapper().readValue(pse, PedagogicalSoftwareSolution.class);
+
+			//2- Calculates and sets the maximum distance of this solution
+			PedagogicalSoftwareDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
 			
-			//2- Searches if there is a solution for this exercise
+			//3- Searches if there is a solution for this exercise
 			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseIdAndUserId(pedagogicalSoftwareSolution.getExercise().getId(), pedagogicalSoftwareSolution.getUserId());
 			
-			//3- If there is an existing pedagogical software solution, we update its data
+			//4- If there is an existing pedagogical software solution, we update its data
 			if(pedagogicalSoftwareSolutions.size() > 0 ) {
 				PedagogicalSoftwareSolution pedagogicalSoftwareSolutionDb = pedagogicalSoftwareSolutions.get(0);
 				pedagogicalSoftwareSolutionDb.setElements(pedagogicalSoftwareSolution.getElements());
 				pedagogicalSoftwareSolutionDb.setScreenShot(pedagogicalSoftwareSolution.getScreenShot());
+				pedagogicalSoftwareSolutionDb.setMaximumDistance(pedagogicalSoftwareSolution.getMaximumDistance());
 				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
 				
 				if(objSaved != null) {
@@ -87,11 +96,18 @@ public class PedagogicalSoftwareSolutionService {
 
 		//If the pedagogical software data has been retrieved
 		if(pedagogicalSoftwareData != null){
+
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new PedagogicalSoftwareSolution(pedagogicalSoftwareData.getStudent().getUserId(),
 																										pedagogicalSoftwareData.getId(),
 																										pedagogicalSoftwareData.getExercise(),
 																										pedagogicalSoftwareData.getScreenShot(),
-																										pedagogicalSoftwareData.getElements());
+																										pedagogicalSoftwareData.getElements(), 0);
+			//Calculates the maximum distance for this solution
+			PedagogicalSoftwareDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+
+			//Sets the maximum distance to this solution
+			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
+
 			//Save the pedagogical software solution in the database
 			this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
 		}

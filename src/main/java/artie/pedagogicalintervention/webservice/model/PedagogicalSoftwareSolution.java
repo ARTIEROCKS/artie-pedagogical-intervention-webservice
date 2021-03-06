@@ -20,6 +20,7 @@ public class PedagogicalSoftwareSolution {
 	private Exercise exercise;
 	private String screenShot;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
+	private double maximumDistance;
 	
 	public String getId() {
 		return this.id;
@@ -74,6 +75,8 @@ public class PedagogicalSoftwareSolution {
 		this.elements.forEach(e -> allBlocks.addAll(e.getBlocks()));
 		return allBlocks;
 	}
+	public double getMaximumDistance(){return this.maximumDistance;}
+	public void setMaximumDistance(double maximumDistance){this.maximumDistance = maximumDistance;}
 	
 	/**
 	 * Default Constructor
@@ -103,13 +106,15 @@ public class PedagogicalSoftwareSolution {
 	 * @param exercise
 	 * @param screenShot
 	 * @param elements
+	 * @param maximumDistance
 	 */
-	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, List<PedagogicalSoftwareElement> elements){
+	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, List<PedagogicalSoftwareElement> elements, double maximumDistance){
 		this.userId=userId;
 		this.pedagogicalSoftwareDataId = pedagogicalSoftwareDataId;
 		this.exercise = exercise;
 		this.screenShot = screenShot;
 		this.elements = elements;
+		this.maximumDistance = maximumDistance;
 
 		if(exercise != null) {
 			this.exerciseId = exercise.getId();

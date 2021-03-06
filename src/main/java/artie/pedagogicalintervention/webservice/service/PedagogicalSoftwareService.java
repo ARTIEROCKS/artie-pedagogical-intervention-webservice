@@ -56,11 +56,21 @@ public class PedagogicalSoftwareService {
 
 		// 2- If there at least 1 solution, we get the distances
 		PedagogicalSoftwareDistance distance = null;
+		double maximumDistance = 0;
+		double grade = 0;
 		if (pedagogicalSoftwareSolution != null) {
-			distance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
+
+			//2.1- Gets the distance
+			Map<String, Object> mapDistance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
+			distance = (PedagogicalSoftwareDistance)mapDistance.get("distance");
+			maximumDistance = (double)mapDistance.get("maximumDistance");
 			pedagogicalSoftwareData.setSolutionDistance(distance);
 
-			//2.1- We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
+			//2.2- Calculates and sets the grade
+			grade = this.calculateGrade(maximumDistance, distance.getTotalDistance(), 10);
+			pedagogicalSoftwareData.setGrade(grade);
+
+			//2.3- We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
 			if(pedagogicalSoftwareData.getExercise().getIsEvaluation() && distance.getTotalDistance() == 0 & pedagogicalSoftwareData.getStudent().getCompetence() == 0){
 				//We set the competence as the level of the exercise
 				pedagogicalSoftwareData.getStudent().setCompetence(pedagogicalSoftwareData.getExercise().getLevel());
@@ -169,10 +179,15 @@ public class PedagogicalSoftwareService {
 				//we delete the solution
 				this.pedagogicalSoftwareSolutionService.deleteFromPedagogicalSoftwareDataId(pedagogicalDataId);
 
-				//We calculate the distance of the pedagogical software data
+				//We calculate the distance and the grade of the pedagogical software data
 				List<PedagogicalSoftwareSolution> listSolutions = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
-				PedagogicalSoftwareDistance pedagogicalSoftwareDistance = this.distanceCalculation(pedagogicalSoftwareData, listSolutions);
+				Map<String, Object> mapDistance = this.distanceCalculation(pedagogicalSoftwareData, listSolutions);
+				PedagogicalSoftwareDistance pedagogicalSoftwareDistance = (PedagogicalSoftwareDistance) mapDistance.get("distance");
 				pedagogicalSoftwareData.setSolutionDistance(pedagogicalSoftwareDistance);
+
+				double maximumDistance = (double)mapDistance.get("maximumDistance");
+				double grade = this.calculateGrade(maximumDistance, pedagogicalSoftwareDistance.getTotalDistance(), 10);
+				pedagogicalSoftwareData.setGrade(grade);
 			}
 
 			pedagogicalSoftwareData.setValidSolution(validated);
@@ -186,9 +201,11 @@ public class PedagogicalSoftwareService {
 	 * @param aims
 	 * @return
 	 */
-	public PedagogicalSoftwareDistance distanceCalculation(PedagogicalSoftwareData origin, List<PedagogicalSoftwareSolution> aims){
+	public Map<String, Object> distanceCalculation(PedagogicalSoftwareData origin, List<PedagogicalSoftwareSolution> aims){
 
+		Map<String, Object> result = new HashMap<>();
 		PedagogicalSoftwareDistance nearestDistance = null;
+		double maximumDistance = 0;
 
 		//1- Gets the distance between all the solutions
 		for(PedagogicalSoftwareSolution aim : aims){
@@ -197,10 +214,13 @@ public class PedagogicalSoftwareService {
 			//2- Sets the nearest distance
 			if(nearestDistance == null || distance.getTotalDistance() < nearestDistance.getTotalDistance()){
 				nearestDistance = distance;
+				maximumDistance = aim.getMaximumDistance();
 			}
 		}
 
-		return nearestDistance;
+		result.put("distance", nearestDistance);
+		result.put("maximumDistance", maximumDistance);
+		return result;
 	}
 
 	/**
@@ -900,5 +920,22 @@ public class PedagogicalSoftwareService {
 		}
 
 		return subBlocks;
+	}
+
+
+	/**
+	 * Function that calculates a grade in base of the current distance with a maximum distance
+	 * @param maximumDistance
+	 * @param currentDistance
+	 * @param maximumGrade
+	 * @return
+	 */
+	private double calculateGrade(double maximumDistance, double currentDistance, double maximumGrade){
+
+		//1- Checks that the current distance is not bigger than the maximum
+		currentDistance = currentDistance > maximumDistance ? maximumDistance : currentDistance;
+
+		//2- Formula that calculates the grade
+		return (maximumGrade - ((maximumGrade*currentDistance) / maximumDistance));
 	}
 }
