@@ -810,6 +810,20 @@ class PedagogicalSoftwareServiceTest {
 
 
 	}
+
+	@Test
+	void calculateGradeTest(){
+
+		double result = 0;
+		result = pedagogicalSoftwareService.calculateGrade(380, 380, 10);
+		assertEquals(0, result);
+
+		result = pedagogicalSoftwareService.calculateGrade(380, 190, 10);
+		assertEquals(5, result);
+
+		result = pedagogicalSoftwareService.calculateGrade(380, 0, 10);
+		assertEquals(10, result);
+	}
 }
 
 

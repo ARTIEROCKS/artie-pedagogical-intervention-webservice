@@ -930,7 +930,7 @@ public class PedagogicalSoftwareService {
 	 * @param maximumGrade
 	 * @return
 	 */
-	private double calculateGrade(double maximumDistance, double currentDistance, double maximumGrade){
+	public double calculateGrade(double maximumDistance, double currentDistance, double maximumGrade){
 
 		//1- Checks that the current distance is not bigger than the maximum
 		currentDistance = currentDistance > maximumDistance ? maximumDistance : currentDistance;
