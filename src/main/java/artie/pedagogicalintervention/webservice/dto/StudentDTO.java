@@ -27,13 +27,15 @@ public class StudentDTO extends Student {
 	 * @param name
 	 * @param lastName
 	 * @param studentNumber
+	 * @param gender
+	 * @param motherTongue
 	 * @param competence
 	 * @param motivation
 	 * @param institutionId
 	 * @param userId
 	 */
-	public StudentDTO(String id, String name, String lastName, String studentNumber, int competence, int motivation, String institutionId, String userId) {
-		super(id, name, lastName, studentNumber, competence, motivation);
+	public StudentDTO(String id, String name, String lastName, String studentNumber,int gender, int motherTongue, int competence, int motivation, String institutionId, String userId) {
+		super(id, name, lastName, studentNumber, gender, motherTongue, competence, motivation);
 
 		this.institutionId = institutionId;
 		this.userId = userId;
