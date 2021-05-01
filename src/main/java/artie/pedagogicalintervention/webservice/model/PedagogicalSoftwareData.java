@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Id;
+
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import artie.common.web.enums.ValidSolutionEnum;
@@ -25,6 +27,7 @@ public class PedagogicalSoftwareData {
 	private boolean finishedExercise;
 	private int validSolution;
 	private double grade;
+	private LocalDateTime lastLogin;
 	private String screenShot;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
@@ -92,6 +95,9 @@ public class PedagogicalSoftwareData {
 	public double getGrade(){return this.grade;}
 	public void setGrade(double grade){this.grade = grade;}
 
+	public LocalDateTime getLastLogin(){return this.lastLogin;}
+	public void setLastLogin(LocalDateTime lastLogin){this.lastLogin = lastLogin;}
+
 	public String getScreenShot(){return this.screenShot;}
 	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
 
@@ -133,10 +139,11 @@ public class PedagogicalSoftwareData {
 	 * @param finishedExercise
 	 * @param validSolution
 	 * @param grade
+	 * @param lastLogin
 	 * @param screenShot
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, boolean finishedExercise, int validSolution, double grade, String screenShot) {
+								   boolean requestHelp, boolean finishedExercise, int validSolution, double grade, LocalDateTime lastLogin, String screenShot) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
@@ -146,6 +153,7 @@ public class PedagogicalSoftwareData {
 		this.finishedExercise = finishedExercise;
 		this.validSolution = validSolution;
 		this.grade = grade;
+		this.lastLogin = lastLogin;
 		this.screenShot = screenShot;
 		
 		if(exercise != null) {
