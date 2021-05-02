@@ -26,6 +26,7 @@ public class PedagogicalSoftwareData {
 	private PedagogicalSoftwareDistance solutionDistance = new PedagogicalSoftwareDistance();
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
+	private int secondsHelpOpen;
 	private boolean finishedExercise;
 	private int validSolution;
 	private double grade;
@@ -89,6 +90,9 @@ public class PedagogicalSoftwareData {
 		this.requestHelp = requestHelp;
 	}
 
+	public int getSecondsHelpOpen(){return this.secondsHelpOpen;}
+	public void setSecondsHelpOpen(int secondsHelpOpen){this.secondsHelpOpen = secondsHelpOpen;}
+
 	public boolean getFinishedExercise(){return this.finishedExercise;}
 	public void setFinishedExercise(boolean finishedExercise){this.finishedExercise = finishedExercise;}
 
@@ -139,6 +143,7 @@ public class PedagogicalSoftwareData {
 	 * @param solutionDistance
 	 * @param elements
 	 * @param requestHelp
+	 * @param secondsHelpOpen
 	 * @param finishedExercise
 	 * @param validSolution
 	 * @param grade
@@ -146,13 +151,14 @@ public class PedagogicalSoftwareData {
 	 * @param screenShot
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot) {
+								   boolean requestHelp, int secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
 		this.elements = elements;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
+		this.secondsHelpOpen = secondsHelpOpen;
 		this.finishedExercise = finishedExercise;
 		this.validSolution = validSolution;
 		this.grade = grade;
