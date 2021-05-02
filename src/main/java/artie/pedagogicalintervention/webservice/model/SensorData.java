@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -97,7 +98,8 @@ public class SensorData {
 	 * @throws JsonProcessingException
 	 */
 	public SensorData(SensorObject sensorObject, Student student) throws JsonProcessingException {
-		ObjectMapper obj = new ObjectMapper(); 
+		ObjectMapper obj = new ObjectMapper();
+		obj.registerModule(new JavaTimeModule());
 		this.date = sensorObject.getDate();
 		this.milliseconds = sensorObject.getMilliseconds();
 		this.sensorObjectType = sensorObject.getSensorObjectType().toString();

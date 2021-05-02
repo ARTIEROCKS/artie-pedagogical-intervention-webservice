@@ -2,10 +2,12 @@ package artie.pedagogicalintervention.webservice.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.tomcat.jni.Local;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -27,7 +29,8 @@ public class PedagogicalSoftwareData {
 	private boolean finishedExercise;
 	private int validSolution;
 	private double grade;
-	private LocalDateTime lastLogin;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
+	private Date lastLogin;
 	private String screenShot;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
@@ -95,8 +98,8 @@ public class PedagogicalSoftwareData {
 	public double getGrade(){return this.grade;}
 	public void setGrade(double grade){this.grade = grade;}
 
-	public LocalDateTime getLastLogin(){return this.lastLogin;}
-	public void setLastLogin(LocalDateTime lastLogin){this.lastLogin = lastLogin;}
+	public Date getLastLogin(){return this.lastLogin;}
+	public void setLastLogin(Date lastLogin){this.lastLogin = lastLogin;}
 
 	public String getScreenShot(){return this.screenShot;}
 	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
@@ -143,7 +146,7 @@ public class PedagogicalSoftwareData {
 	 * @param screenShot
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, boolean finishedExercise, int validSolution, double grade, LocalDateTime lastLogin, String screenShot) {
+								   boolean requestHelp, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;

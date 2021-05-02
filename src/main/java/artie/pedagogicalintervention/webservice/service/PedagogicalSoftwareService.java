@@ -9,6 +9,7 @@ import artie.common.web.dto.NextStepHint;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
 import artie.common.web.enums.ValidSolutionEnum;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,8 @@ import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolutio
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class PedagogicalSoftwareService {
 
@@ -41,6 +44,12 @@ public class PedagogicalSoftwareService {
 
 	@Value("${artie.webservices.student.updateCompetence.url}")
 	private String updateCompetenceUrl;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@PostConstruct
+	public void setUp(){ this.objectMapper.registerModule(new JavaTimeModule()); }
 
 	/**
 	 * Function to add the pedagogical software data in the database
@@ -58,7 +67,7 @@ public class PedagogicalSoftwareService {
 		PedagogicalSoftwareDistance distance = null;
 		double maximumDistance = 0;
 		double grade = 0;
-		if (pedagogicalSoftwareSolution != null) {
+		if (pedagogicalSoftwareSolution != null && pedagogicalSoftwareSolution.size() > 0) {
 
 			//2.1- Gets the distance
 			Map<String, Object> mapDistance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
@@ -116,7 +125,7 @@ public class PedagogicalSoftwareService {
 		try {
 
 			// 1- Transforms the string into the pedagogical software data
-			PedagogicalSoftwareData pedagogicalSoftwareData = new ObjectMapper().readValue(psd,
+			PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
 					PedagogicalSoftwareData.class);
 
 			response = this.add(pedagogicalSoftwareData);

@@ -6,6 +6,7 @@ import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareDistance;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import artie.pedagogicalintervention.webservice.dto.ResponseDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class PedagogicalSoftwareSolutionService {
 	
@@ -29,6 +32,14 @@ public class PedagogicalSoftwareSolutionService {
 
 	@Autowired
 	private PedagogicalSoftwareService pedagogicalSoftwareService;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@PostConstruct
+	public void setUp(){
+		this.objectMapper.registerModule(new JavaTimeModule());
+	}
 	
 	/**
 	 * Function to add the pedagogical software solution in the database
@@ -56,7 +67,7 @@ public class PedagogicalSoftwareSolutionService {
 		
 		try {					
 			//1- Transforms the string in pedagogical software solution object
-			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new ObjectMapper().readValue(pse, PedagogicalSoftwareSolution.class);
+			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = this.objectMapper.readValue(pse, PedagogicalSoftwareSolution.class);
 
 			//2- Calculates and sets the maximum distance of this solution
 			PedagogicalSoftwareDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
