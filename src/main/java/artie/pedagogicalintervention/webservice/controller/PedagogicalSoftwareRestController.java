@@ -1,6 +1,7 @@
 package artie.pedagogicalintervention.webservice.controller;
 
 import artie.common.web.dto.Exercise;
+import artie.common.web.dto.LearningProgress;
 import artie.common.web.dto.Solution;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,19 @@ public class PedagogicalSoftwareRestController {
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void deleteSolutionById(@RequestParam String solutionId){
 		this.pedagogicalSoftwareSolutionService.deleteSolutionById(solutionId);
+	}
+
+	/**
+	 * Function to get the learning progress of a student in a specific exercise
+	 * @return learning progress
+	 */
+	@GetMapping(path = "/learningProgress/getByExerciseAndStudent",
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseStatus(HttpStatus.FOUND)
+	public LearningProgress[] getLearningProgressByExerciseAndStudent(@RequestParam String studentId, @RequestParam String exerciseId){
+
+		List<LearningProgress> learningProgressList = this.pedagogicalSoftwareService.findByStudentAndExercise(studentId, exerciseId);
+		return learningProgressList.toArray(new LearningProgress[learningProgressList.size()]);
 	}
 	
 }

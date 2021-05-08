@@ -4,11 +4,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import artie.common.web.dto.Exercise;
-import artie.common.web.dto.NextStepHint;
-import artie.common.web.dto.Response;
-import artie.common.web.dto.ResponseBody;
+import artie.common.web.dto.*;
 import artie.common.web.enums.ValidSolutionEnum;
+import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -947,4 +945,26 @@ public class PedagogicalSoftwareService {
 		//2- Formula that calculates the grade
 		return (maximumGrade - ((maximumGrade*currentDistance) / maximumDistance));
 	}
+
+	/**
+	 * Function to return all the pedagogical software data interactions of a student and an exercise
+	 * @param studentId
+	 * @param exerciseId
+	 * @return
+	 */
+	public List<LearningProgress> findByStudentAndExercise(String studentId, String exerciseId){
+
+		//Gets all the pedagogical software data of the student and the selected exercise
+		List<PedagogicalSoftwareData> pedagogicalSoftwareDataList = this.pedagogicalSoftwareDataRepository.findByStudent_IdAndExerciseId(studentId, exerciseId);
+
+		//Transforms this information in a learning progress list
+		List<LearningProgress> learningProgressList = pedagogicalSoftwareDataList.stream().map(ps -> {
+			return new LearningProgress(ps.getExercise(), ps.getStudent(), ps.getSolutionDistance().getTotalDistance(), ps.getGrade(),
+										ps.getDateTime(), ps.getLastLogin(), ps.getRequestHelp(), ps.getSecondsHelpOpen(), ps.getFinishedExercise(),
+										ps.getValidSolution());
+		}).collect(Collectors.toList());
+
+		return learningProgressList;
+	}
+
 }
