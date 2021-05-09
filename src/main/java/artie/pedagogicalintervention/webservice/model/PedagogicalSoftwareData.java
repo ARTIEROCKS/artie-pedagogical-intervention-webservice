@@ -21,7 +21,6 @@ public class PedagogicalSoftwareData {
 	@Id
 	private String id;
 	private StudentDTO student;
-	private String exerciseId;
 	private Exercise exercise;
 	private PedagogicalSoftwareDistance solutionDistance = new PedagogicalSoftwareDistance();
 	private LocalDateTime dateTime;
@@ -48,25 +47,12 @@ public class PedagogicalSoftwareData {
 	public void setStudent(StudentDTO student) {
 		this.student = student;
 	}
-	
-	public String getExerciseId() {
-		return this.exerciseId;
-	}
-	public void setExerciseId(String exerciseId) {
-		this.exerciseId = exerciseId;
-	}
-	
+
 	public Exercise getExercise() {
 		return this.exercise;
 	}
 	public void setExercise(Exercise exercise) {
 		this.exercise = exercise;
-		
-		if(exercise != null) {
-			this.exerciseId = exercise.getId();
-		}else{
-			this.exerciseId = null;
-		}
 	}
 	
 	public PedagogicalSoftwareDistance getSolutionDistance() {
@@ -164,12 +150,6 @@ public class PedagogicalSoftwareData {
 		this.grade = grade;
 		this.lastLogin = lastLogin;
 		this.screenShot = screenShot;
-		
-		if(exercise != null) {
-			this.exerciseId = exercise.getId();
-		}else{
-			this.exerciseId = null;
-		}
 	}
 	
 	public void addElement(PedagogicalSoftwareElement element) {

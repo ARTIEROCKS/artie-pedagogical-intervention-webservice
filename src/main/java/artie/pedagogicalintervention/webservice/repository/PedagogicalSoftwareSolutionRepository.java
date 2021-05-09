@@ -9,6 +9,6 @@ import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolutio
 
 public interface PedagogicalSoftwareSolutionRepository extends MongoRepository<PedagogicalSoftwareSolution, String>{
 	List<PedagogicalSoftwareSolution> findByUserId(String userId);
-	List<PedagogicalSoftwareSolution> findByExerciseIdAndUserId(String exerciseId, String userId);
+	List<PedagogicalSoftwareSolution> findByExercise_IdAndUserId(String exerciseId, String userId);
 	List<PedagogicalSoftwareSolution> findByPedagogicalSoftwareDataId(String pedagogicalSoftwareDataId);
 }

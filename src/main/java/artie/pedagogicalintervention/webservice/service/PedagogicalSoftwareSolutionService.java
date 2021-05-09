@@ -74,7 +74,7 @@ public class PedagogicalSoftwareSolutionService {
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
 			
 			//3- Searches if there is a solution for this exercise
-			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExerciseIdAndUserId(pedagogicalSoftwareSolution.getExercise().getId(), pedagogicalSoftwareSolution.getUserId());
+			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareSolution.getExercise().getId(), pedagogicalSoftwareSolution.getUserId());
 			
 			//4- If there is an existing pedagogical software solution, we update its data
 			if(pedagogicalSoftwareSolutions.size() > 0 ) {
@@ -178,7 +178,7 @@ public class PedagogicalSoftwareSolutionService {
 	 * @return
 	 */
 	public List<PedagogicalSoftwareSolution> findByExerciseAndUserId(Exercise exercise, String userId) {
-		return this.pedagogicalSoftwareSolutionRepository.findByExerciseIdAndUserId(exercise.getId(), userId);
+		return this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(exercise.getId(), userId);
 	}
 
 
