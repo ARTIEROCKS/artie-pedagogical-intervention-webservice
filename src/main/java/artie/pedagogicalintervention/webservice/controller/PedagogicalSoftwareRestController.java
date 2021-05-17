@@ -86,7 +86,8 @@ public class PedagogicalSoftwareRestController {
 	@ResponseStatus(HttpStatus.FOUND)
 	public Solution[] getSolutionsByUserId(@RequestParam String userId){
 		List<PedagogicalSoftwareSolution> tmpListSolutions = this.pedagogicalSoftwareSolutionService.findByUserId(userId);
-		List<Solution> listSolutions = tmpListSolutions.stream().map(s -> new Solution(s.getId(), s.getExerciseId(), s.getExercise().getName(), s.getExercise().getDescription(), s.getScreenShot())).collect(Collectors.toList());
+		List<Solution> listSolutions = tmpListSolutions.stream().map(s -> new Solution(s.getId(), s.getExerciseId(), s.getExercise().getName(), s.getExercise().getDescription(),
+																					   s.getScreenShot(), s.getBinary())).collect(Collectors.toList());
 		return listSolutions.toArray(new Solution[listSolutions.size()]);
 	}
 

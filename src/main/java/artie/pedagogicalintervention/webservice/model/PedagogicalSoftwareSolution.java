@@ -19,6 +19,7 @@ public class PedagogicalSoftwareSolution {
 	private String exerciseId;
 	private Exercise exercise;
 	private String screenShot;
+	private String binary;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	private double maximumDistance;
 	
@@ -60,6 +61,8 @@ public class PedagogicalSoftwareSolution {
 	public void setScreenShot(String screenShot) {
 		this.screenShot = screenShot;
 	}
+	public String getBinary(){return this.binary;}
+	public void setBinary(String binary){this.binary = binary;}
 	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
 	}
@@ -105,14 +108,16 @@ public class PedagogicalSoftwareSolution {
 	 * @param pedagogicalSoftwareDataId
 	 * @param exercise
 	 * @param screenShot
+	 * @param binary
 	 * @param elements
 	 * @param maximumDistance
 	 */
-	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, List<PedagogicalSoftwareElement> elements, double maximumDistance){
+	public PedagogicalSoftwareSolution(String userId, String pedagogicalSoftwareDataId,  Exercise exercise, String screenShot, String binary, List<PedagogicalSoftwareElement> elements, double maximumDistance){
 		this.userId=userId;
 		this.pedagogicalSoftwareDataId = pedagogicalSoftwareDataId;
 		this.exercise = exercise;
 		this.screenShot = screenShot;
+		this.binary = binary;
 		this.elements = elements;
 		this.maximumDistance = maximumDistance;
 

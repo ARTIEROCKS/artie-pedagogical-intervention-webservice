@@ -112,6 +112,7 @@ public class PedagogicalSoftwareSolutionService {
 																										pedagogicalSoftwareData.getId(),
 																										pedagogicalSoftwareData.getExercise(),
 																										pedagogicalSoftwareData.getScreenShot(),
+																										pedagogicalSoftwareData.getBinary(),
 																										pedagogicalSoftwareData.getElements(), 0);
 			//Calculates the maximum distance for this solution
 			PedagogicalSoftwareDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);

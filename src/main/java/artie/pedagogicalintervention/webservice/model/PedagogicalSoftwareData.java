@@ -32,6 +32,7 @@ public class PedagogicalSoftwareData {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
 	private Date lastLogin;
 	private String screenShot;
+	private String binary;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	
 	public String getId() {
@@ -94,6 +95,9 @@ public class PedagogicalSoftwareData {
 	public String getScreenShot(){return this.screenShot;}
 	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
 
+	public String getBinary(){return this.binary;}
+	public void setBinary(String binary){this.binary = binary;}
+
 	public List<PedagogicalSoftwareElement> getElements(){
 		return this.elements;
 	}
@@ -135,9 +139,11 @@ public class PedagogicalSoftwareData {
 	 * @param grade
 	 * @param lastLogin
 	 * @param screenShot
+	 * @param binary
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot) {
+								   boolean requestHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot,
+								   String binary) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
@@ -150,6 +156,7 @@ public class PedagogicalSoftwareData {
 		this.grade = grade;
 		this.lastLogin = lastLogin;
 		this.screenShot = screenShot;
+		this.binary = binary;
 	}
 	
 	public void addElement(PedagogicalSoftwareElement element) {
