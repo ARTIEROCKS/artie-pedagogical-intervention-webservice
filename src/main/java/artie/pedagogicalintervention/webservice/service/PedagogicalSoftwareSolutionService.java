@@ -81,6 +81,7 @@ public class PedagogicalSoftwareSolutionService {
 				PedagogicalSoftwareSolution pedagogicalSoftwareSolutionDb = pedagogicalSoftwareSolutions.get(0);
 				pedagogicalSoftwareSolutionDb.setElements(pedagogicalSoftwareSolution.getElements());
 				pedagogicalSoftwareSolutionDb.setScreenShot(pedagogicalSoftwareSolution.getScreenShot());
+				pedagogicalSoftwareSolutionDb.setBinary(pedagogicalSoftwareSolution.getBinary());
 				pedagogicalSoftwareSolutionDb.setMaximumDistance(pedagogicalSoftwareSolution.getMaximumDistance());
 				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
 				

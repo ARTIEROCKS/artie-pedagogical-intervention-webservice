@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import artie.common.web.dto.Exercise;
 
 @Document(collection="PedagogicalSoftwareSolution")
-public class PedagogicalSoftwareSolution {
+public class  PedagogicalSoftwareSolution {
 	
 	@Id
 	private String id;
