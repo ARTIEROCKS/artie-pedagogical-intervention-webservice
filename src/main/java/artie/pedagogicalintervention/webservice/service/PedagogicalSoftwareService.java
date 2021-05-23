@@ -153,7 +153,7 @@ public class PedagogicalSoftwareService {
 																		)
 																		.map(e ->{
 																			return new Exercise(e.getId(), e.getExercise().getName(), e.getExercise().getId(), e.getExercise().getDescription(),
-																							    e.getScreenShot(), e.getValidSolution(), e.getExercise().getIsEvaluation(), e.getExercise().getLevel());
+																							    e.getScreenShot(), e.getBinary(), e.getValidSolution(), e.getExercise().getIsEvaluation(), e.getExercise().getLevel());
 																		})
 																		.collect(Collectors.toList());
 
