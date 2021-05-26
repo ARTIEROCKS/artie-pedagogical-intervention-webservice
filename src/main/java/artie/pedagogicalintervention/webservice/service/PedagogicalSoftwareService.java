@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 
 import artie.common.web.dto.*;
 import artie.common.web.enums.ValidSolutionEnum;
-import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,7 +32,10 @@ import javax.annotation.PostConstruct;
 @Service
 public class PedagogicalSoftwareService {
 
-	private final RestTemplate restTemplate = new RestTemplate();
+	@Value("${artie.api.key}")
+	private String apiKey;
+	private RestTemplate restTemplate;
+	private HttpEntity<String> entity;
 
 	@Autowired
 	private PedagogicalSoftwareDataRepository pedagogicalSoftwareDataRepository;
@@ -46,8 +49,21 @@ public class PedagogicalSoftwareService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@Autowired
+	public PedagogicalSoftwareService(RestTemplateBuilder builder){
+		this.restTemplate = builder.build();
+	}
+	public PedagogicalSoftwareService(){}
+
 	@PostConstruct
-	public void setUp(){ this.objectMapper.registerModule(new JavaTimeModule()); }
+	public void setUp(){
+		this.objectMapper.registerModule(new JavaTimeModule());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("apiKey", this.apiKey);
+		this.entity = new HttpEntity<String>("parameters", headers);
+	}
 
 	/**
 	 * Function to add the pedagogical software data in the database
@@ -81,13 +97,13 @@ public class PedagogicalSoftwareService {
 			if(pedagogicalSoftwareData.getExercise().getIsEvaluation() && distance.getTotalDistance() == 0 & pedagogicalSoftwareData.getStudent().getCompetence() == 0){
 				//We set the competence as the level of the exercise
 				pedagogicalSoftwareData.getStudent().setCompetence(pedagogicalSoftwareData.getExercise().getLevel());
-				ResponseEntity<Response> wsResponse = restTemplate.getForEntity(this.updateCompetenceUrl, Response.class, pedagogicalSoftwareData.getStudent().getId(), pedagogicalSoftwareData.getExercise().getLevel());
+				ResponseEntity<Response> wsResponse = this.restTemplate.exchange(this.updateCompetenceUrl + "?studentId=" + pedagogicalSoftwareData.getStudent().getId() + "&competence=" + pedagogicalSoftwareData.getExercise().getLevel(), HttpMethod.GET, this.entity, Response.class);
 
 			}else if (pedagogicalSoftwareData.getExercise().getIsEvaluation() && distance.getTotalDistance() == 0){
 				//If the exercise is an evaluation, and the distance is 0, we set the competence of the student
 				int level = (pedagogicalSoftwareData.getExercise().getLevel() - 1 == 0 ? pedagogicalSoftwareData.getExercise().getLevel() : pedagogicalSoftwareData.getExercise().getLevel() - 1);
 				pedagogicalSoftwareData.getStudent().setCompetence(level);
-				ResponseEntity<Response> wsResponse = restTemplate.getForEntity(this.updateCompetenceUrl, Response.class, pedagogicalSoftwareData.getStudent().getId(), level);
+				ResponseEntity<Response> wsResponse = this.restTemplate.exchange(this.updateCompetenceUrl + "?studentId=" + pedagogicalSoftwareData.getStudent().getId() + "&competence=" + level, HttpMethod.GET, this.entity, Response.class);
 			}
 		}
 
