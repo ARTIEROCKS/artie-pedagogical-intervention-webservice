@@ -98,12 +98,13 @@ public class PedagogicalSoftwareService {
 				//We set the competence as the level of the exercise
 				pedagogicalSoftwareData.getStudent().setCompetence(pedagogicalSoftwareData.getExercise().getLevel());
 				ResponseEntity<Response> wsResponse = this.restTemplate.exchange(this.updateCompetenceUrl + "?studentId=" + pedagogicalSoftwareData.getStudent().getId() + "&competence=" + pedagogicalSoftwareData.getExercise().getLevel(), HttpMethod.GET, this.entity, Response.class);
-
+				response = wsResponse.getBody();
 			}else if (pedagogicalSoftwareData.getExercise().getIsEvaluation() && distance.getTotalDistance() == 0){
 				//If the exercise is an evaluation, and the distance is 0, we set the competence of the student
 				int level = (pedagogicalSoftwareData.getExercise().getLevel() - 1 == 0 ? pedagogicalSoftwareData.getExercise().getLevel() : pedagogicalSoftwareData.getExercise().getLevel() - 1);
 				pedagogicalSoftwareData.getStudent().setCompetence(level);
 				ResponseEntity<Response> wsResponse = this.restTemplate.exchange(this.updateCompetenceUrl + "?studentId=" + pedagogicalSoftwareData.getStudent().getId() + "&competence=" + level, HttpMethod.GET, this.entity, Response.class);
+				response = wsResponse.getBody();
 			}
 		}
 
