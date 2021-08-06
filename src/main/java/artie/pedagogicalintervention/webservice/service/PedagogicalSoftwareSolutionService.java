@@ -2,6 +2,8 @@ package artie.pedagogicalintervention.webservice.service;
 
 import java.util.List;
 
+import artie.common.web.dto.Response;
+import artie.common.web.dto.ResponseBody;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareDistance;
@@ -14,8 +16,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import artie.common.web.dto.Exercise;
-import artie.pedagogicalintervention.webservice.dto.ResponseBodyDTO;
-import artie.pedagogicalintervention.webservice.dto.ResponseDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
 
@@ -47,11 +47,11 @@ public class PedagogicalSoftwareSolutionService {
 	 */
 	public String add(PedagogicalSoftwareSolution pss) {
 		
-		ResponseDTO response = new ResponseDTO(null);
+		Response response = new Response(null);
 		PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pss);
 		
 		if(objSaved != null) {
-			response = new ResponseDTO(new ResponseBodyDTO("OK"));
+			response = new Response(new ResponseBody("OK"));
 		}
 		
 		return response.toJSON();
@@ -63,7 +63,7 @@ public class PedagogicalSoftwareSolutionService {
 	 */
 	public String add(String pse) {
 		
-		ResponseDTO response = new ResponseDTO(null);
+		Response response = new Response(null);
 		
 		try {					
 			//1- Transforms the string in pedagogical software solution object
@@ -86,7 +86,7 @@ public class PedagogicalSoftwareSolutionService {
 				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
 				
 				if(objSaved != null) {
-					response = new ResponseDTO(new ResponseBodyDTO("OK"));
+					response = new Response(new ResponseBody("OK"));
 				}
 			}else {
 				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
