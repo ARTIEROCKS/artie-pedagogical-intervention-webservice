@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Id;
 
+import artie.common.web.dto.SoftwareData;
 import artie.common.web.dto.SolutionDistance;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -161,5 +162,15 @@ public class PedagogicalSoftwareData {
 	
 	public void addElement(PedagogicalSoftwareElement element) {
 		this.elements.add(element);
+	}
+
+	/**
+	 * Function to transform the pedagogical software data class into the software data DTO in the common library
+	 * @return
+	 */
+	public SoftwareData toDTO(){
+		return new SoftwareData(this.student.getParent(), this.exercise, this.solutionDistance,
+								this.secondsHelpOpen, this.finishedExercise, this.validSolution,
+								this.grade, this.lastLogin);
 	}
 }
