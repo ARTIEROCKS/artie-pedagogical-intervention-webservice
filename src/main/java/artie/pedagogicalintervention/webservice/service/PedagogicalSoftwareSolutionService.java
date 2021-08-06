@@ -4,9 +4,9 @@ import java.util.List;
 
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
+import artie.common.web.dto.SolutionDistance;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareDistance;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@ public class PedagogicalSoftwareSolutionService {
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = this.objectMapper.readValue(pse, PedagogicalSoftwareSolution.class);
 
 			//2- Calculates and sets the maximum distance of this solution
-			PedagogicalSoftwareDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			SolutionDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
 			
 			//3- Searches if there is a solution for this exercise
@@ -116,7 +116,7 @@ public class PedagogicalSoftwareSolutionService {
 																										pedagogicalSoftwareData.getBinary(),
 																										pedagogicalSoftwareData.getElements(), 0);
 			//Calculates the maximum distance for this solution
-			PedagogicalSoftwareDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			SolutionDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
 
 			//Sets the maximum distance to this solution
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());

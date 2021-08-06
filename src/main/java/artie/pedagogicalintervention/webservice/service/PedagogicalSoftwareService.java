@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
 import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareDistance;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
@@ -78,14 +77,14 @@ public class PedagogicalSoftwareService {
 		List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
 
 		// 2- If there at least 1 solution, we get the distances
-		PedagogicalSoftwareDistance distance = null;
+		SolutionDistance distance = null;
 		double maximumDistance = 0;
 		double grade = 0;
 		if (pedagogicalSoftwareSolution != null && pedagogicalSoftwareSolution.size() > 0) {
 
 			//2.1- Gets the distance
 			Map<String, Object> mapDistance = this.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
-			distance = (PedagogicalSoftwareDistance)mapDistance.get("distance");
+			distance = (SolutionDistance)mapDistance.get("distance");
 			maximumDistance = (double)mapDistance.get("maximumDistance");
 			pedagogicalSoftwareData.setSolutionDistance(distance);
 
@@ -194,7 +193,7 @@ public class PedagogicalSoftwareService {
 			if(validated == ValidSolutionEnum.VALIDATED.getValue()){
 
 				//We set the distance of the pedagogical software data to 0
-				pedagogicalSoftwareData.setSolutionDistance(new PedagogicalSoftwareDistance(0,0,0,0,0, null));
+				pedagogicalSoftwareData.setSolutionDistance(new SolutionDistance(0,0,0,0,0, null));
 
 				//We register the new solution
 				this.pedagogicalSoftwareSolutionService.addFromPedagogicalSoftwareDataId(pedagogicalDataId);
@@ -206,7 +205,7 @@ public class PedagogicalSoftwareService {
 				//We calculate the distance and the grade of the pedagogical software data
 				List<PedagogicalSoftwareSolution> listSolutions = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
 				Map<String, Object> mapDistance = this.distanceCalculation(pedagogicalSoftwareData, listSolutions);
-				PedagogicalSoftwareDistance pedagogicalSoftwareDistance = (PedagogicalSoftwareDistance) mapDistance.get("distance");
+				SolutionDistance pedagogicalSoftwareDistance = (SolutionDistance) mapDistance.get("distance");
 				pedagogicalSoftwareData.setSolutionDistance(pedagogicalSoftwareDistance);
 
 				double maximumDistance = (double)mapDistance.get("maximumDistance");
@@ -228,12 +227,12 @@ public class PedagogicalSoftwareService {
 	public Map<String, Object> distanceCalculation(PedagogicalSoftwareData origin, List<PedagogicalSoftwareSolution> aims){
 
 		Map<String, Object> result = new HashMap<>();
-		PedagogicalSoftwareDistance nearestDistance = null;
+		SolutionDistance nearestDistance = null;
 		double maximumDistance = 0;
 
 		//1- Gets the distance between all the solutions
 		for(PedagogicalSoftwareSolution aim : aims){
-			PedagogicalSoftwareDistance distance = this.distanceCalculation(origin, aim);
+			SolutionDistance distance = this.distanceCalculation(origin, aim);
 
 			//2- Sets the nearest distance
 			if(nearestDistance == null || distance.getTotalDistance() < nearestDistance.getTotalDistance()){
@@ -254,7 +253,7 @@ public class PedagogicalSoftwareService {
 	 * @param aim
 	 * @return
 	 */
-	public PedagogicalSoftwareDistance distanceCalculation(PedagogicalSoftwareData origin, PedagogicalSoftwareSolution aim) {
+	public SolutionDistance distanceCalculation(PedagogicalSoftwareData origin, PedagogicalSoftwareSolution aim) {
 
 		List<PedagogicalSoftwareBlockDTO> aimBlocks = new ArrayList<>();
 		List<PedagogicalSoftwareBlockDTO> originBlocks = new ArrayList<>();
@@ -309,7 +308,7 @@ public class PedagogicalSoftwareService {
 		totalDistance = (diffFamily / DistanceEnum.FAMILY.getValue()) + (diffElements / DistanceEnum.ELEMENT.getValue())
 				+ (diffPosition / DistanceEnum.POSITION.getValue()) + (diffInput / DistanceEnum.INPUT.getValue());
 
-		return new PedagogicalSoftwareDistance(diffFamily, diffElements, diffPosition, diffInput, totalDistance, nextSteps);
+		return new SolutionDistance(diffFamily, diffElements, diffPosition, diffInput, totalDistance, nextSteps);
 	}
 
 	/**

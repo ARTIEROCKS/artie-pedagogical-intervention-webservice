@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.persistence.Id;
 
+import artie.common.web.dto.SolutionDistance;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.tomcat.jni.Local;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import artie.common.web.enums.ValidSolutionEnum;
@@ -22,7 +22,7 @@ public class PedagogicalSoftwareData {
 	private String id;
 	private StudentDTO student;
 	private Exercise exercise;
-	private PedagogicalSoftwareDistance solutionDistance = new PedagogicalSoftwareDistance();
+	private SolutionDistance solutionDistance = new SolutionDistance();
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
 	private double secondsHelpOpen;
@@ -56,10 +56,10 @@ public class PedagogicalSoftwareData {
 		this.exercise = exercise;
 	}
 	
-	public PedagogicalSoftwareDistance getSolutionDistance() {
+	public SolutionDistance getSolutionDistance() {
 		return solutionDistance;
 	}
-	public void setSolutionDistance(PedagogicalSoftwareDistance solutionDistance) {
+	public void setSolutionDistance(SolutionDistance solutionDistance) {
 		this.solutionDistance = solutionDistance;
 	}
 	
@@ -141,7 +141,7 @@ public class PedagogicalSoftwareData {
 	 * @param screenShot
 	 * @param binary
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, PedagogicalSoftwareDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
+	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
 								   boolean requestHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot,
 								   String binary) {
 		this.student = student;

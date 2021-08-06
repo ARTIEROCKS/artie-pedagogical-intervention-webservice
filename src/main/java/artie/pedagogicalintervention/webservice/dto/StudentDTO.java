@@ -46,8 +46,14 @@ public class StudentDTO extends Student {
 	/**
 	 * Default constructor
 	 */
-	public StudentDTO() {
+	public StudentDTO() {}
 
+	/**
+	 * Get the parent class
+	 * @return
+	 */
+	public Student getParent(){
+		return this;
 	}
 
 }
