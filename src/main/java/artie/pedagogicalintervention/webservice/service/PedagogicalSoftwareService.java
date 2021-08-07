@@ -42,6 +42,9 @@ public class PedagogicalSoftwareService {
 	@Autowired
 	private PedagogicalSoftwareSolutionService pedagogicalSoftwareSolutionService;
 
+	@Autowired
+	private HelpModelService helpModelService;
+
 	@Value("${artie.webservices.student.updateCompetence.url}")
 	private String updateCompetenceUrl;
 
@@ -143,6 +146,9 @@ public class PedagogicalSoftwareService {
 					PedagogicalSoftwareData.class);
 
 			response = this.add(pedagogicalSoftwareData);
+
+			// 2- Calls the help model to get if the help must be shown or not
+			boolean helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
 
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();

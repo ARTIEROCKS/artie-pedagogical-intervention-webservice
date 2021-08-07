@@ -9,6 +9,7 @@ import javax.persistence.Id;
 
 import artie.common.web.dto.SoftwareData;
 import artie.common.web.dto.SolutionDistance;
+import artie.common.web.dto.Student;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -169,7 +170,8 @@ public class PedagogicalSoftwareData {
 	 * @return
 	 */
 	public SoftwareData toDTO(){
-		return new SoftwareData(this.student.getParent(), this.exercise, this.solutionDistance,
+		Student st = this.student;
+		return new SoftwareData(st, this.exercise, this.solutionDistance,
 								this.secondsHelpOpen, this.finishedExercise, this.validSolution,
 								this.grade, this.lastLogin);
 	}

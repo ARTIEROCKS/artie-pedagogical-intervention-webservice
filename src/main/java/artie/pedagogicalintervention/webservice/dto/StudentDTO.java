@@ -48,12 +48,5 @@ public class StudentDTO extends Student {
 	 */
 	public StudentDTO() {}
 
-	/**
-	 * Get the parent class
-	 * @return
-	 */
-	public Student getParent(){
-		return this;
-	}
 
 }
