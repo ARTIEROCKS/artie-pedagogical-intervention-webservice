@@ -27,6 +27,7 @@ public class PedagogicalSoftwareData {
 	private SolutionDistance solutionDistance = new SolutionDistance();
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
+	private boolean predictedNeedHelp;
 	private double secondsHelpOpen;
 	private boolean finishedExercise;
 	private int validSolution;
@@ -79,6 +80,9 @@ public class PedagogicalSoftwareData {
 		this.requestHelp = requestHelp;
 	}
 
+	public boolean getPredictedNeedHelp(){return this.predictedNeedHelp;}
+	public void setPredictedNeedHelp(boolean predictedNeedHelp){this.predictedNeedHelp = predictedNeedHelp;}
+
 	public double getSecondsHelpOpen(){return this.secondsHelpOpen;}
 	public void setSecondsHelpOpen(double secondsHelpOpen){this.secondsHelpOpen = secondsHelpOpen;}
 
@@ -126,6 +130,7 @@ public class PedagogicalSoftwareData {
 		this.finishedExercise = false;
 		this.validSolution = ValidSolutionEnum.WAITING_APPROVAL.getValue();
 		this.screenShot = null;
+		this.predictedNeedHelp = false;
 	}
 	
 	/**
@@ -135,6 +140,7 @@ public class PedagogicalSoftwareData {
 	 * @param solutionDistance
 	 * @param elements
 	 * @param requestHelp
+	 * @param predictedNeedHelp
 	 * @param secondsHelpOpen
 	 * @param finishedExercise
 	 * @param validSolution
@@ -144,7 +150,7 @@ public class PedagogicalSoftwareData {
 	 * @param binary
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot,
+								   boolean requestHelp, boolean predictedNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot,
 								   String binary) {
 		this.student = student;
 		this.exercise = exercise;
@@ -152,6 +158,7 @@ public class PedagogicalSoftwareData {
 		this.elements = elements;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
+		this.predictedNeedHelp = predictedNeedHelp;
 		this.secondsHelpOpen = secondsHelpOpen;
 		this.finishedExercise = finishedExercise;
 		this.validSolution = validSolution;

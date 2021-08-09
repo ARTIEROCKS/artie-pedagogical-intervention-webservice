@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import artie.common.web.dto.*;
+import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,13 +119,13 @@ public class PedagogicalSoftwareService {
 			response = new Response(new ResponseBody(distance));
 		}else if(objSaved != null && pedagogicalSoftwareData.getRequestHelp() == false){
 			//3.2- If we haven't requested any kind of help, we just return if the element has been saved or not
-			response = new Response(new ResponseBody("OK"));
+			response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
 		}else if(pedagogicalSoftwareData.getRequestHelp() && distance != null){
 			//3.3- If we have requested help, we return the next hints
 			response = new Response(new ResponseBody(distance));
 		}else if(pedagogicalSoftwareData.getRequestHelp() && distance == null){
 			//3.4- If the distance is null and we have requested help, there must be an error
-			response = new Response(new ResponseBody("ERROR"));
+			response = new Response(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
 		}
 
 		return response.toJSON();
@@ -145,10 +146,12 @@ public class PedagogicalSoftwareService {
 			PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
 					PedagogicalSoftwareData.class);
 
-			response = this.add(pedagogicalSoftwareData);
-
 			// 2- Calls the help model to get if the help must be shown or not
 			boolean helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
+
+			// 3- Adds the predicted need help into the response
+			pedagogicalSoftwareData.setPredictedNeedHelp(helpNeeded);
+			response = this.add(pedagogicalSoftwareData);
 
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
