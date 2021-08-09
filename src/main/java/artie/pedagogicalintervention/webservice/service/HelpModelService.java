@@ -1,8 +1,11 @@
 package artie.pedagogicalintervention.webservice.service;
 
 import artie.common.web.dto.Response;
+import artie.common.web.dto.ResponseBody;
 import artie.common.web.dto.SoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -49,10 +52,18 @@ public class HelpModelService {
         SoftwareData softwareData = pedagogicalSoftwareData.toDTO();
 
         //2- Calls for the webservice
-        Response wsResponse = restTemplate.postForObject(helpWebserviceUrl + "/predict", softwareData, Response.class);
+        String wsResponse = restTemplate.postForObject(helpWebserviceUrl + "/predict", softwareData, String.class);
+
+        //3- Transforms the string into the object
+        Response response = null;
+        try {
+            response = new ObjectMapper().readValue(wsResponse, Response.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
         //3- Returns the boolean body object
-        return (boolean)wsResponse.getBody().getObject();
+        return response != null ? ((int)response.getBody().getObject() == 1 ? true : false ): false;
     }
 
 }
