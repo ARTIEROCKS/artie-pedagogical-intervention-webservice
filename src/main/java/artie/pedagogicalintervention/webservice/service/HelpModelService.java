@@ -3,6 +3,7 @@ package artie.pedagogicalintervention.webservice.service;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
 import artie.common.web.dto.SoftwareData;
+import artie.common.web.enums.ResponseCodeEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,12 +59,19 @@ public class HelpModelService {
         Response response = null;
         try {
             response = new ObjectMapper().readValue(wsResponse, Response.class);
+
+            //If there are an error in the response, we print the error
+            if(response != null && response.getBody() != null && response.getBody().getMessage() == ResponseCodeEnum.ERROR.toString()){
+                System.out.println((String)response.getBody().getObject());
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         //3- Returns the boolean body object
-        return response != null ? ((int)response.getBody().getObject() == 1 ? true : false ): false;
+        return response != null &&
+                response.getBody().getMessage() != ResponseCodeEnum.ERROR.toString() &&
+                response.getBody().getObject() != null ? ((int)response.getBody().getObject() == 1 ? true : false ): false;
     }
 
 }
