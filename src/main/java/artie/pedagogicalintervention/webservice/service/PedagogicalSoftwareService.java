@@ -114,18 +114,13 @@ public class PedagogicalSoftwareService {
 		PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 
 		//3- Creating the return object
-		if (objSaved != null && pedagogicalSoftwareData.getRequestHelp() == false && distance != null) {
-			//3.1- If we haven't requested any kind of help, but we have a distance
-			response = new Response(new ResponseBody(distance));
-		}else if(objSaved != null && pedagogicalSoftwareData.getRequestHelp() == false){
-			//3.2- If we haven't requested any kind of help, we just return if the element has been saved or not
-			response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
-		}else if(pedagogicalSoftwareData.getRequestHelp() && distance != null){
-			//3.3- If we have requested help, we return the next hints
-			response = new Response(new ResponseBody(distance));
-		}else if(pedagogicalSoftwareData.getRequestHelp() && distance == null){
-			//3.4- If the distance is null and we have requested help, there must be an error
+		HelpResult helpResult = new HelpResult(objSaved.getId(), objSaved.getPredictedNeedHelp(), false, false, null, distance);
+		if(pedagogicalSoftwareData.getRequestHelp() && distance == null){
+			//3.1- If the distance is null and we have requested help, there must be an error
 			response = new Response(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
+		}else{
+			//3.2- We send that everithing is OK and the help result object
+			response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString(), helpResult));
 		}
 
 		return response.toJSON();
