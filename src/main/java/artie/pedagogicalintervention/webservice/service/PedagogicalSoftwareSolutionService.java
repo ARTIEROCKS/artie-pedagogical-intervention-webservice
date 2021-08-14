@@ -5,6 +5,7 @@ import java.util.List;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
 import artie.common.web.dto.SolutionDistance;
+import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
@@ -86,10 +87,11 @@ public class PedagogicalSoftwareSolutionService {
 				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
 				
 				if(objSaved != null) {
-					response = new Response(new ResponseBody("OK"));
+					response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
 				}
 			}else {
 				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
+				response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
 			}
 		}catch(JsonProcessingException e) {
 			e.printStackTrace();
