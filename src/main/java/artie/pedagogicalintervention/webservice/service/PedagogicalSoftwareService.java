@@ -993,13 +993,20 @@ public class PedagogicalSoftwareService {
 	 * Function to update the answeredNeededHelp in base of the id of the PedagogicalSoftwareData
 	 * @param id
 	 */
-	public void updateAnsweredNeedHelpById(String id, boolean answeredNeedHelp){
+	public String updateAnsweredNeedHelpById(String id, boolean answeredNeedHelp){
+
+		Response response = new Response();
 
 		//Update the pedagogical software data with the answered need help information
 		PedagogicalSoftwareData psd = this.pedagogicalSoftwareDataRepository.findById(id).orElse(null);
 		if(psd != null){
 			psd.setAnsweredNeedHelp(answeredNeedHelp);
 			this.pedagogicalSoftwareDataRepository.save(psd);
+			response.setBody(new ResponseBody(ResponseCodeEnum.OK.toString()));
+		} else{
+			response.setBody(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
 		}
+
+		return response.toJSON();
 	}
 }
