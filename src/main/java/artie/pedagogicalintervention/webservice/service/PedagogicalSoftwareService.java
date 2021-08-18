@@ -80,7 +80,7 @@ public class PedagogicalSoftwareService {
 		// 1- Looks for the solution to the exercise
 		List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
 
-		// 2- If there at least 1 solution, we get the distances
+		// 2- If there is at least 1 solution, we get the distances
 		SolutionDistance distance = null;
 		double maximumDistance = 0;
 		double grade = 0;
@@ -119,7 +119,9 @@ public class PedagogicalSoftwareService {
 			//3.1- If the distance is null, and we have requested help, there must be an error
 			response = new Response(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
 		}else{
-			//3.2- We send that everithing is OK and the help result object
+			//3.2- We send that everything is OK and the help result object
+			//TODO: Delete
+			helpResult.setPredictedNeedHelp(true);
 			response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString(), helpResult));
 		}
 
@@ -987,4 +989,17 @@ public class PedagogicalSoftwareService {
 		return learningProgressList;
 	}
 
+	/**
+	 * Function to update the answeredNeededHelp in base of the id of the PedagogicalSoftwareData
+	 * @param id
+	 */
+	public void updateAnsweredNeedHelpById(String id, boolean answeredNeedHelp){
+
+		//Update the pedagogical software data with the answered need help information
+		PedagogicalSoftwareData psd = this.pedagogicalSoftwareDataRepository.findById(id).orElse(null);
+		if(psd != null){
+			psd.setAnsweredNeedHelp(answeredNeedHelp);
+			this.pedagogicalSoftwareDataRepository.save(psd);
+		}
+	}
 }

@@ -39,6 +39,13 @@ public class PedagogicalSoftwareRestController {
 	public String sendPedagogicalSoftwareData(@RequestBody String data) {
 		return this.pedagogicalSoftwareService.add(data);
 	}
+
+	@PutMapping(path = "/update/answeredNeedHelp",
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public void updateAnsweredNeedHelp(@RequestParam String id, @RequestParam boolean answeredNeedHelp){
+		this.pedagogicalSoftwareService.updateAnsweredNeedHelpById(id, answeredNeedHelp);
+	}
 	
 	/**
 	 * Function to store the pedagogical software solution
