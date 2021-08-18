@@ -28,6 +28,7 @@ public class PedagogicalSoftwareData {
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
 	private boolean predictedNeedHelp;
+	private boolean answeredNeedHelp;
 	private double secondsHelpOpen;
 	private boolean finishedExercise;
 	private int validSolution;
@@ -83,6 +84,9 @@ public class PedagogicalSoftwareData {
 	public boolean getPredictedNeedHelp(){return this.predictedNeedHelp;}
 	public void setPredictedNeedHelp(boolean predictedNeedHelp){this.predictedNeedHelp = predictedNeedHelp;}
 
+	public boolean getAnsweredNeedHelp(){return this.answeredNeedHelp;}
+	public void setAnsweredNeedHelp(boolean answeredNeedHelp){this.answeredNeedHelp = answeredNeedHelp;}
+
 	public double getSecondsHelpOpen(){return this.secondsHelpOpen;}
 	public void setSecondsHelpOpen(double secondsHelpOpen){this.secondsHelpOpen = secondsHelpOpen;}
 
@@ -131,6 +135,7 @@ public class PedagogicalSoftwareData {
 		this.validSolution = ValidSolutionEnum.WAITING_APPROVAL.getValue();
 		this.screenShot = null;
 		this.predictedNeedHelp = false;
+		this.answeredNeedHelp = false;
 	}
 	
 	/**
@@ -141,6 +146,7 @@ public class PedagogicalSoftwareData {
 	 * @param elements
 	 * @param requestHelp
 	 * @param predictedNeedHelp
+	 * @param answeredNeedHelp
 	 * @param secondsHelpOpen
 	 * @param finishedExercise
 	 * @param validSolution
@@ -150,7 +156,7 @@ public class PedagogicalSoftwareData {
 	 * @param binary
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, boolean predictedNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot,
+								   boolean requestHelp, boolean predictedNeedHelp, boolean answeredNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot,
 								   String binary) {
 		this.student = student;
 		this.exercise = exercise;
@@ -159,6 +165,7 @@ public class PedagogicalSoftwareData {
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
 		this.predictedNeedHelp = predictedNeedHelp;
+		this.answeredNeedHelp = answeredNeedHelp;
 		this.secondsHelpOpen = secondsHelpOpen;
 		this.finishedExercise = finishedExercise;
 		this.validSolution = validSolution;

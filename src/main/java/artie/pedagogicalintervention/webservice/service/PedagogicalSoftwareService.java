@@ -114,9 +114,9 @@ public class PedagogicalSoftwareService {
 		PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 
 		//3- Creating the return object
-		HelpResult helpResult = new HelpResult(objSaved.getId(), objSaved.getPredictedNeedHelp(), false, false, null, distance);
+		HelpResult helpResult = new HelpResult(objSaved.getId(), objSaved.getPredictedNeedHelp(), false, null, distance);
 		if(pedagogicalSoftwareData.getRequestHelp() && distance == null){
-			//3.1- If the distance is null and we have requested help, there must be an error
+			//3.1- If the distance is null, and we have requested help, there must be an error
 			response = new Response(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
 		}else{
 			//3.2- We send that everithing is OK and the help result object
