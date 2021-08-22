@@ -199,7 +199,7 @@ public class PedagogicalSoftwareService {
 			if(validated == ValidSolutionEnum.VALIDATED.getValue()){
 
 				//We set the distance of the pedagogical software data to 0
-				pedagogicalSoftwareData.setSolutionDistance(new SolutionDistance(0,0,0,0,0, null));
+				pedagogicalSoftwareData.setSolutionDistance(new SolutionDistance("",0,0,0,0,0, null));
 
 				//We register the new solution
 				this.pedagogicalSoftwareSolutionService.addFromPedagogicalSoftwareDataId(pedagogicalDataId);
@@ -265,7 +265,7 @@ public class PedagogicalSoftwareService {
 		List<PedagogicalSoftwareBlockDTO> originBlocks = new ArrayList<>();
 
 		//Preparing the next steps in base if the user has requested help or not
-		NextStepHint nextSteps = (origin.getRequestHelp() ? new NextStepHint() : null);
+		NextStepHint nextSteps = ((origin.getRequestHelp() || origin.getAnsweredNeedHelp()) ? new NextStepHint() : null);
 
 		// Family variables
 		Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilySimilarities = new HashMap<>();
@@ -314,7 +314,7 @@ public class PedagogicalSoftwareService {
 		totalDistance = (diffFamily / DistanceEnum.FAMILY.getValue()) + (diffElements / DistanceEnum.ELEMENT.getValue())
 				+ (diffPosition / DistanceEnum.POSITION.getValue()) + (diffInput / DistanceEnum.INPUT.getValue());
 
-		return new SolutionDistance(diffFamily, diffElements, diffPosition, diffInput, totalDistance, nextSteps);
+		return new SolutionDistance(aim.getId(), diffFamily, diffElements, diffPosition, diffInput, totalDistance, nextSteps);
 	}
 
 	/**
@@ -997,16 +997,36 @@ public class PedagogicalSoftwareService {
 
 		Response response = new Response();
 
-		//Update the pedagogical software data with the answered need help information
+		//Updates the pedagogical software data with the answered need help information
 		PedagogicalSoftwareData psd = this.pedagogicalSoftwareDataRepository.findById(id).orElse(null);
+
+		// If we have the pedagogical software data
 		if(psd != null){
+
 			psd.setAnsweredNeedHelp(answeredNeedHelp);
+
+			// We check if the user wants help
+			if(answeredNeedHelp && psd.getSolutionDistance() != null && psd.getSolutionDistance().getSolutionId() != null){
+
+				// 1- We get the solution of the pedagogical software data
+				PedagogicalSoftwareSolution pss = this.pedagogicalSoftwareSolutionService.findById(psd.getSolutionDistance().getSolutionId());
+
+				// 2- Calculates the distance and the next steps
+				SolutionDistance solutionDistance = this.distanceCalculation(psd, pss);
+
+				// 3- Gets the new grade of the user
+				double newGrade = this.calculateGrade(pss.getMaximumDistance(), solutionDistance.getTotalDistance(), 10);
+
+				// 4- Updates the pedagogical software data
+				psd.setSolutionDistance(solutionDistance);
+				psd.setGrade(newGrade);
+			}
+
 			this.pedagogicalSoftwareDataRepository.save(psd);
-			response.setBody(new ResponseBody(ResponseCodeEnum.OK.toString()));
+			response.setBody(new ResponseBody(ResponseCodeEnum.OK.toString(), psd));
 		} else{
 			response.setBody(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
 		}
-
 		return response.toJSON();
 	}
 }

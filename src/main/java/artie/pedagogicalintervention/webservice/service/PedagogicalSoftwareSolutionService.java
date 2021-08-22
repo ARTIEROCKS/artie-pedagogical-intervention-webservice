@@ -185,5 +185,12 @@ public class PedagogicalSoftwareSolutionService {
 		return this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(exercise.getId(), userId);
 	}
 
-
+	/**
+	 * Function to get the pedagogical software solution in base of its ID
+	 * @param id
+	 * @return
+	 */
+	public PedagogicalSoftwareSolution findById(String id){
+		return this.pedagogicalSoftwareSolutionRepository.findById(id).orElse(null);
+	}
 }

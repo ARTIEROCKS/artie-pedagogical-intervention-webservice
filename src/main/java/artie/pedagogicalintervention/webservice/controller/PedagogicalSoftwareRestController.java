@@ -40,6 +40,12 @@ public class PedagogicalSoftwareRestController {
 		return this.pedagogicalSoftwareService.add(data);
 	}
 
+	/**
+	 * Function to update if the user answered yes to the question if he/she needs help
+	 * @param id
+	 * @param answeredNeedHelp
+	 * @return
+	 */
 	@PutMapping(path = "/update/answeredNeedHelp",
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.ACCEPTED)
@@ -59,7 +65,7 @@ public class PedagogicalSoftwareRestController {
 	}
 
 	/**
-	 * Function to get the finished exercises by the students of an user
+	 * Function to get the finished exercises by the students of a user
 	 * @param userId
 	 * @return
 	 */
@@ -84,7 +90,7 @@ public class PedagogicalSoftwareRestController {
 	}
 
 	/**
-	 * Function to get the solutions of an user ID
+	 * Function to get the solutions of a user ID
 	 * @param userId
 	 * @return
 	 */
