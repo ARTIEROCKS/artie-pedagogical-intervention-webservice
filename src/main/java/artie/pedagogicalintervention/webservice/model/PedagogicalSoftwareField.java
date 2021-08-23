@@ -43,7 +43,7 @@ public class PedagogicalSoftwareField implements Cloneable {
 	    if (this.getClass() != obj.getClass()) return false;
 		PedagogicalSoftwareField objField = (PedagogicalSoftwareField) obj;
 		
-		return (this.name.equals(objField.getName()) && this.value.equals(objField.getValue()));
+		return (this.name.toLowerCase().equals(objField.getName().toLowerCase()) && this.value.toLowerCase().equals(objField.getValue().toLowerCase()));
 	}
 	
 	/**

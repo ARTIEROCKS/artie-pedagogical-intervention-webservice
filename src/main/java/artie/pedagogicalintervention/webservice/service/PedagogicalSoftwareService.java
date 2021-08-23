@@ -596,7 +596,7 @@ public class PedagogicalSoftwareService {
 					}
 
 					// If there are similarities, we add these similarities to the block map
-					mapBlockSimilarities.put(familyAimBlock.getElementName(), nearestBlocks);
+					mapBlockSimilarities.put(familyAimBlock.getElementName().toLowerCase(), nearestBlocks);
 
 					// We avoid to repeat the same block
 					familyOriginBlocks.removeAll(nearestBlocks);
@@ -689,12 +689,12 @@ public class PedagogicalSoftwareService {
 			//5.1- Gets the blocks in the aim for this block
 			List<PedagogicalSoftwareBlockDTO> blockAimBlocks = aimBlocks
 																.stream()
-																.filter(c -> c.getElementName().equals(block))
+																.filter(c -> c.getElementName().toLowerCase().equals(block.toLowerCase()))
 																.sorted(compareByElementPosition)
 																.collect(Collectors.toList());
 			
 			//5.2- Gets the blocks in the origin
-			List<PedagogicalSoftwareBlockDTO> blockOriginBlocks = mapBlockSimilarities.get(block)
+			List<PedagogicalSoftwareBlockDTO> blockOriginBlocks = mapBlockSimilarities.get(block.toLowerCase())
 					 																	.stream()
 																						.map(eoe -> eoe.clone())
 																						.sorted(compareByElementPosition)
@@ -828,10 +828,10 @@ public class PedagogicalSoftwareService {
 
 			// 4.1- Gets the elements in the aim for this block
 			List<PedagogicalSoftwareBlockDTO> blockAimBlocks = aimBlocks.stream()
-					.filter(c -> c.getElementName().equals(block)).collect(Collectors.toList());
+					.filter(c -> c.getElementName().toLowerCase().equals(block.toLowerCase())).collect(Collectors.toList());
 
 			// 4.2- Gets the blocks in the origin
-			List<PedagogicalSoftwareBlockDTO> elementOriginBlocks = mapBlockSimilarities.get(block).stream()
+			List<PedagogicalSoftwareBlockDTO> elementOriginBlocks = mapBlockSimilarities.get(block.toLowerCase()).stream()
 					.map(mes -> mes.clone()).collect(Collectors.toList());
 
 			int nearestPosition = -1;

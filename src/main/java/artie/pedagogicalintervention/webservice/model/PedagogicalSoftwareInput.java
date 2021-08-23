@@ -58,8 +58,8 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	    if (this.getClass() != obj.getClass()) return false;
 	    PedagogicalSoftwareInput objInput = (PedagogicalSoftwareInput) obj;
 
-	    if(!this.name.equals(objInput.getName())) return false;
-	    if(!this.opcode.equals(objInput.getOpCode())) return false;
+	    if(!this.name.toLowerCase().equals(objInput.getName().toLowerCase())) return false;
+	    if(!this.opcode.toLowerCase().equals(objInput.getOpCode().toLowerCase())) return false;
 	    
 	    boolean result = this.fields.size()== objInput.getFields().size();
 	    for(PedagogicalSoftwareField field : this.fields) {

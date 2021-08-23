@@ -15,6 +15,7 @@ class PedagogicalSoftwareInputTest {
 
 	private PedagogicalSoftwareInput input1;
 	private PedagogicalSoftwareInput input11;
+	private PedagogicalSoftwareInput input111;
 	private PedagogicalSoftwareInput input2;
 	private PedagogicalSoftwareInput input21;
 	private PedagogicalSoftwareInput input22;
@@ -32,7 +33,8 @@ class PedagogicalSoftwareInputTest {
 		
 		
 		this.input1 = new PedagogicalSoftwareInput("name1", "name1", fields1);
-		this.input11 = new PedagogicalSoftwareInput("name1", "name1", fields1);
+		this.input11 = new PedagogicalSoftwareInput("Name1", "Name1", fields1);
+		this.input111 = new PedagogicalSoftwareInput("NAME1", "NAME1", fields1);
 		
 		this.input2 = new PedagogicalSoftwareInput("name2", "name2", fields2);
 		this.input21 = new PedagogicalSoftwareInput("name21", "name21", fields2);
@@ -42,7 +44,9 @@ class PedagogicalSoftwareInputTest {
 
 	@Test
 	void equalsInputTest() {
+		assertEquals(input1, input1);
 		assertEquals(input1, input11);
+		assertEquals(input1, input111);
 		assertNotEquals(input1, input2);
 		assertNotEquals(input2, input21);
 		assertNotEquals(input21, input22);
