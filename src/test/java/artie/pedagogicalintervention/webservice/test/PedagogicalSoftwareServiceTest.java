@@ -549,19 +549,19 @@ class PedagogicalSoftwareServiceTest {
 		List<PedagogicalSoftwareBlockDTO> aimElements;
 		
 
-		//A- Same origin and aim
+		//A.1- Same origin and aim and different CASE
 		mapFamilyDifferences = new HashMap<>();
 		
-		originFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		originFieldInput1 = new PedagogicalSoftwareField("str", "a");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
 		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
 		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 		
 		
-		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
 		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 		
@@ -574,19 +574,19 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(0, distance);
 		
 		
-		//B- String input difference
+		//B- String input difference and different CASE
 		mapFamilyDifferences = new HashMap<>();
 		
-		originFieldInput1 = new PedagogicalSoftwareField("STR", "b");
+		originFieldInput1 = new PedagogicalSoftwareField("str", "b");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
 		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
 		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 		
 		
-		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
 		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 		
@@ -610,19 +610,19 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(22, distance); //Input difference from similar families: 1 + Input differences from different families: 20 + 1 (string)
 		
 		
-		//C- Number input difference
+		//C- Number input difference and different CASE
 		mapFamilyDifferences = new HashMap<>();
 		
-		originFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		originFieldInput1 = new PedagogicalSoftwareField("str", "a");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
 		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
 		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 		
 		
-		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "40");
-		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
 		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 		
@@ -645,19 +645,19 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(16.25, distance); //Input difference from similar families: 0.25 + Input differences from different families: 15 + 1 (string)
 
 
-		//D- Number input difference with 0 value in the aim
+		//D- Number input difference with 0 value in the aim and different CASE
 		mapFamilyDifferences = new HashMap<>();
 
-		originFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		originFieldInput1 = new PedagogicalSoftwareField("str", "a");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
 		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
 		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 
 
-		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "0");
-		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
 		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 
@@ -680,19 +680,19 @@ class PedagogicalSoftwareServiceTest {
 		assertEquals(46, distance); //Input difference from similar families: 0.25 + Input differences from different families: 15 + 1 (string)
 		
 		
-		//E- Number and String inputs difference
+		//E- Number and String inputs difference and different CASE
 		mapFamilyDifferences = new HashMap<>();
 		
-		originFieldInput1 = new PedagogicalSoftwareField("STR", "b");
+		originFieldInput1 = new PedagogicalSoftwareField("str", "b");
 		originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
 		originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
 		originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
 		origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
 		
 		
-		aimFieldInput1 = new PedagogicalSoftwareField("STR", "a");
+		aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
 		aimFieldInput2 = new PedagogicalSoftwareField("NUM", "40");
-		aimInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
+		aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
 		aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
 		aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
 		

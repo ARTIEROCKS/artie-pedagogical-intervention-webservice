@@ -757,7 +757,7 @@ public class PedagogicalSoftwareService {
 
 							}
 							//If the value of the origin field is not equal to the aim field value
-							else if(aimField == null || !originField.getValue().equals(aimField.getValue()))
+							else if(aimField == null || !originField.getValue().toLowerCase().equals(aimField.getValue().toLowerCase()))
 							{
 								accumulatedOriginDifference += 1;
 
