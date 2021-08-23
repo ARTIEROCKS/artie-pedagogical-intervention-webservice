@@ -120,8 +120,6 @@ public class PedagogicalSoftwareService {
 			response = new Response(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
 		}else{
 			//3.2- We send that everything is OK and the help result object
-			//TODO: Delete
-			helpResult.setPredictedNeedHelp(true);
 			response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString(), helpResult));
 		}
 
