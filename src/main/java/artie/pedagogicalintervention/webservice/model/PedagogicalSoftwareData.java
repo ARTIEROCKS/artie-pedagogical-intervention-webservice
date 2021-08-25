@@ -35,6 +35,8 @@ public class PedagogicalSoftwareData {
 	private double grade;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
 	private Date lastLogin;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
+    private Date lastExerciseChange;
 	private String screenShot;
 	private String binary;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
@@ -102,6 +104,9 @@ public class PedagogicalSoftwareData {
 	public Date getLastLogin(){return this.lastLogin;}
 	public void setLastLogin(Date lastLogin){this.lastLogin = lastLogin;}
 
+	public Date getLastExerciseChange(){return this.lastExerciseChange;}
+	public void setLastExerciseChange(Date lastExerciseChange){this.lastExerciseChange = lastExerciseChange;}
+
 	public String getScreenShot(){return this.screenShot;}
 	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
 
@@ -152,12 +157,13 @@ public class PedagogicalSoftwareData {
 	 * @param validSolution
 	 * @param grade
 	 * @param lastLogin
+	 * @param lastExerciseChange
 	 * @param screenShot
 	 * @param binary
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, boolean predictedNeedHelp, boolean answeredNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade, Date lastLogin, String screenShot,
-								   String binary) {
+								   boolean requestHelp, boolean predictedNeedHelp, boolean answeredNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade,
+								   Date lastLogin, Date lastExerciseChange, String screenShot, String binary) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
@@ -171,6 +177,7 @@ public class PedagogicalSoftwareData {
 		this.validSolution = validSolution;
 		this.grade = grade;
 		this.lastLogin = lastLogin;
+		this.lastExerciseChange = lastExerciseChange;
 		this.screenShot = screenShot;
 		this.binary = binary;
 	}
@@ -187,6 +194,6 @@ public class PedagogicalSoftwareData {
 		Student st = this.student;
 		return new SoftwareData(st, this.exercise, this.solutionDistance,
 								this.secondsHelpOpen, this.finishedExercise, this.validSolution,
-								this.grade, this.lastLogin);
+								this.grade, this.lastLogin, this.lastExerciseChange);
 	}
 }
