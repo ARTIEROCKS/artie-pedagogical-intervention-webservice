@@ -78,6 +78,19 @@ public class PedagogicalSoftwareRestController {
 	}
 
 	/**
+	 * Function to get the finished exercises by student id
+	 * @param studentId
+	 * @return
+	 */
+	@GetMapping(path = "/finishedExercisesByStudentId",
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseStatus(HttpStatus.FOUND)
+	public Exercise[] getFinishedExercisesByStudentId(@RequestParam String studentId){
+		List<Exercise> listExercises = this.pedagogicalSoftwareService.findFinishedExercisesByStudentId(studentId);
+		return listExercises.toArray(new Exercise[listExercises.size()]);
+	}
+
+	/**
 	 * Function to set the validated value in a finished exercise
 	 * @param pedagogicalDataId
 	 * @param validated

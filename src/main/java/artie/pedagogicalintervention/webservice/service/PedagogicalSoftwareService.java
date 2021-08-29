@@ -8,6 +8,7 @@ import artie.common.web.dto.*;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -172,12 +173,33 @@ public class PedagogicalSoftwareService {
 																									fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
 																		)
 																		.map(e ->{
-																			return new Exercise(e.getId(), e.getExercise().getName(), e.getExercise().getId(), e.getExercise().getDescription(),
+																			return new Exercise(e.getExercise().getId(), e.getExercise().getName(), e.getExercise().getDescription(), e.getExercise().getFinishedExerciseId(),
 																							    e.getScreenShot(), e.getBinary(), e.getValidSolution(), e.getExercise().getIsEvaluation(), e.getExercise().getLevel());
 																		})
 																		.collect(Collectors.toList());
 
 		return listFinishedExercises;
+	}
+
+	/**
+	 * Function to get the finished exercises of a student ID or which total distance is == 0
+	 * @param studentId
+	 * @return
+	 */
+	public List<Exercise> findFinishedExercisesByStudentId(String studentId){
+
+		List<Exercise> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByStudent_Id(studentId)
+												.stream()
+												.filter(fe -> fe.getSolutionDistance().getTotalDistance() == 0 ||
+														(fe.getFinishedExercise() && fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
+												.map(e ->{
+													return new Exercise(e.getExercise().getId(), e.getExercise().getName(), e.getExercise().getDescription(), e.getExercise().getFinishedExerciseId(),
+															e.getScreenShot(), e.getBinary(), e.getValidSolution(), e.getExercise().getIsEvaluation(), e.getExercise().getLevel());
+												})
+												.collect(Collectors.toList());
+
+		return StreamEx.of(listFinishedExercises).distinct(Exercise::getId).toList();
+
 	}
 
 	/**
