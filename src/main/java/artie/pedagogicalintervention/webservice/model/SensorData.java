@@ -1,9 +1,6 @@
 package artie.pedagogicalintervention.webservice.model;
 
-import java.util.Date;
-
 import javax.persistence.Id;
-
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,18 +11,15 @@ import artie.common.web.dto.Student;
 import artie.sensor.common.dto.SensorObject;
 
 @Document(collection="SensorData")
-public class SensorData {
+public class SensorData extends SensorObject {
 	
 	//Attributes
 	@Id
 	private String id;
-	private Date date;
-	private long milliseconds;
-	private String sensorObjectType;
-	private String sensorName;
 	private int competence;
 	private int motivation;
-	private String data;
+	private String predictedEmotionalState;
+	private String answeredEmotionalState;
 	
 	
 	//Properties
@@ -34,34 +28,6 @@ public class SensorData {
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	
-	public Date getDate() {
-		return date;
-	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
-	
-	public long getMilliseconds() {
-		return this.milliseconds;
-	}
-	public void setMilliseconds(long milliseconds) {
-		this.milliseconds = milliseconds;
-	}
-	
-	public String getSensorObjectType() {
-		return this.sensorObjectType;
-	}
-	public void setSensorObjectType(String sensorObjectType) {
-		this.sensorObjectType = sensorObjectType;
-	}
-	
-	public String getSensorName() {
-		return this.sensorName;
-	}
-	public void setSensorName(String sensorName) {
-		this.sensorName = sensorName;
 	}
 	
 	public int getCompetence() {
@@ -77,14 +43,14 @@ public class SensorData {
 	public void setMotivation(int motivation) {
 		this.motivation = motivation;
 	}
-	
-	public String getData() {
-		return data;
-	}
-	public void setData(String data) {
-		this.data = data;
-	}
-	
+
+	public String getPredictedEmotionalState() { return this.predictedEmotionalState; }
+	public void setPredictedEmotionalState(String predictedEmotionalState) { this.predictedEmotionalState = predictedEmotionalState; }
+
+	public String getAnsweredEmotionalState() { return this.answeredEmotionalState; }
+	public void setAnsweredEmotionalState(String answeredEmotionalState){ this.answeredEmotionalState = answeredEmotionalState; }
+
+
 	/**
 	 * Default constructor
 	 */
@@ -102,9 +68,11 @@ public class SensorData {
 		obj.registerModule(new JavaTimeModule());
 		this.date = sensorObject.getDate();
 		this.milliseconds = sensorObject.getMilliseconds();
-		this.sensorObjectType = sensorObject.getSensorObjectType().toString();
+		this.sensorObjectType = sensorObject.getSensorObjectType();
 		this.sensorName = sensorObject.getSensorName();
 		this.data = obj.writeValueAsString(sensorObject.getData());
+		this.fromDate = sensorObject.getFromDate();
+		this.toDate = sensorObject.getToDate();
 		this.competence = student.getCompetence();
 		this.motivation = student.getMotivation();
 	}
