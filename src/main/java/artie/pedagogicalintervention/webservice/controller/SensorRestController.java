@@ -33,7 +33,7 @@ public class SensorRestController {
 	 */
 	@PostMapping(path = "/sendSensorData",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})
-	@ResponseStatus(HttpStatus.FOUND)
+	@ResponseStatus(HttpStatus.CREATED)
 	public void sendSensorData(@RequestBody SecuritySensorData securitySensorData) {
 		
 		//1- Login into the system
