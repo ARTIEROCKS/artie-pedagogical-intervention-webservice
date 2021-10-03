@@ -16,6 +16,7 @@ public class SensorData extends SensorObject {
 	//Attributes
 	@Id
 	private String id;
+	private String externalId;
 	private int competence;
 	private int motivation;
 	private String predictedEmotionalState;
@@ -29,6 +30,9 @@ public class SensorData extends SensorObject {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	public String getExternalId() { return externalId; }
+	private void setExternalId(String externalId) { this.externalId = externalId; }
 	
 	public int getCompetence() {
 		return competence;
@@ -75,6 +79,7 @@ public class SensorData extends SensorObject {
 		this.toDate = sensorObject.getToDate();
 		this.competence = student.getCompetence();
 		this.motivation = student.getMotivation();
+		this.externalId = student.getId();
 	}
 	
 }
