@@ -173,7 +173,7 @@ public class PedagogicalSoftwareService {
 																									fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
 																		)
 																		.map(e ->{
-																			return new Exercise(e.getExercise().getId(), e.getExercise().getName(), e.getExercise().getDescription(), e.getExercise().getFinishedExerciseId(),
+																			return new Exercise(e.getId(), e.getExercise().getName(), e.getExercise().getDescription(), e.getExercise().getFinishedExerciseId(),
 																							    e.getScreenShot(), e.getBinary(), e.getValidSolution(), e.getExercise().getIsEvaluation(), e.getExercise().getLevel());
 																		})
 																		.collect(Collectors.toList());

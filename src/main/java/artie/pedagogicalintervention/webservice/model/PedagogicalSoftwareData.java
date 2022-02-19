@@ -33,9 +33,9 @@ public class PedagogicalSoftwareData {
 	private boolean finishedExercise;
 	private int validSolution;
 	private double grade;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, hh:mm:ss")
 	private Date lastLogin;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, hh:mm:ss")
     private Date lastExerciseChange;
 	private String screenShot;
 	private String binary;
