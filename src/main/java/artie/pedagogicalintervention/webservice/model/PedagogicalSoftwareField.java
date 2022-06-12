@@ -1,37 +1,18 @@
 package artie.pedagogicalintervention.webservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PedagogicalSoftwareField implements Cloneable {
 	
 	//Attributes
 	private String name;
 	private String value;
-	
-	//Prperties
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	//Default constructor
-	public PedagogicalSoftwareField() {}
-	
-	//Parameterized constructor
-	public PedagogicalSoftwareField(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-	
 	
 	/**
 	 * Overrides equals

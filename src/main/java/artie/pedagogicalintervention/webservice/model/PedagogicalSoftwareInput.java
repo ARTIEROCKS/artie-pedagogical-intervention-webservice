@@ -1,37 +1,21 @@
 package artie.pedagogicalintervention.webservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
+@NoArgsConstructor
 public class PedagogicalSoftwareInput implements Cloneable {
 
 	private String name;
 	private String opcode;
 	private List<PedagogicalSoftwareField> fields = new ArrayList<>();
-	
-	
-	public String getName() {
-		return this.name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getOpCode() { return this.opcode; }
-	public void setOpcode(String opcode) { this.opcode = opcode; }
-	public List<PedagogicalSoftwareField> getFields() {
-		return fields;
-	}
-	public void setFields(List<PedagogicalSoftwareField> fields) {
-		this.fields = fields;
-	}
-	
-	
-	/**
-	 * Default constructor
-	 */
-	public PedagogicalSoftwareInput() {}
-	
+
 	/**
 	 * Parameterized constructor
 	 * @param name
@@ -59,7 +43,7 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	    PedagogicalSoftwareInput objInput = (PedagogicalSoftwareInput) obj;
 
 	    if(!this.name.toLowerCase().equals(objInput.getName().toLowerCase())) return false;
-	    if(!this.opcode.toLowerCase().equals(objInput.getOpCode().toLowerCase())) return false;
+	    if(!this.opcode.toLowerCase().equals(objInput.getOpcode().toLowerCase())) return false;
 	    
 	    boolean result = this.fields.size()== objInput.getFields().size();
 	    for(PedagogicalSoftwareField field : this.fields) {

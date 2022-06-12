@@ -115,8 +115,8 @@ public class PedagogicalSoftwareService {
 		PedagogicalSoftwareData objSaved = this.pedagogicalSoftwareDataRepository.save(pedagogicalSoftwareData);
 
 		//3- Creating the return object
-		HelpResult helpResult = new HelpResult(objSaved.getId(), objSaved.getPredictedNeedHelp(), false, null, distance);
-		if(pedagogicalSoftwareData.getRequestHelp() && distance == null){
+		HelpResult helpResult = new HelpResult(objSaved.getId(), objSaved.isPredictedNeedHelp(), false, null, distance);
+		if(pedagogicalSoftwareData.isRequestHelp() && distance == null){
 			//3.1- If the distance is null, and we have requested help, there must be an error
 			response = new Response(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
 		}else{
@@ -191,7 +191,7 @@ public class PedagogicalSoftwareService {
 		List<Exercise> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByStudent_Id(studentId)
 												.stream()
 												.filter(fe -> fe.getSolutionDistance().getTotalDistance() == 0 ||
-														(fe.getFinishedExercise() && fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
+														(fe.isFinishedExercise() && fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
 												.map(e ->{
 													return new Exercise(e.getExercise().getId(), e.getExercise().getName(), e.getExercise().getDescription(), e.getExercise().getFinishedExerciseId(),
 															e.getScreenShot(), e.getBinary(), e.getValidSolution(), e.getExercise().isEvaluation(), e.getExercise().getLevel());
@@ -285,7 +285,7 @@ public class PedagogicalSoftwareService {
 		List<PedagogicalSoftwareBlockDTO> originBlocks = new ArrayList<>();
 
 		//Preparing the next steps in base if the user has requested help or not
-		NextStepHint nextSteps = ((origin.getRequestHelp() || origin.getAnsweredNeedHelp()) ? new NextStepHint() : null);
+		NextStepHint nextSteps = ((origin.isRequestHelp() || origin.isAnsweredNeedHelp()) ? new NextStepHint() : null);
 
 		// Family variables
 		Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilySimilarities = new HashMap<>();
@@ -774,7 +774,7 @@ public class PedagogicalSoftwareService {
 									}
 
 									artie.common.web.dto.PedagogicalSoftwareBlock tmpBlock = new artie.common.web.dto.PedagogicalSoftwareBlock(tmpPreviousBlock, blockOriginBlock.getElementName(), tmpNextBlock);
-									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(blockOriginBlock.getInputs().get(input).getName(), originField.getName(),blockOriginBlock.getInputs().get(input).getOpCode(), tmpBlock, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));
+									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(blockOriginBlock.getInputs().get(input).getName(), originField.getName(),blockOriginBlock.getInputs().get(input).getOpcode(), tmpBlock, Double.toString(originField.getDoubleValue()), Double.toString(aimField.getDoubleValue())));
 								}
 
 							}
@@ -797,7 +797,7 @@ public class PedagogicalSoftwareService {
 									}
 
 									artie.common.web.dto.PedagogicalSoftwareBlock tmpElement = new artie.common.web.dto.PedagogicalSoftwareBlock(tmpPreviousBlock, blockOriginBlock.getElementName(), tmpNextBlock);
-									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(blockOriginBlock.getInputs().get(input).getName(), originField.getName(), blockOriginBlock.getInputs().get(input).getOpCode(), tmpElement, originField.getValue(), aimField.getValue()));
+									nextSteps.putReplaceInputs(new artie.common.web.dto.PedagogicalSoftwareInput(blockOriginBlock.getInputs().get(input).getName(), originField.getName(), blockOriginBlock.getInputs().get(input).getOpcode(), tmpElement, originField.getValue(), aimField.getValue()));
 								}
 							}
 						}
@@ -1002,7 +1002,7 @@ public class PedagogicalSoftwareService {
 		//Transforms this information in a learning progress list
 		List<LearningProgress> learningProgressList = pedagogicalSoftwareDataList.stream().map(ps -> {
 			return new LearningProgress(ps.getExercise(), ps.getStudent(), ps.getSolutionDistance().getTotalDistance(), ps.getGrade(),
-										ps.getDateTime(), ps.getLastLogin(), ps.getRequestHelp(), ps.getSecondsHelpOpen(), ps.getFinishedExercise(),
+										ps.getDateTime(), ps.getLastLogin(), ps.isRequestHelp(), ps.getSecondsHelpOpen(), ps.isFinishedExercise(),
 										ps.getValidSolution());
 		}).collect(Collectors.toList());
 

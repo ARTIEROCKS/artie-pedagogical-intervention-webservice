@@ -11,12 +11,16 @@ import artie.common.web.dto.SoftwareData;
 import artie.common.web.dto.SolutionDistance;
 import artie.common.web.dto.Student;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.common.web.dto.Exercise;
 import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 
+@Data
 @Document(collection="PedagogicalSoftwareData")
 public class PedagogicalSoftwareData {
 	
@@ -40,85 +44,6 @@ public class PedagogicalSoftwareData {
 	private String screenShot;
 	private String binary;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
-	
-	public String getId() {
-		return this.id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	public StudentDTO getStudent() {
-		return this.student;
-	}
-	public void setStudent(StudentDTO student) {
-		this.student = student;
-	}
-
-	public Exercise getExercise() {
-		return this.exercise;
-	}
-	public void setExercise(Exercise exercise) {
-		this.exercise = exercise;
-	}
-	
-	public SolutionDistance getSolutionDistance() {
-		return solutionDistance;
-	}
-	public void setSolutionDistance(SolutionDistance solutionDistance) {
-		this.solutionDistance = solutionDistance;
-	}
-	
-	public LocalDateTime getDateTime() {
-		return this.dateTime;
-	}
-	public void setDateTime(LocalDateTime dateTime) {
-		this.dateTime = dateTime;
-	}
-	
-	public boolean getRequestHelp() {
-		return this.requestHelp;
-	}
-	public void setRequestHelp(boolean requestHelp) {
-		this.requestHelp = requestHelp;
-	}
-
-	public boolean getPredictedNeedHelp(){return this.predictedNeedHelp;}
-	public void setPredictedNeedHelp(boolean predictedNeedHelp){this.predictedNeedHelp = predictedNeedHelp;}
-
-	public boolean getAnsweredNeedHelp(){return this.answeredNeedHelp;}
-	public void setAnsweredNeedHelp(boolean answeredNeedHelp){this.answeredNeedHelp = answeredNeedHelp;}
-
-	public double getSecondsHelpOpen(){return this.secondsHelpOpen;}
-	public void setSecondsHelpOpen(double secondsHelpOpen){this.secondsHelpOpen = secondsHelpOpen;}
-
-	public boolean getFinishedExercise(){return this.finishedExercise;}
-	public void setFinishedExercise(boolean finishedExercise){this.finishedExercise = finishedExercise;}
-
-	public int getValidSolution(){return this.validSolution;}
-	public void setValidSolution(int validSolution){this.validSolution = validSolution;}
-
-	public double getGrade(){return this.grade;}
-	public void setGrade(double grade){this.grade = grade;}
-
-	public Date getLastLogin(){return this.lastLogin;}
-	public void setLastLogin(Date lastLogin){this.lastLogin = lastLogin;}
-
-	public Date getLastExerciseChange(){return this.lastExerciseChange;}
-	public void setLastExerciseChange(Date lastExerciseChange){this.lastExerciseChange = lastExerciseChange;}
-
-	public String getScreenShot(){return this.screenShot;}
-	public void setScreenShot(String screenShot){this.screenShot = screenShot;}
-
-	public String getBinary(){return this.binary;}
-	public void setBinary(String binary){this.binary = binary;}
-
-	public List<PedagogicalSoftwareElement> getElements(){
-		return this.elements;
-	}
-	public void setElements(List<PedagogicalSoftwareElement> elements) {
-		this.elements = elements;
-	}
 
 	/**
 	 * Function to get all the blocks from inside the elements
