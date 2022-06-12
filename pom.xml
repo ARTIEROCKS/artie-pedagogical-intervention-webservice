@@ -87,7 +87,7 @@
 		<dependency>
 			<groupId>artie.web</groupId>
 			<artifactId>common</artifactId>
-			<version>0.10.0-RELEASE</version>
+			<version>0.11.0-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
@@ -98,6 +98,13 @@
 			<groupId>one.util</groupId>
 			<artifactId>streamex</artifactId>
 			<version>0.7.3</version>
+		</dependency>
+		<!-- TOOLS -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
