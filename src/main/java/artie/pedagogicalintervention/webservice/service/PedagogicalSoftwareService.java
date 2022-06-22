@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import artie.common.web.dto.*;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
+import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class PedagogicalSoftwareService {
 	private PedagogicalSoftwareDataRepository pedagogicalSoftwareDataRepository;
 
 	@Autowired
-	private PedagogicalSoftwareSolutionService pedagogicalSoftwareSolutionService;
+	private PedagogicalSoftwareSolutionRepository pedagogicalSoftwareSolutionRepository;
 
 	@Autowired
 	private HelpModelService helpModelService;
@@ -79,7 +80,7 @@ public class PedagogicalSoftwareService {
 		Response response = new Response(null);
 
 		// 1- Looks for the solution to the exercise
-		List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
+		List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareData.getExercise().getId(), pedagogicalSoftwareData.getStudent().getUserId());
 
 		// 2- If there is at least 1 solution, we get the distances
 		SolutionDistance distance = null;
@@ -222,14 +223,30 @@ public class PedagogicalSoftwareService {
 				pedagogicalSoftwareData.setSolutionDistance(new SolutionDistance("",0,0,0,0,0, null));
 
 				//We register the new solution
-				this.pedagogicalSoftwareSolutionService.addFromPedagogicalSoftwareDataId(pedagogicalDataId);
+				PedagogicalSoftwareSolution pedagogicalSoftwareSolution = new PedagogicalSoftwareSolution(pedagogicalSoftwareData.getStudent().getUserId(),
+						pedagogicalSoftwareData.getId(),
+						pedagogicalSoftwareData.getExercise(),
+						pedagogicalSoftwareData.getScreenShot(),
+						pedagogicalSoftwareData.getBinary(),
+						pedagogicalSoftwareData.getElements(), 0);
+
+				//Calculates the maximum distance for this solution
+				SolutionDistance pedagogicalSoftwareDistance = this.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+
+				//Sets the maximum distance to this solution
+				pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
+
+				//Save the pedagogical software solution in the database
+				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
+
 			}else{
 
 				//we delete the solution
-				this.pedagogicalSoftwareSolutionService.deleteFromPedagogicalSoftwareDataId(pedagogicalDataId);
+				List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByPedagogicalSoftwareDataId(pedagogicalDataId);
+				this.pedagogicalSoftwareSolutionRepository.deleteAll(pedagogicalSoftwareSolutions);
 
 				//We calculate the distance and the grade of the pedagogical software data
-				List<PedagogicalSoftwareSolution> listSolutions = this.pedagogicalSoftwareSolutionService.findByExerciseAndUserId(pedagogicalSoftwareData.getExercise(), pedagogicalSoftwareData.getStudent().getUserId());
+				List<PedagogicalSoftwareSolution> listSolutions = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareData.getExercise().getId(), pedagogicalSoftwareData.getStudent().getUserId());
 				Map<String, Object> mapDistance = this.distanceCalculation(pedagogicalSoftwareData, listSolutions);
 				SolutionDistance pedagogicalSoftwareDistance = (SolutionDistance) mapDistance.get("distance");
 				pedagogicalSoftwareData.setSolutionDistance(pedagogicalSoftwareDistance);
@@ -1029,7 +1046,7 @@ public class PedagogicalSoftwareService {
 			if(answeredNeedHelp && psd.getSolutionDistance() != null && psd.getSolutionDistance().getSolutionId() != null){
 
 				// 1- We get the solution of the pedagogical software data
-				PedagogicalSoftwareSolution pss = this.pedagogicalSoftwareSolutionService.findById(psd.getSolutionDistance().getSolutionId());
+				PedagogicalSoftwareSolution pss = this.pedagogicalSoftwareSolutionRepository.findById(psd.getSolutionDistance().getSolutionId()).orElse(null);
 
 				// 2- Calculates the distance and the next steps
 				SolutionDistance solutionDistance = this.distanceCalculation(psd, pss);

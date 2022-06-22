@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import artie.common.web.dto.Exercise;
 
 @Data
+@NoArgsConstructor
 @Document(collection="PedagogicalSoftwareSolution")
 public class  PedagogicalSoftwareSolution {
 	
