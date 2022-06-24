@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>artie.web</groupId>
 	<artifactId>pedagogicalinterventionws</artifactId>
-	<version>0.11.1-RELEASE</version>
+	<version>0.11.2-RELEASE</version>
 	<name>pedagogical intervention webservice</name>
 	<description>ARTIE Pedagogical intervention webservice</description>
 
@@ -87,7 +87,7 @@
 		<dependency>
 			<groupId>artie.web</groupId>
 			<artifactId>common</artifactId>
-			<version>0.11.0-RELEASE</version>
+			<version>0.11.1-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.persistence</groupId>

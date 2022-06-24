@@ -683,8 +683,8 @@ public class PedagogicalSoftwareService {
 			}
 
 			// 3.5- Once we got all the aim blocks, we check how many blocks of this
-			// family remain in the origin
-			diffBlocks += familyOriginBlocks.size();
+			// family remain in the origin and have not been taken into account
+			diffBlocks += familyOriginBlocks.stream().filter(b -> !familyOriginTakenAccountBlocksAdd.contains(b.getElementName())).count();
 		}
 
 		return diffBlocks;
