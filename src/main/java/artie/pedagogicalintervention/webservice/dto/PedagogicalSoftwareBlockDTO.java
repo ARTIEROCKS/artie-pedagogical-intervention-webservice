@@ -1,24 +1,17 @@
 package artie.pedagogicalintervention.webservice.dto;
 
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PedagogicalSoftwareBlockDTO extends PedagogicalSoftwareBlock implements Cloneable{
 	
 	private int elementPosition = 0;
-
-	public int getElementPosition() {
-		return elementPosition;
-	}
-
-	public void setElementPosition(int elementPosition) {
-		this.elementPosition = elementPosition;
-	}
 	
-	
-	/**
-	 * Default constructor
-	 */
-	public PedagogicalSoftwareBlockDTO() {}
 	
 	/**
 	 * Parameterized constructor

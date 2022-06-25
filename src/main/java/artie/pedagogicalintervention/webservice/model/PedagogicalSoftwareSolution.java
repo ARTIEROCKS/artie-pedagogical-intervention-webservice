@@ -5,10 +5,15 @@ import java.util.List;
 
 import javax.persistence.Id;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import artie.common.web.dto.Exercise;
 
+@Data
+@NoArgsConstructor
 @Document(collection="PedagogicalSoftwareSolution")
 public class  PedagogicalSoftwareSolution {
 	
@@ -22,30 +27,7 @@ public class  PedagogicalSoftwareSolution {
 	private String binary;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 	private double maximumDistance;
-	
-	public String getId() {
-		return this.id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getUserId() {
-		return this.userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public String getPedagogicalSoftwareDataId(){return this.pedagogicalSoftwareDataId;}
-	public void setPedagogicalSoftwareDataId(String pedagogicalSoftwareDataId){this.pedagogicalSoftwareDataId=pedagogicalSoftwareDataId;}
-	public String getExerciseId() {
-		return this.exerciseId;
-	}
-	public void setExerciseId(String exerciseId) {
-		this.exerciseId = exerciseId;
-	}
-	public Exercise getExercise() {
-		return this.exercise;
-	}
+
 	public void setExercise(Exercise exercise) {
 		this.exercise = exercise;
 		
@@ -54,20 +36,6 @@ public class  PedagogicalSoftwareSolution {
 		}else{
 			this.exerciseId = null;
 		}
-	}
-	public String getScreenShot() {
-		return this.screenShot;
-	}
-	public void setScreenShot(String screenShot) {
-		this.screenShot = screenShot;
-	}
-	public String getBinary(){return this.binary;}
-	public void setBinary(String binary){this.binary = binary;}
-	public List<PedagogicalSoftwareElement> getElements(){
-		return this.elements;
-	}
-	public void setElements(List<PedagogicalSoftwareElement> elements) {
-		this.elements = elements;
 	}
 	/**
 	 * Function to get all the blocks from inside the elements
@@ -78,13 +46,8 @@ public class  PedagogicalSoftwareSolution {
 		this.elements.forEach(e -> allBlocks.addAll(e.getBlocks()));
 		return allBlocks;
 	}
-	public double getMaximumDistance(){return this.maximumDistance;}
-	public void setMaximumDistance(double maximumDistance){this.maximumDistance = maximumDistance;}
 	
-	/**
-	 * Default Constructor
-	 */
-	public PedagogicalSoftwareSolution() {}
+
 	
 	/**
 	 * Parameterized constructor

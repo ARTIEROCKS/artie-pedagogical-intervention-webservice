@@ -2,6 +2,9 @@ package artie.pedagogicalintervention.webservice.model;
 
 import javax.persistence.Id;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,7 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import artie.common.web.dto.Student;
 import artie.sensor.common.dto.SensorObject;
-
+@Data
+@NoArgsConstructor
 @Document(collection="SensorData")
 public class SensorData extends SensorObject {
 	
@@ -21,45 +25,7 @@ public class SensorData extends SensorObject {
 	private int motivation;
 	private String predictedEmotionalState;
 	private String answeredEmotionalState;
-	
-	
-	//Properties
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 
-	public String getExternalId() { return externalId; }
-	private void setExternalId(String externalId) { this.externalId = externalId; }
-	
-	public int getCompetence() {
-		return competence;
-	}
-	public void setCompetence(int competence) {
-		this.competence = competence;
-	}
-	
-	public int getMotivation() {
-		return motivation;
-	}
-	public void setMotivation(int motivation) {
-		this.motivation = motivation;
-	}
-
-	public String getPredictedEmotionalState() { return this.predictedEmotionalState; }
-	public void setPredictedEmotionalState(String predictedEmotionalState) { this.predictedEmotionalState = predictedEmotionalState; }
-
-	public String getAnsweredEmotionalState() { return this.answeredEmotionalState; }
-	public void setAnsweredEmotionalState(String answeredEmotionalState){ this.answeredEmotionalState = answeredEmotionalState; }
-
-
-	/**
-	 * Default constructor
-	 */
-	public SensorData() {
-	}
 	
 	/**
 	 * Parameterized constructor

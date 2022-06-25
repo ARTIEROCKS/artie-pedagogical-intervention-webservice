@@ -1,9 +1,14 @@
 package artie.pedagogicalintervention.webservice.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
+@NoArgsConstructor
 public class PedagogicalSoftwareBlock implements Cloneable {
 
 	//Attributes
@@ -15,58 +20,8 @@ public class PedagogicalSoftwareBlock implements Cloneable {
 	private List<PedagogicalSoftwareBlock> nested = new ArrayList<>();
 	private PedagogicalSoftwareBlock previous;
 	private PedagogicalSoftwareBlock parent;
-	
-	
-	//Properties
-	public String getId(){ return id; }
-	public void setId(String id){ this.id = id; }
 
-	public String getElementName() {
-		return elementName;
-	}
-	public void setElementName(String elementName) {
-		this.elementName = elementName;
-	}
-	
-	public String getElementFamily() {
-		return this.elementFamily;
-	}
-	public void setElementFamily(String elementFamily) {
-		this.elementFamily = elementFamily;
-	}
-	
-	public List<PedagogicalSoftwareInput> getInputs(){
-		return inputs;
-	}
-	public void setInputs(List<PedagogicalSoftwareInput> inputs) {
-		this.inputs = inputs;
-	}
-	
-	public PedagogicalSoftwareBlock getNext() {
-		return this.next;
-	}
-	public void setNext(PedagogicalSoftwareBlock next) {
-		this.next = next;
-	}
-	
-	public List<PedagogicalSoftwareBlock> getNested(){
-		return this.nested;
-	}
-	public void setNested(List<PedagogicalSoftwareBlock> nested) {
-		this.nested = nested;
-	}
 
-	public PedagogicalSoftwareBlock getPrevious(){return this.previous;}
-	public void setPrevious(PedagogicalSoftwareBlock previous){this.previous = previous;}
-
-	public PedagogicalSoftwareBlock getParent(){return this.parent;}
-	public void setParent(PedagogicalSoftwareBlock parent){this.parent = parent;}
-	
-	
-	//Default constructor
-	public PedagogicalSoftwareBlock() {}
-
-	
 	/**
 	 * Parameterized constructor
 	 * @param id
