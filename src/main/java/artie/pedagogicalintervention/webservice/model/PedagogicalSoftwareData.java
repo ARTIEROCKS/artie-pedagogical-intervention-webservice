@@ -33,6 +33,12 @@ public class PedagogicalSoftwareData {
 	private boolean requestHelp;
 	private boolean predictedNeedHelp;
 	private boolean answeredNeedHelp;
+
+	private String manualEmotionalState;
+
+	private String predictedEmotionalState;
+
+	private String answeredEmotionalState;
 	private double secondsHelpOpen;
 	private boolean finishedExercise;
 	private int validSolution;

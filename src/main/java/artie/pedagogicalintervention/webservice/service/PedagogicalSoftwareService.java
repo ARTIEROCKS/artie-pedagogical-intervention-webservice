@@ -139,14 +139,19 @@ public class PedagogicalSoftwareService {
 
 		try {
 
-			// 1- Transforms the string into the pedagogical software data
+			// 1. Transforms the string into the pedagogical software data
 			PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
 					PedagogicalSoftwareData.class);
 
-			// 2- Calls the help model to get if the help must be shown or not
-			boolean helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
+			// 2.1 Calls the help model to get if the help must be shown or not
+			boolean helpNeeded = false;
+			try{
+				helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
 
-			// 3- Adds the predicted need help into the response
+			// 2.2 Adds the predicted need help into the response
 			pedagogicalSoftwareData.setPredictedNeedHelp(helpNeeded);
 			response = this.add(pedagogicalSoftwareData);
 
