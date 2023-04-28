@@ -90,6 +90,11 @@
 			<version>0.11.1-RELEASE</version>
 		</dependency>
 		<dependency>
+			<groupId>artie.web</groupId>
+			<artifactId>pedagogical-intervention-generator</artifactId>
+			<version>0.2.0-RELEASE</version>
+		</dependency>
+		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
 			<version>2.2.3</version>
@@ -109,6 +114,12 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>artie.web</groupId>
+            <artifactId>pedagogical-intervention-generator</artifactId>
+            <version>0.2.0-RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
