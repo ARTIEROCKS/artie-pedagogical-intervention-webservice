@@ -42,7 +42,7 @@ public class InterventionService {
         this.headers.add("apiKey", this.apiKey);
     }
 
-    public void buildIntervention(PedagogicalSoftwareData pedagogicalSoftwareData) throws JsonProcessingException {
+    public void buildAndSendIntervention(PedagogicalSoftwareData pedagogicalSoftwareData) throws JsonProcessingException {
 
         PrologQueryDTO prologQuery = PrologQueryDTO.builder()
                                         .institutionId(pedagogicalSoftwareData.getStudent().getInstitutionId())
@@ -50,7 +50,7 @@ public class InterventionService {
 
         //1.1 Gets the emotional state of the student
         String emotionalState = "HAPPY";
-        
+
         //1.2 Gets the eyes
         prologQuery.setQuery("eyeSelection(\"" + emotionalState + "\", X).");
         HttpEntity<PrologQueryDTO> request = new HttpEntity<>(prologQuery, headers);
@@ -58,9 +58,17 @@ public class InterventionService {
         String eyes = getValueFromPrologAnswer(eyeSelectionAnswer, "X");
 
         //1.3 Gets the tone of the voice
-        String toneOfVoice = "high";
+        prologQuery.setQuery("toneOfVoiceSelection(\"" + emotionalState + "\", X).");
+        request = new HttpEntity<>(prologQuery, headers);
+        PrologAnswerDTO[][] toneOfVoiceAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        String toneOfVoice = getValueFromPrologAnswer(toneOfVoiceAnswer, "X");
+
         //1.4 Gets the voice speed
-        String voiceSpeed = "low";
+        prologQuery.setQuery("voiceSpeedSelection(\"" + emotionalState + "\", X).");
+        request = new HttpEntity<>(prologQuery, headers);
+        PrologAnswerDTO[][] voiceSpeedAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        String voiceSpeed = getValueFromPrologAnswer(voiceSpeedAnswer, "X");
+
         //1.5 Gets the gaze
         String gaze = "testGaze";
         //1.6 Gets the gesture
