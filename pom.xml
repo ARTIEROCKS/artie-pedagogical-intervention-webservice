@@ -83,16 +83,11 @@
 	    	<groupId>org.apache.commons</groupId>
 	    	<artifactId>commons-lang3</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>artie.web</groupId>
 			<artifactId>common</artifactId>
 			<version>0.11.1-RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>artie.web</groupId>
-			<artifactId>pedagogical-intervention-generator</artifactId>
-			<version>0.2.0-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
@@ -115,13 +110,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <dependency>
-            <groupId>artie.web</groupId>
-            <artifactId>pedagogical-intervention-generator</artifactId>
-            <version>0.2.0-RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>artie</groupId>
+			<artifactId>generator</artifactId>
+			<version>0.2.1-RELEASE</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>

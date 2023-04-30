@@ -1,7 +1,7 @@
 package artie.pedagogicalintervention.webservice.service;
 
-import artie.pedagogicalintervention.generator.dto.bmle.BML;
-import artie.pedagogicalintervention.generator.service.GeneratorService;
+import artie.generator.dto.bmle.BML;
+import artie.generator.service.GeneratorService;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +43,12 @@ public class InterventionService {
 
     public void buildIntervention(PedagogicalSoftwareData pedagogicalSoftwareData) throws JsonProcessingException {
 
+        //PrologQueryDTO prologQuery = PrologQueryDTO.builder()
+
         //1.1 Gets the emotional state of the student
         String emotionalState = "HAPPY";
         //1.2 Gets the eyes
-        String eyes = "yellow";
+        String eyes = "";//restTemplate.postForObject(interventionWebserviceUrl, softwareData, String.class);;
         //1.3 Gets the tone of the voice
         String toneOfVoice = "high";
         //1.4 Gets the voice speed
