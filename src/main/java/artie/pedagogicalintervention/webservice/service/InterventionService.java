@@ -2,6 +2,8 @@ package artie.pedagogicalintervention.webservice.service;
 
 import artie.generator.dto.bmle.BML;
 import artie.generator.service.GeneratorService;
+import artie.pedagogicalintervention.webservice.dto.PrologAnswerDTO;
+import artie.pedagogicalintervention.webservice.dto.PrologQueryDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ public class InterventionService {
     @Value("${artie.webservices.prolog.query.url}")
     private String interventionWebserviceUrl;
     private RestTemplate restTemplate;
-    private HttpEntity<String> entity;
+    private HttpHeaders headers;
 
     @Autowired
     private GeneratorService generatorService;
@@ -36,19 +38,25 @@ public class InterventionService {
     @PostConstruct
     public void setUp(){
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.add("apiKey", this.apiKey);
-        this.entity = new HttpEntity<String>("parameters", headers);
+        this.headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        this.headers.add("apiKey", this.apiKey);
     }
 
     public void buildIntervention(PedagogicalSoftwareData pedagogicalSoftwareData) throws JsonProcessingException {
 
-        //PrologQueryDTO prologQuery = PrologQueryDTO.builder()
+        PrologQueryDTO prologQuery = PrologQueryDTO.builder()
+                                        .institutionId(pedagogicalSoftwareData.getStudent().getInstitutionId())
+                                        .build();
 
         //1.1 Gets the emotional state of the student
         String emotionalState = "HAPPY";
+        
         //1.2 Gets the eyes
-        String eyes = "";//restTemplate.postForObject(interventionWebserviceUrl, softwareData, String.class);;
+        prologQuery.setQuery("eyeSelection(\"" + emotionalState + "\", X).");
+        HttpEntity<PrologQueryDTO> request = new HttpEntity<>(prologQuery, headers);
+        PrologAnswerDTO[][] eyeSelectionAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        String eyes = getValueFromPrologAnswer(eyeSelectionAnswer, "X");
+
         //1.3 Gets the tone of the voice
         String toneOfVoice = "high";
         //1.4 Gets the voice speed
@@ -69,5 +77,28 @@ public class InterventionService {
         String bmle = generatorService.generateBMLE(bml);
 
         //3. Sends the BMLe to the queue message to let the robot process the messages
+    }
+
+    /**
+     * Function to get the value from the PROLOG answer
+     * @param eyeSelectionAnswer
+     * @param variableName
+     * @return
+     */
+    private String getValueFromPrologAnswer(PrologAnswerDTO[][] eyeSelectionAnswer, String variableName) {
+
+        String value = null;
+        for (PrologAnswerDTO[] answerRow : eyeSelectionAnswer) {
+            for (PrologAnswerDTO answer : answerRow) {
+                if (answer.getVariable().equals(variableName)) {
+                    value = answer.getValue();
+                    break;
+                }
+            }
+            if (value != null) {
+                break;
+            }
+        }
+        return value;
     }
 }
