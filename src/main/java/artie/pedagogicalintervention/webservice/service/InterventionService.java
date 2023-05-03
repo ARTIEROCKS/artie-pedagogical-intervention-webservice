@@ -55,26 +55,36 @@ public class InterventionService {
         prologQuery.setQuery("eyeSelection(\"" + emotionalState + "\", X).");
         HttpEntity<PrologQueryDTO> request = new HttpEntity<>(prologQuery, headers);
         PrologAnswerDTO[][] eyeSelectionAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        assert eyeSelectionAnswer != null;
         String eyes = getValueFromPrologAnswer(eyeSelectionAnswer, "X");
 
         //1.3 Gets the tone of the voice
         prologQuery.setQuery("toneOfVoiceSelection(\"" + emotionalState + "\", X).");
         request = new HttpEntity<>(prologQuery, headers);
         PrologAnswerDTO[][] toneOfVoiceAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        assert toneOfVoiceAnswer != null;
         String toneOfVoice = getValueFromPrologAnswer(toneOfVoiceAnswer, "X");
 
         //1.4 Gets the voice speed
         prologQuery.setQuery("voiceSpeedSelection(\"" + emotionalState + "\", X).");
         request = new HttpEntity<>(prologQuery, headers);
         PrologAnswerDTO[][] voiceSpeedAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        assert voiceSpeedAnswer != null;
         String voiceSpeed = getValueFromPrologAnswer(voiceSpeedAnswer, "X");
 
         //1.5 Gets the gaze
-        String gaze = "testGaze";
+        String gaze = pedagogicalSoftwareData.getStudent().getUserId();
+        
         //1.6 Gets the gesture
-        String gesture = "testGesture";
+        prologQuery.setQuery("gestureSelection(\"" + emotionalState + "\", X).");
+        request = new HttpEntity<>(prologQuery, headers);
+        PrologAnswerDTO[][] gestureAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        assert gestureAnswer != null;
+        String gesture = getValueFromPrologAnswer(gestureAnswer, "X");
+
         //1.7 Gets the posture
-        String posture = "testPosture";
+        String posture = "stand";
+
         //1.8 Gets the text to say
         String text = "Hola!";
 
