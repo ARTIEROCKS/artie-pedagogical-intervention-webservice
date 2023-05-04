@@ -86,7 +86,11 @@ public class InterventionService {
         String posture = "stand";
 
         //1.8 Gets the text to say
-        String text = "Hola!";
+        prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Sentence,\"" + emotionalState + "\", \"Nombre\").");
+        request = new HttpEntity<>(prologQuery, headers);
+        PrologAnswerDTO[][] textAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        assert textAnswer != null;
+        String text = getValueFromPrologAnswer(textAnswer, "Sentence");
 
         //2. Building the BMLe
         BML bml = new BML(pedagogicalSoftwareData.getId(),
