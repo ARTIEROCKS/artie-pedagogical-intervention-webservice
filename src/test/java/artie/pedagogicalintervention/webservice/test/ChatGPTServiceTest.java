@@ -20,7 +20,7 @@ public class ChatGPTServiceTest {
 
     @Test
     void getChatResponseTest() throws Exception {
-        String response = this.chatGPTService.getChatResponse("¿Qué frase le dirías a un alumno que está realizando un ejercicio de Scratch que está desanimado, para que no se desanime?");
+        String response = this.chatGPTService.getChatResponse("Hola");
         assertNotEquals("", response);
     }
 }
