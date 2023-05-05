@@ -1,11 +1,9 @@
 package artie.pedagogicalintervention.webservice.service;
 
 import artie.common.web.dto.Response;
-import artie.common.web.dto.ResponseBody;
 import artie.common.web.dto.SoftwareData;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
