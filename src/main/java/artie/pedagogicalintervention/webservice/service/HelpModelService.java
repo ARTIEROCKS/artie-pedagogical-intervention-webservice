@@ -22,7 +22,7 @@ import java.util.Collections;
 @Service
 public class HelpModelService {
 
-    @Value("${API_KEY}")
+    @Value("${artie.api.key}")
     private String apiKey;
     private RestTemplate restTemplate;
     private HttpEntity<String> entity;
