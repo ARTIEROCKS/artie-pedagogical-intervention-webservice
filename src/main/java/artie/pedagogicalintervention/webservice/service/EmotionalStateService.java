@@ -27,6 +27,12 @@ public class EmotionalStateService {
 
     public void sendEmotionalStateMessage(List<SensorObject> messages, String externalId) {
 
+        // Declare the queue if it doesn't exist
+        rabbitTemplate.execute(channel -> {
+            channel.queueDeclare(this.queue, true, false, false, null);
+            return null;
+        });
+
         //Gets all the sensor objects and inserts them in the queue
         messages.forEach(d -> {
             String json = null;
