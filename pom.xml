@@ -44,15 +44,8 @@
 	</distributionManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>javax.persistence-api</artifactId>
-			<version>2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
+
+		<!-- SPRINGBOOT DEPENDENCIES -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -65,9 +58,6 @@
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
-
-		
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -79,11 +69,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-	    	<groupId>org.apache.commons</groupId>
-	    	<artifactId>commons-lang3</artifactId>
-		</dependency>
-		
+
+		<!-- ARTIE DEPENDENCIES -->
 		<dependency>
 			<groupId>artie.web</groupId>
 			<artifactId>common</artifactId>
@@ -95,6 +82,30 @@
 			<version>0.2.1-RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<!-- TOOLS -->
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>5.17.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>javax.persistence-api</artifactId>
+			<version>2.2</version>
+		</dependency>
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
@@ -105,7 +116,6 @@
 			<artifactId>streamex</artifactId>
 			<version>0.7.3</version>
 		</dependency>
-		<!-- TOOLS -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -126,7 +136,12 @@
 			<artifactId>json</artifactId>
 			<version>20220320</version>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
