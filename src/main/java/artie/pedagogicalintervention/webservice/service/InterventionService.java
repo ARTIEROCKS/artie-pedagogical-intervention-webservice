@@ -2,6 +2,7 @@ package artie.pedagogicalintervention.webservice.service;
 
 import artie.generator.dto.bmle.BML;
 import artie.generator.service.GeneratorService;
+import artie.generator.service.GeneratorServiceImpl;
 import artie.pedagogicalintervention.webservice.dto.PrologAnswerDTO;
 import artie.pedagogicalintervention.webservice.dto.PrologQueryDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
@@ -37,15 +38,14 @@ public class InterventionService {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private GeneratorService generatorService;
+    private final GeneratorService generatorService = new GeneratorServiceImpl();
 
     @Autowired
     private EmotionalStateService emotionalStateService;
 
     @Autowired
     private PedagogicalSoftwareService pedagogicalSoftwareService;
+    private HttpEntity<String> entity;
 
     @Autowired
     public InterventionService(RabbitTemplate rabbitTemplate, RestTemplateBuilder builder){
@@ -55,7 +55,7 @@ public class InterventionService {
 
     @PostConstruct
     public void setUp(){
-        HttpHeaders headers = new HttpHeaders();
+        this.headers = new HttpHeaders();
         this.headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         this.headers.add("apiKey", this.apiKey);
     }
@@ -97,9 +97,12 @@ public class InterventionService {
 
         //1.1 Gets the emotional state of the student
         String emotionalState = this.emotionalStateService.predict(pedagogicalSoftwareData.getStudent().getUserId()).getEmotionalState();
+        if (emotionalState == null || emotionalState == "NONE"){
+            emotionalState = "neutral";
+        }
 
         //1.2 Gets the eyes
-        prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Sentence,\"" + emotionalState + "\").");
+        prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Sentence," + emotionalState.toLowerCase() + ").");
         HttpEntity<PrologQueryDTO> request = new HttpEntity<>(prologQuery, headers);
         PrologAnswerDTO[][] answer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
         assert answer != null;
@@ -127,6 +130,7 @@ public class InterventionService {
         BML bml = new BML(pedagogicalSoftwareData.getId(),
                           pedagogicalSoftwareData.getStudent().getUserId(),
                           posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed, text);
+
         String bmle = generatorService.generateBMLE(bml);
 
         //3. Sends the BMLe to the queue message to let the robot process the messages

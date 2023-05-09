@@ -80,7 +80,6 @@
 			<groupId>artie</groupId>
 			<artifactId>generator</artifactId>
 			<version>0.2.1-RELEASE</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<!-- TOOLS -->
