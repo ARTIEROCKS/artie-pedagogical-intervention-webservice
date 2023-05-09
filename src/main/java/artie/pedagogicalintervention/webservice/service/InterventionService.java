@@ -6,6 +6,7 @@ import artie.pedagogicalintervention.webservice.dto.PrologAnswerDTO;
 import artie.pedagogicalintervention.webservice.dto.PrologQueryDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,10 +36,16 @@ public class InterventionService {
     private String queue;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private GeneratorService generatorService;
 
     @Autowired
     private EmotionalStateService emotionalStateService;
+
+    @Autowired
+    private PedagogicalSoftwareService pedagogicalSoftwareService;
 
     @Autowired
     public InterventionService(RabbitTemplate rabbitTemplate, RestTemplateBuilder builder){
@@ -53,6 +60,35 @@ public class InterventionService {
         this.headers.add("apiKey", this.apiKey);
     }
 
+    /**
+     * Function to send the intervention from the pedagogical software data id
+     * @param id
+     */
+    public void buildAndSendInterventionByPedagogicalSoftwareDataId(String id) throws JsonProcessingException {
+        PedagogicalSoftwareData psd = this.pedagogicalSoftwareService.findById(id);
+        this.buildAndSendIntervention(psd);
+    }
+
+    /**
+     * Function to send the intervention from the pedagogcial software data in json string
+     * @param psd
+     */
+    public void buildAndSendIntervention(String psd) throws JsonProcessingException {
+
+        PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
+                PedagogicalSoftwareData.class);
+
+        //We send the intervention if the student has requested help
+        if(pedagogicalSoftwareData.isRequestHelp()) {
+            this.buildAndSendIntervention(pedagogicalSoftwareData);
+        }
+    }
+
+    /**
+     * Function to build and send the intervention to the robot queue
+     * @param pedagogicalSoftwareData
+     * @throws JsonProcessingException
+     */
     public void buildAndSendIntervention(PedagogicalSoftwareData pedagogicalSoftwareData) throws JsonProcessingException {
 
         PrologQueryDTO prologQuery = PrologQueryDTO.builder()

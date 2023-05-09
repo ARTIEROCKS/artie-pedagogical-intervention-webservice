@@ -1031,6 +1031,15 @@ public class PedagogicalSoftwareService {
 	}
 
 	/**
+	 * Function to find the pedagogical software data from its id
+	 * @param id
+	 * @return
+	 */
+	public PedagogicalSoftwareData findById(String id){
+		return this.pedagogicalSoftwareDataRepository.findById(id).orElse(null);
+	}
+
+	/**
 	 * Function to update the answeredNeededHelp in base of the id of the PedagogicalSoftwareData
 	 * @param id
 	 */
