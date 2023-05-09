@@ -1,6 +1,5 @@
 package artie.pedagogicalintervention.webservice.model;
 
-import artie.pedagogicalintervention.webservice.service.EmotionalStateService;
 import artie.sensor.common.dto.SensorObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

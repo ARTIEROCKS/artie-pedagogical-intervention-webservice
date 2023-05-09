@@ -33,6 +33,9 @@ public class InterventionService {
     private GeneratorService generatorService;
 
     @Autowired
+    private EmotionalStateService emotionalStateService;
+
+    @Autowired
     public InterventionService(RestTemplateBuilder builder){this.restTemplate = builder.build();}
 
     @PostConstruct
@@ -49,48 +52,32 @@ public class InterventionService {
                                         .build();
 
         //1.1 Gets the emotional state of the student
-        String emotionalState = "HAPPY";
+        String emotionalState = this.emotionalStateService.predict(pedagogicalSoftwareData.getStudent().getUserId()).getEmotionalState();
 
         //1.2 Gets the eyes
-        prologQuery.setQuery("eyeSelection(\"" + emotionalState + "\", X).");
+        prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Sentence,\"" + emotionalState + "\").");
         HttpEntity<PrologQueryDTO> request = new HttpEntity<>(prologQuery, headers);
-        PrologAnswerDTO[][] eyeSelectionAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
-        assert eyeSelectionAnswer != null;
-        String eyes = getValueFromPrologAnswer(eyeSelectionAnswer, "X");
+        PrologAnswerDTO[][] answer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
+        assert answer != null;
+        String eyes = getValueFromPrologAnswer(answer, "Eye");
 
         //1.3 Gets the tone of the voice
-        prologQuery.setQuery("toneOfVoiceSelection(\"" + emotionalState + "\", X).");
-        request = new HttpEntity<>(prologQuery, headers);
-        PrologAnswerDTO[][] toneOfVoiceAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
-        assert toneOfVoiceAnswer != null;
-        String toneOfVoice = getValueFromPrologAnswer(toneOfVoiceAnswer, "X");
+        String toneOfVoice = getValueFromPrologAnswer(answer, "Tone");
 
         //1.4 Gets the voice speed
-        prologQuery.setQuery("voiceSpeedSelection(\"" + emotionalState + "\", X).");
-        request = new HttpEntity<>(prologQuery, headers);
-        PrologAnswerDTO[][] voiceSpeedAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
-        assert voiceSpeedAnswer != null;
-        String voiceSpeed = getValueFromPrologAnswer(voiceSpeedAnswer, "X");
+        String voiceSpeed = getValueFromPrologAnswer(answer, "Speed");
 
         //1.5 Gets the gaze
         String gaze = pedagogicalSoftwareData.getStudent().getUserId();
         
         //1.6 Gets the gesture
-        prologQuery.setQuery("gestureSelection(\"" + emotionalState + "\", X).");
-        request = new HttpEntity<>(prologQuery, headers);
-        PrologAnswerDTO[][] gestureAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
-        assert gestureAnswer != null;
-        String gesture = getValueFromPrologAnswer(gestureAnswer, "X");
+        String gesture = getValueFromPrologAnswer(answer, "Gesture");
 
         //1.7 Gets the posture
         String posture = "stand";
 
         //1.8 Gets the text to say
-        prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Sentence,\"" + emotionalState + "\", \"Nombre\").");
-        request = new HttpEntity<>(prologQuery, headers);
-        PrologAnswerDTO[][] textAnswer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
-        assert textAnswer != null;
-        String text = getValueFromPrologAnswer(textAnswer, "Sentence");
+        String text = getValueFromPrologAnswer(answer, "Sentence");
 
         //2. Building the BMLe
         BML bml = new BML(pedagogicalSoftwareData.getId(),
@@ -107,7 +94,7 @@ public class InterventionService {
      * @param variableName
      * @return
      */
-    private String getValueFromPrologAnswer(PrologAnswerDTO[][] eyeSelectionAnswer, String variableName) {
+    public String getValueFromPrologAnswer(PrologAnswerDTO[][] eyeSelectionAnswer, String variableName) {
 
         String value = null;
         for (PrologAnswerDTO[] answerRow : eyeSelectionAnswer) {
