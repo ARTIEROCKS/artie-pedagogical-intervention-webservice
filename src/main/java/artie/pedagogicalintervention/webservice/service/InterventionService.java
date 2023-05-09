@@ -6,6 +6,7 @@ import artie.pedagogicalintervention.webservice.dto.PrologAnswerDTO;
 import artie.pedagogicalintervention.webservice.dto.PrologQueryDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -28,6 +29,10 @@ public class InterventionService {
     private String interventionWebserviceUrl;
     private RestTemplate restTemplate;
     private HttpHeaders headers;
+    private final RabbitTemplate rabbitTemplate;
+
+    @Value("${artie.webservices.interventions.queue}")
+    private String queue;
 
     @Autowired
     private GeneratorService generatorService;
@@ -36,7 +41,10 @@ public class InterventionService {
     private EmotionalStateService emotionalStateService;
 
     @Autowired
-    public InterventionService(RestTemplateBuilder builder){this.restTemplate = builder.build();}
+    public InterventionService(RabbitTemplate rabbitTemplate, RestTemplateBuilder builder){
+        this.restTemplate = builder.build();
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     @PostConstruct
     public void setUp(){
@@ -86,6 +94,12 @@ public class InterventionService {
         String bmle = generatorService.generateBMLE(bml);
 
         //3. Sends the BMLe to the queue message to let the robot process the messages
+        // Declare the queue if it doesn't exist
+        rabbitTemplate.execute(channel -> {
+            channel.queueDeclare(this.queue, true, false, false, null);
+            return null;
+        });
+        rabbitTemplate.convertAndSend(this.queue, bmle);
     }
 
     /**
