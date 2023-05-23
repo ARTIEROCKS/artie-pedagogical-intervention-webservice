@@ -1,7 +1,6 @@
 package artie.pedagogicalintervention.webservice.controller;
 
 
-import artie.pedagogicalintervention.webservice.model.EmotionalStateMessage;
 import artie.pedagogicalintervention.webservice.service.EmotionalStateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,16 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import artie.common.web.dto.SecuritySensorData;
 import artie.pedagogicalintervention.webservice.service.SecurityService;
-import artie.pedagogicalintervention.webservice.service.SensorService;
 
 @Controller
 @RestController
 @RequestMapping("/api/v1/sensor")
 @CrossOrigin(origins="*", allowedHeaders="*")
 public class SensorRestController {
-	
-	@Autowired
-	private SensorService sensorService;
 
 	@Autowired
 	private EmotionalStateService emotionalStateService;
@@ -40,16 +35,8 @@ public class SensorRestController {
 		
 		//1- Login into the system
 		if(securityService.login(securitySensorData.getUser(), securitySensorData.getPassword())) {
-			
-			//1.1 Adds the sensor data to the database
-			//this.sensorService.add(securitySensorData.getData(), securitySensorData.getStudent());
-
 			//1.1 Adds the sensor data to the queue
 			this.emotionalStateService.sendEmotionalStateMessage(securitySensorData.getData(), securitySensorData.getStudent().getId());
-			
-			//1.2 Getting the emotional state
-			//this.sensorService.getEmotionalState(securitySensorData.getData(), securitySensorData.getStudent(), securitySensorData.getUser(), securitySensorData.getPassword());
-			
 		}
 		
 	}

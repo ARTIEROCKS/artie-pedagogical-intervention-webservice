@@ -3,7 +3,10 @@ package artie.pedagogicalintervention.webservice.controller;
 import artie.common.web.dto.Exercise;
 import artie.common.web.dto.LearningProgress;
 import artie.common.web.dto.Solution;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
+import artie.pedagogicalintervention.webservice.service.InterventionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +31,9 @@ public class PedagogicalSoftwareRestController {
 	
 	@Autowired
 	private PedagogicalSoftwareSolutionService pedagogicalSoftwareSolutionService;
+
+	@Autowired
+	private InterventionService interventionService;
 	
 	/**
 	 * Function to store the pedagogical software data
@@ -36,7 +42,10 @@ public class PedagogicalSoftwareRestController {
 	@PostMapping(path = "/sendPedagogicalSoftwareData",
 	         produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.CREATED)
-	public String sendPedagogicalSoftwareData(@RequestBody String data) {
+	public String sendPedagogicalSoftwareData(@RequestBody String data) throws JsonProcessingException {
+
+		//We build the intervention to the robot queue
+		this.interventionService.buildAndSendIntervention(data);
 		return this.pedagogicalSoftwareService.add(data);
 	}
 
@@ -49,7 +58,12 @@ public class PedagogicalSoftwareRestController {
 	@PutMapping(path = "/update/answeredNeedHelp",
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public String updateAnsweredNeedHelp(@RequestParam String id, @RequestParam boolean answeredNeedHelp){
+	public String updateAnsweredNeedHelp(@RequestParam String id, @RequestParam boolean answeredNeedHelp) throws JsonProcessingException {
+
+		//If the student answers he/she needs help
+		if (answeredNeedHelp) {
+			this.interventionService.buildAndSendInterventionByPedagogicalSoftwareDataId(id);
+		}
 		return this.pedagogicalSoftwareService.updateAnsweredNeedHelpById(id, answeredNeedHelp);
 	}
 	
