@@ -2,10 +2,12 @@ package artie.pedagogicalintervention.webservice.dto;
 
 import artie.common.web.dto.Student;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDTO extends Student {

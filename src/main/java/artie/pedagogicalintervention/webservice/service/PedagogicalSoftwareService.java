@@ -8,6 +8,7 @@ import artie.common.web.dto.*;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
 import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
@@ -139,14 +138,19 @@ public class PedagogicalSoftwareService {
 
 		try {
 
-			// 1- Transforms the string into the pedagogical software data
+			// 1. Transforms the string into the pedagogical software data
 			PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
 					PedagogicalSoftwareData.class);
 
-			// 2- Calls the help model to get if the help must be shown or not
-			boolean helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
+			// 2.1 Calls the help model to get if the help must be shown or not
+			boolean helpNeeded = false;
+			try{
+				helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
 
-			// 3- Adds the predicted need help into the response
+			// 2.2 Adds the predicted need help into the response
 			pedagogicalSoftwareData.setPredictedNeedHelp(helpNeeded);
 			response = this.add(pedagogicalSoftwareData);
 
@@ -1024,6 +1028,15 @@ public class PedagogicalSoftwareService {
 		}).collect(Collectors.toList());
 
 		return learningProgressList;
+	}
+
+	/**
+	 * Function to find the pedagogical software data from its id
+	 * @param id
+	 * @return
+	 */
+	public PedagogicalSoftwareData findById(String id){
+		return this.pedagogicalSoftwareDataRepository.findById(id).orElse(null);
 	}
 
 	/**
