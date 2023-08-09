@@ -5,6 +5,7 @@ import artie.generator.service.GeneratorService;
 import artie.generator.service.GeneratorServiceImpl;
 import artie.pedagogicalintervention.webservice.dto.PrologAnswerDTO;
 import artie.pedagogicalintervention.webservice.dto.PrologQueryDTO;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSentence;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class InterventionService {
@@ -45,6 +47,9 @@ public class InterventionService {
 
     @Autowired
     private PedagogicalSoftwareService pedagogicalSoftwareService;
+
+    @Autowired
+    private PedagogicalSentenceService pedagogicalSentenceService;
     private HttpEntity<String> entity;
 
     @Autowired
@@ -123,13 +128,18 @@ public class InterventionService {
         //1.7 Gets the posture
         String posture = "stand";
 
-        //1.8 Gets the text to say
-        String text = getValueFromPrologAnswer(answer, "Sentence");
+        //1.8 The text is given by a key, so we have to first get the sentence from the db
+        String sentenceKey = getValueFromPrologAnswer(answer, "Sentence");
+        List<PedagogicalSentence> pedagogicalSentenceList = this.pedagogicalSentenceService.findByInstitutionIdAndSentenceKey(pedagogicalSoftwareData.getStudent().getInstitutionId(), sentenceKey);
+        String sentence = "";
+        if (!pedagogicalSentenceList.isEmpty()) {
+            sentence = pedagogicalSentenceList.get(0).getSentence();
+        }
 
-        //2. Building the BMLe
+        //2. Building the BMLe with the first sentence found
         BML bml = new BML(pedagogicalSoftwareData.getId(),
                           pedagogicalSoftwareData.getStudent().getUserId(),
-                          posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed, text);
+                          posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed, sentence);
 
         String bmle = generatorService.generateBMLE(bml);
 
