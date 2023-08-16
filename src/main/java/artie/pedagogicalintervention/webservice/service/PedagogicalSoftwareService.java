@@ -1011,8 +1011,8 @@ public class PedagogicalSoftwareService {
 
 	/**
 	 * Function to return all the pedagogical software data interactions of a student and an exercise
-	 * @param studentId
-	 * @param exerciseId
+	 * @param studentId student ID
+	 * @param exerciseId exercise ID
 	 * @return
 	 */
 	public List<LearningProgress> findByStudentAndExercise(String studentId, String exerciseId){
@@ -1021,13 +1021,11 @@ public class PedagogicalSoftwareService {
 		List<PedagogicalSoftwareData> pedagogicalSoftwareDataList = this.pedagogicalSoftwareDataRepository.findByStudent_IdAndExerciseId(studentId, exerciseId);
 
 		//Transforms this information in a learning progress list
-		List<LearningProgress> learningProgressList = pedagogicalSoftwareDataList.stream().map(ps -> {
+        return pedagogicalSoftwareDataList.stream().map(ps -> {
 			return new LearningProgress(ps.getExercise(), ps.getStudent(), ps.getSolutionDistance().getTotalDistance(), ps.getGrade(),
 										ps.getDateTime(), ps.getLastLogin(), ps.isRequestHelp(), ps.getSecondsHelpOpen(), ps.isFinishedExercise(),
 										ps.getValidSolution());
 		}).collect(Collectors.toList());
-
-		return learningProgressList;
 	}
 
 	/**
