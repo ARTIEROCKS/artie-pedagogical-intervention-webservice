@@ -16,13 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PedagogicalSoftwareServiceNextStepTest {
-
-    private PedagogicalSoftwareService pedagogicalSoftwareService;
     private DistanceCalculationService distanceCalculationService;
 
     @BeforeEach
     void setUp() throws Exception {
-        pedagogicalSoftwareService = new PedagogicalSoftwareService();
         distanceCalculationService = new DistanceCalculationService();
     }
 

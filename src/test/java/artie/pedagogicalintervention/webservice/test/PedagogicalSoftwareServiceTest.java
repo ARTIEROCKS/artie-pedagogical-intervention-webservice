@@ -1,18 +1,8 @@
 package artie.pedagogicalintervention.webservice.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 
 class PedagogicalSoftwareServiceTest {
