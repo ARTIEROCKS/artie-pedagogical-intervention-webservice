@@ -5,6 +5,7 @@ import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
+import artie.pedagogicalintervention.webservice.service.DistanceCalculationService;
 import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PedagogicalSoftwareServiceNextStepTest {
 
     private PedagogicalSoftwareService pedagogicalSoftwareService;
+    private DistanceCalculationService distanceCalculationService;
 
     @BeforeEach
     void setUp() throws Exception {
         pedagogicalSoftwareService = new PedagogicalSoftwareService();
+        distanceCalculationService = new DistanceCalculationService();
     }
 
     @Test
@@ -51,7 +54,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
+        distanceCalculationService.artieFamilyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
         assertEquals(0, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());
@@ -64,7 +67,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
+        distanceCalculationService.artieFamilyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
         assertEquals(0, nextSteps.getAddBlocks().size());
         assertEquals(1, nextSteps.getDeleteBlocks().size());
@@ -80,7 +83,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
+        distanceCalculationService.artieFamilyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
         assertEquals(1, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());
@@ -95,7 +98,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
+        distanceCalculationService.artieFamilyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
         assertEquals(1, nextSteps.getAddBlocks().size());
         assertEquals(1, nextSteps.getDeleteBlocks().size());
@@ -112,7 +115,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.familyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
+        distanceCalculationService.artieFamilyDistanceCalculation(aimElements, originElements, mapFamilySimilarities, mapFamilyDifferences, 0, nextSteps);
 
         assertEquals(1, nextSteps.getAddBlocks().size());
         assertEquals(2, nextSteps.getDeleteBlocks().size());
@@ -152,7 +155,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(0, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());
@@ -165,7 +168,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(1, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());
@@ -182,7 +185,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3)));
         mapFamilyDifferences.put("family4", new ArrayList<>(Arrays.asList(origin4)));
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(1, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());
@@ -198,7 +201,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         nextSteps = new NextStepHint();
 
         mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3, aim3)));
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(1, nextSteps.getAddBlocks().size());
         assertEquals(1, nextSteps.getDeleteBlocks().size());
@@ -214,7 +217,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(1, nextSteps.getDeleteBlocks().size());
         assertEquals(1, nextSteps.getAddBlocks().size());
@@ -233,7 +236,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(1, nextSteps.getDeleteBlocks().size());
         assertEquals(1, nextSteps.getAddBlocks().size());
@@ -253,7 +256,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(2, nextSteps.getDeleteBlocks().size());
         assertEquals(1, nextSteps.getAddBlocks().size());
@@ -274,7 +277,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(1, nextSteps.getDeleteBlocks().size());
         assertEquals(1, nextSteps.getAddBlocks().size());
@@ -295,7 +298,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences = new HashMap<>();
         nextSteps = new NextStepHint();
 
-        pedagogicalSoftwareService.elementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
+        distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, nextSteps);
 
         assertEquals(1, nextSteps.getDeleteBlocks().size());
         assertEquals(2, nextSteps.getAddBlocks().size());
@@ -361,7 +364,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapElementSimilarities.put("element1", new ArrayList<>(Arrays.asList(origin1)));
         aimElements = new ArrayList<>(Arrays.asList(aim1));
 
-        pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
+        distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
         assertEquals(0, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());
@@ -400,7 +403,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
 
         aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1));
 
-        pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
+        distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
         assertEquals(0, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());
@@ -442,7 +445,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
         mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
 
-        pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
+        distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
         assertEquals(0, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());
@@ -484,7 +487,7 @@ public class PedagogicalSoftwareServiceNextStepTest {
         mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
         mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
 
-        pedagogicalSoftwareService.inputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
+        distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, nextSteps);
 
         assertEquals(0, nextSteps.getAddBlocks().size());
         assertEquals(0, nextSteps.getDeleteBlocks().size());

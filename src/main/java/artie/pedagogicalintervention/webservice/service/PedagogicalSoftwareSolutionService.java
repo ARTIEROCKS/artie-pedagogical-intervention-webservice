@@ -35,6 +35,9 @@ public class PedagogicalSoftwareSolutionService {
 	private PedagogicalSoftwareService pedagogicalSoftwareService;
 
 	@Autowired
+	private DistanceCalculationService distanceCalculationService;
+
+	@Autowired
 	private ObjectMapper objectMapper;
 
 	@PostConstruct
@@ -71,7 +74,7 @@ public class PedagogicalSoftwareSolutionService {
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = this.objectMapper.readValue(pse, PedagogicalSoftwareSolution.class);
 
 			//2- Calculates and sets the maximum distance of this solution
-			SolutionDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			SolutionDistance pedagogicalSoftwareDistance = this.distanceCalculationService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
 			
 			//3- Searches if there is a solution for this exercise
@@ -118,7 +121,7 @@ public class PedagogicalSoftwareSolutionService {
 																										pedagogicalSoftwareData.getBinary(),
 																										pedagogicalSoftwareData.getElements(), 0);
 			//Calculates the maximum distance for this solution
-			SolutionDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			SolutionDistance pedagogicalSoftwareDistance = this.distanceCalculationService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
 
 			//Sets the maximum distance to this solution
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
