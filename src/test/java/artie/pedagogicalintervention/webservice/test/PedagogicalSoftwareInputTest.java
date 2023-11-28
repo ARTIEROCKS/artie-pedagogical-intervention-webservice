@@ -1,15 +1,14 @@
 package artie.pedagogicalintervention.webservice.test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PedagogicalSoftwareInputTest {
 

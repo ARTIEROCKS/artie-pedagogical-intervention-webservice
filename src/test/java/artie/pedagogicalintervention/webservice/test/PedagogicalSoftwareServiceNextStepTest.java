@@ -6,14 +6,12 @@ import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
 import artie.pedagogicalintervention.webservice.service.DistanceCalculationService;
-import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PedagogicalSoftwareServiceNextStepTest {
     private DistanceCalculationService distanceCalculationService;

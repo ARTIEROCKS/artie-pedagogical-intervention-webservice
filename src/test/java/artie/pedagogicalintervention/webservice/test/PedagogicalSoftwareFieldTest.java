@@ -1,11 +1,10 @@
 package artie.pedagogicalintervention.webservice.test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PedagogicalSoftwareFieldTest {
 

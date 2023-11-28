@@ -1,9 +1,10 @@
 package artie.pedagogicalintervention.webservice.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PedagogicalSoftwareServiceTest {
 

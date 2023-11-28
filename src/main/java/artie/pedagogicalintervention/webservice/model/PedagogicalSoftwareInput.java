@@ -1,6 +1,5 @@
 package artie.pedagogicalintervention.webservice.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

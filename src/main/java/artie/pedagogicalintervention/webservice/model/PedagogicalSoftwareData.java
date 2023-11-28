@@ -1,24 +1,20 @@
 package artie.pedagogicalintervention.webservice.model;
 
+import artie.common.web.dto.Exercise;
+import artie.common.web.dto.SoftwareData;
+import artie.common.web.dto.SolutionDistance;
+import artie.common.web.dto.Student;
+import artie.common.web.enums.ValidSolutionEnum;
+import artie.pedagogicalintervention.webservice.dto.StudentDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Id;
-
-import artie.common.web.dto.SoftwareData;
-import artie.common.web.dto.SolutionDistance;
-import artie.common.web.dto.Student;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import artie.common.web.enums.ValidSolutionEnum;
-import artie.common.web.dto.Exercise;
-import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 
 @Data
 @Document(collection="PedagogicalSoftwareData")

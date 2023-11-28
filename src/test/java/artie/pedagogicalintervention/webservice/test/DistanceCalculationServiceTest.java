@@ -1,7 +1,10 @@
 package artie.pedagogicalintervention.webservice.test;
 
+import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
+import artie.pedagogicalintervention.webservice.service.DistanceCalculationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,10 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
-import artie.pedagogicalintervention.webservice.service.DistanceCalculationService;
 
 public class DistanceCalculationServiceTest {
 

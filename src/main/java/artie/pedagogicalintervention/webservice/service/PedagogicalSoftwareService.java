@@ -1,13 +1,13 @@
 package artie.pedagogicalintervention.webservice.service;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
 import artie.common.web.dto.*;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
+import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import one.util.streamex.StreamEx;
@@ -16,19 +16,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
-import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
-import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PedagogicalSoftwareService {

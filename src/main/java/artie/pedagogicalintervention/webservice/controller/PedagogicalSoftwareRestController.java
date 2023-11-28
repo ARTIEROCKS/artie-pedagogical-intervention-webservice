@@ -3,18 +3,16 @@ package artie.pedagogicalintervention.webservice.controller;
 import artie.common.web.dto.Exercise;
 import artie.common.web.dto.LearningProgress;
 import artie.common.web.dto.Solution;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.service.InterventionService;
+import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
+import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareSolutionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareService;
-import artie.pedagogicalintervention.webservice.service.PedagogicalSoftwareSolutionService;
 
 import java.util.List;
 import java.util.stream.Collectors;

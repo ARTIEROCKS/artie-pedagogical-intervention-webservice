@@ -1,26 +1,23 @@
 package artie.pedagogicalintervention.webservice.service;
 
-import java.util.List;
-
+import artie.common.web.dto.Exercise;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
 import artie.common.web.dto.SolutionDistance;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
+import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import artie.common.web.dto.Exercise;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
-import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
-
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Service
 public class PedagogicalSoftwareSolutionService {
