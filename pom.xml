@@ -20,6 +20,11 @@
 
 	<repositories>
 		<repository>
+			<id>apted</id>
+			<name>ARTIE APTED Repository</name>
+			<url>https://maven.pkg.github.com/ARTIEROCKS/apted</url>
+		</repository>
+		<repository>
 			<id>github</id>
 			<name>ARTIE sensor Repository</name>
 			<url>https://maven.pkg.github.com/ARTIEROCKS/artie-web-common</url>
@@ -63,6 +68,11 @@
 			<groupId>artie.web</groupId>
 			<artifactId>common</artifactId>
 			<version>0.11.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>artie.web</groupId>
+			<artifactId>apted</artifactId>
+			<version>0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>artie</groupId>
