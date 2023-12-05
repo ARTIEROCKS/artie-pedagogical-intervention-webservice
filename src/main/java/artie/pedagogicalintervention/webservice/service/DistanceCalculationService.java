@@ -5,6 +5,11 @@ import artie.common.web.dto.SolutionDistance;
 import artie.pedagogicalintervention.webservice.dto.PedagogicalSoftwareBlockDTO;
 import artie.pedagogicalintervention.webservice.enums.DistanceEnum;
 import artie.pedagogicalintervention.webservice.model.*;
+import at.unisalzburg.dbresearch.apted.costmodel.StringUnitCostModel;
+import at.unisalzburg.dbresearch.apted.distance.APTED;
+import at.unisalzburg.dbresearch.apted.node.Node;
+import at.unisalzburg.dbresearch.apted.node.StringNodeData;
+import at.unisalzburg.dbresearch.apted.parser.BracketStringInputParser;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -63,7 +68,7 @@ public class DistanceCalculationService {
     private int getBlocksUnderNode(PedagogicalSoftwareBlock block, int subBlocks) {
 
         // 1- Counts all the nested blocks in the subtree
-        if (block.getNested().size() > 0) {
+        if (!block.getNested().isEmpty()) {
             for (PedagogicalSoftwareBlock nestedElement : block.getNested()) {
                 subBlocks++;
                 subBlocks = getBlocksUnderNode(nestedElement, subBlocks);
@@ -328,7 +333,7 @@ public class DistanceCalculationService {
 
             // 3.1- Gets the blocks in the aim for this family
             List<PedagogicalSoftwareBlockDTO> familyAimBlocks = aimBlocks.stream()
-                    .filter(c -> c.getElementFamily().equals(family)).collect(Collectors.toList());
+                    .filter(c -> c.getElementFamily().equals(family)).toList();
             // 3.2- Gets the elements in the origin for this family
             List<PedagogicalSoftwareBlockDTO> familyOriginBlocks = mapFamilySimilarities.get(family);
             List<String> familyOriginTakenAccountBlocksAdd = new ArrayList<>();
@@ -339,7 +344,7 @@ public class DistanceCalculationService {
                 // 3.3.1- Counts how many aim blocks are the same block
                 List<PedagogicalSoftwareBlockDTO> tmpAimBlocks = familyAimBlocks.stream()
                         .filter(c -> c.getElementName().equals(familyAimBlock.getElementName()))
-                        .collect(Collectors.toList());
+                        .toList();
 
                 // 3.3.2 - Counts the number of blocks similar to the aim block for the
                 // family
@@ -354,7 +359,7 @@ public class DistanceCalculationService {
                 }
 
                 // 3.3.3- Adds to the block result
-                if (tmpOriginBlocks.size() > 0) {
+                if (!tmpOriginBlocks.isEmpty()) {
 
                     int nearestPosition = -1;
                     int diffPosition = 0;
@@ -378,7 +383,7 @@ public class DistanceCalculationService {
                             listTmpOriginBlocks.addAll(nearestBlocks);
 
                             //3.3.3.3- We have to add the block to the next hint and the element has not been taken into account
-                            if (listTmpOriginBlocks.size() == 0 && !familyOriginTakenAccountBlocksAdd.contains(familyAimBlock.getElementName())) {
+                            if (listTmpOriginBlocks.isEmpty() && !familyOriginTakenAccountBlocksAdd.contains(familyAimBlock.getElementName())) {
                                 artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
                                 artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 
@@ -394,7 +399,7 @@ public class DistanceCalculationService {
                                 //3.3.3.4- We check if the number of blocks with the same name are equals in the origin and the aim
                                 List<PedagogicalSoftwareBlockDTO> listTmpAimBlocks = tmpAimBlocks.stream()
                                         .filter(toe -> toe.getElementName().equals(tmpAimBlock.getElementName()))
-                                        .collect(Collectors.toList());
+                                        .toList();
                                 int blockDifference = Math.abs(listTmpOriginBlocks.size() - listTmpAimBlocks.size());
 
 
@@ -430,7 +435,7 @@ public class DistanceCalculationService {
                                             }).collect(Collectors.toList());
 
                                     nextSteps.putAddBlocks(tmpFilteredList);
-                                    familyOriginTakenAccountBlocksAdd.addAll(tmpFilteredList.stream().map(fl -> fl.getBlockName()).collect(Collectors.toList()));
+                                    familyOriginTakenAccountBlocksAdd.addAll(tmpFilteredList.stream().map(artie.common.web.dto.PedagogicalSoftwareBlock::getBlockName).toList());
                                 }
                             }
                         }
@@ -460,11 +465,11 @@ public class DistanceCalculationService {
 
                     // We avoid to repeat the same block
                     familyOriginBlocks.removeAll(nearestBlocks);
-                    familyOriginTakenAccountBlocksAdd.addAll(nearestBlocks.stream().map(e -> {return e.getElementName();}).collect(Collectors.toList()));
+                    familyOriginTakenAccountBlocksAdd.addAll(nearestBlocks.stream().map(PedagogicalSoftwareBlock::getElementName).toList());
                 }
                 //If there are no origin blocks that correspond with the aim,
                 // we want to get the next steps and we have not yet taken the block into account
-                else if(nextSteps != null && tmpOriginBlocks.size() == 0 && !familyOriginTakenAccountBlocksAdd.contains(familyAimBlock.getElementName())){
+                else if(nextSteps != null && tmpOriginBlocks.isEmpty() && !familyOriginTakenAccountBlocksAdd.contains(familyAimBlock.getElementName())){
                     artie.common.web.dto.PedagogicalSoftwareBlock nextBlock = null;
                     artie.common.web.dto.PedagogicalSoftwareBlock previousBlock = null;
 
@@ -550,14 +555,14 @@ public class DistanceCalculationService {
             //5.1- Gets the blocks in the aim for this block
             List<PedagogicalSoftwareBlockDTO> blockAimBlocks = aimBlocks
                     .stream()
-                    .filter(c -> c.getElementName().toLowerCase().equals(block.toLowerCase()))
+                    .filter(c -> c.getElementName().equalsIgnoreCase(block))
                     .sorted(compareByElementPosition)
-                    .collect(Collectors.toList());
+                    .toList();
 
             //5.2- Gets the blocks in the origin
             List<PedagogicalSoftwareBlockDTO> blockOriginBlocks = mapBlockSimilarities.get(block.toLowerCase())
                     .stream()
-                    .map(eoe -> eoe.clone())
+                    .map(PedagogicalSoftwareBlockDTO::clone)
                     .sorted(compareByElementPosition)
                     .collect(Collectors.toList());
 
@@ -618,7 +623,7 @@ public class DistanceCalculationService {
 
                             }
                             //If the value of the origin field is not equal to the aim field value
-                            else if(aimField == null || !originField.getValue().toLowerCase().equals(aimField.getValue().toLowerCase()))
+                            else if(aimField == null || !originField.getValue().equalsIgnoreCase(aimField.getValue()))
                             {
                                 accumulatedOriginDifference += 1;
 
@@ -690,11 +695,11 @@ public class DistanceCalculationService {
 
             // 4.1- Gets the elements in the aim for this block
             List<PedagogicalSoftwareBlockDTO> blockAimBlocks = aimBlocks.stream()
-                    .filter(c -> c.getElementName().toLowerCase().equals(block.toLowerCase())).collect(Collectors.toList());
+                    .filter(c -> c.getElementName().equalsIgnoreCase(block)).toList();
 
             // 4.2- Gets the blocks in the origin
             List<PedagogicalSoftwareBlockDTO> elementOriginBlocks = mapBlockSimilarities.get(block.toLowerCase()).stream()
-                    .map(mes -> mes.clone()).collect(Collectors.toList());
+                    .map(PedagogicalSoftwareBlockDTO::clone).collect(Collectors.toList());
 
             int nearestPosition = -1;
             int tmpDiff = 0;
@@ -703,7 +708,7 @@ public class DistanceCalculationService {
             // 4.3- For each aim block, we look for the nearest origin block
             for (PedagogicalSoftwareBlockDTO aimBlock : blockAimBlocks) {
 
-                if (elementOriginBlocks.size() > 0) {
+                if (!elementOriginBlocks.isEmpty()) {
 
                     for (PedagogicalSoftwareBlockDTO originBlock : elementOriginBlocks) {
 
@@ -746,5 +751,16 @@ public class DistanceCalculationService {
         return diffPosition;
     }
 
+    public double aptedDistanceCalculation(String origin, String aim){
+        BracketStringInputParser inputParser = new BracketStringInputParser();
+        Node<StringNodeData> originNode = inputParser.fromString(origin);
+        Node<StringNodeData> aimNode = inputParser.fromString(aim);
+
+        //Initializing APTED
+        APTED<StringUnitCostModel, StringNodeData> apted = new APTED<>(new StringUnitCostModel());
+
+        //APTED execution
+        return apted.computeEditDistance(originNode, aimNode);
+    }
 
 }

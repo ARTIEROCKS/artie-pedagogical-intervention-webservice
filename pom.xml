@@ -72,7 +72,7 @@
 		<dependency>
 			<groupId>artie.web</groupId>
 			<artifactId>apted</artifactId>
-			<version>0.1</version>
+			<version>0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>artie</groupId>

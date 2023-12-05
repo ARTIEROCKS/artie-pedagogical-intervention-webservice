@@ -8,7 +8,10 @@ import artie.pedagogicalintervention.webservice.service.DistanceCalculationServi
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +23,7 @@ public class DistanceCalculationServiceTest {
 
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         distanceCalculationService = new DistanceCalculationService();
     }
 
@@ -49,7 +52,6 @@ public class DistanceCalculationServiceTest {
 
         //A- Testing simple next elements
         position.set(0);
-        elements.clear();
 
         e1.setNext(e2);
 
@@ -67,7 +69,7 @@ public class DistanceCalculationServiceTest {
         elements.clear();
         e1.setNext(null);
 
-        e1.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e11)));
+        e1.setNested(new ArrayList<>(List.of(e11)));
 
         elements = distanceCalculationService.getAllElements(e1, elements, position);
 
@@ -83,7 +85,7 @@ public class DistanceCalculationServiceTest {
         elements.clear();
 
         e1.setNext(e2);
-        e1.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e11)));
+        e1.setNested(new ArrayList<>(List.of(e11)));
 
         elements = distanceCalculationService.getAllElements(e1, elements, position);
 
@@ -103,7 +105,7 @@ public class DistanceCalculationServiceTest {
         e11.setNext(e12);
         e1.setNext(e2);
 
-        e1.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e11)));
+        e1.setNested(new ArrayList<>(List.of(e11)));
 
         elements = distanceCalculationService.getAllElements(e1, elements, position);
 
@@ -123,9 +125,9 @@ public class DistanceCalculationServiceTest {
         elements.clear();
 
         e121.setNext(e122);
-        e12.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e121)));
+        e12.setNested(new ArrayList<>(List.of(e121)));
         e11.setNext(e12);
-        e1.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e11)));
+        e1.setNested(new ArrayList<>(List.of(e11)));
         e1.setNext(e2);
 
         elements = distanceCalculationService.getAllElements(e1, elements, position);
@@ -150,12 +152,12 @@ public class DistanceCalculationServiceTest {
         elements.clear();
 
         e121.setNext(e122);
-        e12.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e121)));
+        e12.setNested(new ArrayList<>(List.of(e121)));
         e11.setNext(e12);
-        e1.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e11)));
+        e1.setNested(new ArrayList<>(List.of(e11)));
 
         e21.setNext(e22);
-        e2.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e21)));
+        e2.setNested(new ArrayList<>(List.of(e21)));
         e1.setNext(e2);
 
         elements = distanceCalculationService.getAllElements(e1, elements, position);
@@ -184,18 +186,18 @@ public class DistanceCalculationServiceTest {
         elements.clear();
 
         e131.setNext(e132);
-        e13.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e131)));
+        e13.setNested(new ArrayList<>(List.of(e131)));
 
         e121.setNext(e122);
-        e12.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e121)));
+        e12.setNested(new ArrayList<>(List.of(e121)));
         e12.setNext(e13);
         e11.setNext(e12);
-        e1.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e11)));
+        e1.setNested(new ArrayList<>(List.of(e11)));
 
         e211.setNext(e212);
-        e21.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e211)));
+        e21.setNested(new ArrayList<>(List.of(e211)));
         e21.setNext(e22);
-        e2.setNested(new ArrayList<PedagogicalSoftwareBlock>(Arrays.asList(e21)));
+        e2.setNested(new ArrayList<>(List.of(e21)));
         e1.setNext(e2);
 
         elements = distanceCalculationService.getAllElements(e1, elements, position);
@@ -249,8 +251,8 @@ public class DistanceCalculationServiceTest {
         Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences;
 
         //A- Same origin and aim comparison
-        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
+        originElements = new ArrayList<>(List.of(origin1, origin2, origin3));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim3));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -268,8 +270,8 @@ public class DistanceCalculationServiceTest {
 
 
         //B- More in origin
-        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2));
+        originElements = new ArrayList<>(List.of(origin1, origin2, origin3));
+        aimElements = new ArrayList<>(List.of(aim1, aim2));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -287,8 +289,8 @@ public class DistanceCalculationServiceTest {
 
 
         //C- More in aim comparison
-        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
+        originElements = new ArrayList<>(List.of(origin1, origin2));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim3));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -306,8 +308,8 @@ public class DistanceCalculationServiceTest {
 
 
         //D- Difference in origin and in aim
-        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin4));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
+        originElements = new ArrayList<>(List.of(origin1, origin2, origin4));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim5));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -327,8 +329,8 @@ public class DistanceCalculationServiceTest {
 
 
         //E- Difference in origin and in aim, but more (one element repeated) in origin
-        originElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin4, origin4));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
+        originElements = new ArrayList<>(List.of(origin1, origin2, origin4, origin4));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim5));
         mapFamilySimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -365,13 +367,13 @@ public class DistanceCalculationServiceTest {
 
         List<PedagogicalSoftwareBlockDTO> aimElements;
         Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilySimilarities = new HashMap<>();
-        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences = new HashMap<>();
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences;
         Map<String, List<PedagogicalSoftwareBlockDTO>> mapElementSimilarities;
 
 
         //A- Same origin and aim comparison
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
+        mapFamilySimilarities.put("family1", new ArrayList<>(List.of(origin1, origin2, origin3)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim3));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -389,12 +391,12 @@ public class DistanceCalculationServiceTest {
 
         //B- More in origin with 1 family difference distance
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2));
+        mapFamilySimilarities.put("family1", new ArrayList<>(List.of(origin1, origin2, origin3)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
-        mapFamilyDifferences.put("family4", new ArrayList<>(Arrays.asList(origin4)));
+        mapFamilyDifferences.put("family4", new ArrayList<>(List.of(origin4)));
         distance = distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 
         assertEquals(2, distance); //Element distance = 1 + Family difference distance = 1
@@ -407,13 +409,13 @@ public class DistanceCalculationServiceTest {
 
         //C- More in aim with 2 family difference distance
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
+        mapFamilySimilarities.put("family1", new ArrayList<>(List.of(origin1, origin2)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim3));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
-        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3)));
-        mapFamilyDifferences.put("family4", new ArrayList<>(Arrays.asList(origin4)));
+        mapFamilyDifferences.put("family3", new ArrayList<>(List.of(origin3)));
+        mapFamilyDifferences.put("family4", new ArrayList<>(List.of(origin4)));
         distance = distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 
         assertEquals(3, distance); //Element distance = 1 + Family difference distance = 2
@@ -426,12 +428,12 @@ public class DistanceCalculationServiceTest {
 
         //D- Difference in origin and aim with 2 family difference distance
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin4)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapFamilySimilarities.put("family1", new ArrayList<>(List.of(origin1, origin2, origin4)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim5));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
-        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(origin3, aim3)));
+        mapFamilyDifferences.put("family3", new ArrayList<>(List.of(origin3, aim3)));
         distance = distanceCalculationService.artieElementDistanceCalculation(mapFamilySimilarities, mapFamilyDifferences, mapElementSimilarities, aimElements, 0, null);
 
         assertEquals(4, distance); //Element distance = 2 + Family difference distance = 2
@@ -444,8 +446,8 @@ public class DistanceCalculationServiceTest {
 
         //E- Repeated element in origin but not in aim
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin1, origin2)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapFamilySimilarities.put("family1", new ArrayList<>(List.of(origin1, origin1, origin2)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim5));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -466,8 +468,8 @@ public class DistanceCalculationServiceTest {
         PedagogicalSoftwareBlockDTO origin1bis2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family1", null, null, null, null, null),3);
 
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1bis, origin1bis2, origin2)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim5));
+        mapFamilySimilarities.put("family1", new ArrayList<>(List.of(origin1bis, origin1bis2, origin2)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim5));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -489,8 +491,8 @@ public class DistanceCalculationServiceTest {
         aim2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family1", null, null, null, null, null),2);
 
         mapFamilySimilarities.clear();
-        mapFamilySimilarities.put("family1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1, origin2, origin3)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1bis, aim1bis2, aim2));
+        mapFamilySimilarities.put("family1", new ArrayList<>(List.of(origin1, origin2, origin3)));
+        aimElements = new ArrayList<>(List.of(aim1bis, aim1bis2, aim2));
         mapElementSimilarities = new HashMap<>();
         mapFamilyDifferences = new HashMap<>();
 
@@ -537,7 +539,7 @@ public class DistanceCalculationServiceTest {
 
 
         Map<String, List<PedagogicalSoftwareBlockDTO>> mapElementSimilarities = new HashMap<>();
-        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences = new HashMap<>();
+        Map<String, List<PedagogicalSoftwareBlockDTO>> mapFamilyDifferences;
         List<PedagogicalSoftwareBlockDTO> aimElements;
 
 
@@ -546,20 +548,20 @@ public class DistanceCalculationServiceTest {
 
         originFieldInput1 = new PedagogicalSoftwareField("str", "a");
         originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
-        origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(originFieldInput1)));
+        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(originFieldInput2)));
+        origin1.setInputs(new ArrayList<>(List.of(originInput1, originInput2)));
 
 
         aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
         aimFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
-        aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<>(List.of(aimFieldInput1)));
+        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(aimFieldInput2)));
+        aim1.setInputs(new ArrayList<>(List.of(aimInput1, aimInput2)));
 
 
-        mapElementSimilarities.put("element1", new ArrayList<>(Arrays.asList(origin1)));
-        aimElements = new ArrayList<>(Arrays.asList(aim1));
+        mapElementSimilarities.put("element1", new ArrayList<>(List.of(origin1)));
+        aimElements = new ArrayList<>(List.of(aim1));
 
         double distance = distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 
@@ -571,31 +573,31 @@ public class DistanceCalculationServiceTest {
 
         originFieldInput1 = new PedagogicalSoftwareField("str", "b");
         originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
-        origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(originFieldInput1)));
+        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(originFieldInput2)));
+        origin1.setInputs(new ArrayList<>(List.of(originInput1, originInput2)));
 
 
         aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
         aimFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
-        aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<>(List.of(aimFieldInput1)));
+        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(aimFieldInput2)));
+        aim1.setInputs(new ArrayList<>(List.of(aimInput1, aimInput2)));
 
         diffFieldInput1 = new PedagogicalSoftwareField("STR", "a");
         diffFieldInput2 = new PedagogicalSoftwareField("NUM", "20");
-        diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
-        diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
-        diff1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput1)));
-        diff2.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput2)));
+        diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(diffFieldInput1)));
+        diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(diffFieldInput2)));
+        diff1.setInputs(new ArrayList<>(List.of(diffInput1)));
+        diff2.setInputs(new ArrayList<>(List.of(diffInput2)));
 
 
         mapElementSimilarities.clear();
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
-        mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
-        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
+        mapElementSimilarities.put("element1", new ArrayList<>(List.of(origin1)));
+        mapFamilyDifferences.put("family2", new ArrayList<>(List.of(diff1)));
+        mapFamilyDifferences.put("family3", new ArrayList<>(List.of(diff2)));
 
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1));
+        aimElements = new ArrayList<>(List.of(aim1));
 
         distance = distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 
@@ -607,30 +609,30 @@ public class DistanceCalculationServiceTest {
 
         originFieldInput1 = new PedagogicalSoftwareField("str", "a");
         originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
-        origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(originFieldInput1)));
+        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(originFieldInput2)));
+        origin1.setInputs(new ArrayList<>(List.of(originInput1, originInput2)));
 
 
         aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
         aimFieldInput2 = new PedagogicalSoftwareField("NUM", "40");
-        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
-        aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<>(List.of(aimFieldInput1)));
+        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(aimFieldInput2)));
+        aim1.setInputs(new ArrayList<>(List.of(aimInput1, aimInput2)));
 
         mapElementSimilarities.clear();
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1));
+        mapElementSimilarities.put("element1", new ArrayList<>(List.of(origin1)));
+        aimElements = new ArrayList<>(List.of(aim1));
 
         diffFieldInput1 = new PedagogicalSoftwareField("STR", "string");
         diffFieldInput2 = new PedagogicalSoftwareField("NUM", "15");
-        diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
-        diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
-        diff1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput1)));
-        diff2.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput2)));
+        diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(diffFieldInput1)));
+        diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(diffFieldInput2)));
+        diff1.setInputs(new ArrayList<>(List.of(diffInput1)));
+        diff2.setInputs(new ArrayList<>(List.of(diffInput2)));
 
-        mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
-        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
+        mapFamilyDifferences.put("family2", new ArrayList<>(List.of(diff1)));
+        mapFamilyDifferences.put("family3", new ArrayList<>(List.of(diff2)));
 
         distance = distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 
@@ -642,30 +644,30 @@ public class DistanceCalculationServiceTest {
 
         originFieldInput1 = new PedagogicalSoftwareField("str", "a");
         originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
-        origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(originFieldInput1)));
+        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(originFieldInput2)));
+        origin1.setInputs(new ArrayList<>(List.of(originInput1, originInput2)));
 
 
         aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
         aimFieldInput2 = new PedagogicalSoftwareField("NUM", "0");
-        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
-        aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<>(List.of(aimFieldInput1)));
+        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(aimFieldInput2)));
+        aim1.setInputs(new ArrayList<>(List.of(aimInput1, aimInput2)));
 
         mapElementSimilarities.clear();
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1));
+        mapElementSimilarities.put("element1", new ArrayList<>(List.of(origin1)));
+        aimElements = new ArrayList<>(List.of(aim1));
 
         diffFieldInput1 = new PedagogicalSoftwareField("STR", "string");
         diffFieldInput2 = new PedagogicalSoftwareField("NUM", "15");
-        diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
-        diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
-        diff1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput1)));
-        diff2.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput2)));
+        diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(diffFieldInput1)));
+        diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(diffFieldInput2)));
+        diff1.setInputs(new ArrayList<>(List.of(diffInput1)));
+        diff2.setInputs(new ArrayList<>(List.of(diffInput2)));
 
-        mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
-        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
+        mapFamilyDifferences.put("family2", new ArrayList<>(List.of(diff1)));
+        mapFamilyDifferences.put("family3", new ArrayList<>(List.of(diff2)));
 
         distance = distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 
@@ -677,30 +679,30 @@ public class DistanceCalculationServiceTest {
 
         originFieldInput1 = new PedagogicalSoftwareField("str", "b");
         originFieldInput2 = new PedagogicalSoftwareField("NUM", "30");
-        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput1)));
-        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(originFieldInput2)));
-        origin1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(originInput1, originInput2)));
+        originInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(originFieldInput1)));
+        originInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(originFieldInput2)));
+        origin1.setInputs(new ArrayList<>(List.of(originInput1, originInput2)));
 
 
         aimFieldInput1 = new PedagogicalSoftwareField("STR", "A");
         aimFieldInput2 = new PedagogicalSoftwareField("NUM", "40");
-        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput1)));
-        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(aimFieldInput2)));
-        aim1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(aimInput1, aimInput2)));
+        aimInput1 = new PedagogicalSoftwareInput("NAME", "NAME", new ArrayList<>(List.of(aimFieldInput1)));
+        aimInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(aimFieldInput2)));
+        aim1.setInputs(new ArrayList<>(List.of(aimInput1, aimInput2)));
 
         mapElementSimilarities.clear();
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1));
+        mapElementSimilarities.put("element1", new ArrayList<>(List.of(origin1)));
+        aimElements = new ArrayList<>(List.of(aim1));
 
         diffFieldInput1 = new PedagogicalSoftwareField("STR", "string");
         diffFieldInput2 = new PedagogicalSoftwareField("NUM", "90");
-        diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput1)));
-        diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<PedagogicalSoftwareField>(Arrays.asList(diffFieldInput2)));
-        diff1.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput1)));
-        diff2.setInputs(new ArrayList<PedagogicalSoftwareInput>(Arrays.asList(diffInput2)));
+        diffInput1 = new PedagogicalSoftwareInput("Name", "Name", new ArrayList<>(List.of(diffFieldInput1)));
+        diffInput2 = new PedagogicalSoftwareInput("Steps", "Steps", new ArrayList<>(List.of(diffFieldInput2)));
+        diff1.setInputs(new ArrayList<>(List.of(diffInput1)));
+        diff2.setInputs(new ArrayList<>(List.of(diffInput2)));
 
-        mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
-        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
+        mapFamilyDifferences.put("family2", new ArrayList<>(List.of(diff1)));
+        mapFamilyDifferences.put("family3", new ArrayList<>(List.of(diff2)));
 
         distance = distanceCalculationService.artieInputDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 
@@ -737,10 +739,10 @@ public class DistanceCalculationServiceTest {
         aim2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family1", null, null, null, null, null), 1);
         aim3 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element3", "family1", null, null, null, null, null), 2);
 
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
-        mapElementSimilarities.put("element2", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin2)));
-        mapElementSimilarities.put("element3", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin3)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim3));
+        mapElementSimilarities.put("element1", new ArrayList<>(List.of(origin1)));
+        mapElementSimilarities.put("element2", new ArrayList<>(List.of(origin2)));
+        mapElementSimilarities.put("element3", new ArrayList<>(List.of(origin3)));
 
         double distance = distanceCalculationService.artiePositionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 
@@ -762,13 +764,13 @@ public class DistanceCalculationServiceTest {
         diff1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family2", null, null, null, null, null), 2);
         diff2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family3", null, null, null, null, null), 3);
 
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim2, aim3));
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
-        mapElementSimilarities.put("element2", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin2)));
-        mapElementSimilarities.put("element3", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin3)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim3));
+        mapElementSimilarities.put("element1", new ArrayList<>(List.of(origin1)));
+        mapElementSimilarities.put("element2", new ArrayList<>(List.of(origin2)));
+        mapElementSimilarities.put("element3", new ArrayList<>(List.of(origin3)));
 
-        mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
-        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
+        mapFamilyDifferences.put("family2", new ArrayList<>(List.of(diff1)));
+        mapFamilyDifferences.put("family3", new ArrayList<>(List.of(diff2)));
 
         distance = distanceCalculationService.artiePositionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 
@@ -789,12 +791,12 @@ public class DistanceCalculationServiceTest {
         diff1 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element1", "family2", null, null, null, null, null), 0);
         diff2 = new PedagogicalSoftwareBlockDTO(new PedagogicalSoftwareBlock("","element2", "family3", null, null, null, null, null), 1);
 
-        aimElements = new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(aim1, aim1, aim3));
-        mapElementSimilarities.put("element1", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin1)));
-        mapElementSimilarities.put("element2", new ArrayList<PedagogicalSoftwareBlockDTO>(Arrays.asList(origin2)));
+        aimElements = new ArrayList<>(List.of(aim1, aim2, aim3));
+        mapElementSimilarities.put("element1", new ArrayList<>(List.of(origin1)));
+        mapElementSimilarities.put("element2", new ArrayList<>(List.of(origin2)));
 
-        mapFamilyDifferences.put("family2", new ArrayList<>(Arrays.asList(diff1)));
-        mapFamilyDifferences.put("family3", new ArrayList<>(Arrays.asList(diff2)));
+        mapFamilyDifferences.put("family2", new ArrayList<>(List.of(diff1)));
+        mapFamilyDifferences.put("family3", new ArrayList<>(List.of(diff2)));
 
         distance = distanceCalculationService.artiePositionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 

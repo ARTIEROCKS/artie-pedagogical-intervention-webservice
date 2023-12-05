@@ -12,7 +12,7 @@ class PedagogicalSoftwareServiceTest {
 	
 	
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() {
 		pedagogicalSoftwareService = new PedagogicalSoftwareService();		
 	}
 
@@ -20,8 +20,7 @@ class PedagogicalSoftwareServiceTest {
 	@Test
 	void calculateGradeTest(){
 
-		double result = 0;
-		result = pedagogicalSoftwareService.calculateGrade(380, 380, 10);
+		double result = pedagogicalSoftwareService.calculateGrade(380, 380, 10);
 		assertEquals(0, result);
 
 		result = pedagogicalSoftwareService.calculateGrade(380, 190, 10);
