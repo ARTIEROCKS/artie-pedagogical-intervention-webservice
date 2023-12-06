@@ -836,4 +836,44 @@ public class DistanceCalculationServiceTest {
         distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
         assertEquals(2.0, distance);
     }
+
+    @Test
+    void aptedElementDistanceCalculationTest(){
+
+        //A- Same origin and aim comparison
+        String aim = "{{family1-element1}{family1-element2}{family1-element3}}";
+        String origin = "{{family1-element1}{family1-element2}{family1-element3}}";
+        double distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(0.0, distance);
+
+        //B- More in origin with 1 family difference distance
+        aim = "{{family1-element1}{family1-element2}}";
+        origin = "{{family1-element1}{family1-element2}{family1-element3}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //C- More in aim with 2 family difference distance
+        aim = "{{family1-element1}{family1-element2}{family1-element3}}";
+        origin = "{{family1-element1}{family1-element2}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //D- Difference in origin and aim with 2 family difference distance
+        aim = "{{family1-element1}{family1-element2}{family1-element4}}";
+        origin = "{{family1-element1}{family1-element2}{family1-element5}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //E- Repeated element in origin but not in aim
+        aim = "{{family1-element1}{family1-element2}{family1-element5}}";
+        origin = "{{family1-element1}{family1-element1}{family1-element2}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(2.0, distance);
+
+        //F- Repeated element in aim, but not in origin, and with different positions
+        aim = "{{family1-element1}{family1-element2}{family1-element2}}";
+        origin = "{{family1-element1}{family1-element2}{family1-element3}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+    }
 }
