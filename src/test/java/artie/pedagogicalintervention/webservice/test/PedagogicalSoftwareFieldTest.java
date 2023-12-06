@@ -36,4 +36,13 @@ class PedagogicalSoftwareFieldTest {
 		assertNotEquals(this.field21, this.field22);
 	}
 
+	@Test
+	void toStringTest(){
+		assertEquals(this.field1.toString(),"(field1:value1)");
+		assertEquals(this.field11.toString(),"(Field1:Value1)");
+		assertEquals(this.field111.toString(),"(FIELD1:VALUE1)");
+		assertEquals(this.field21.toString(),"(field2:value1)");
+		assertEquals(this.field22.toString(),"(field2:value2)");
+	}
+
 }
