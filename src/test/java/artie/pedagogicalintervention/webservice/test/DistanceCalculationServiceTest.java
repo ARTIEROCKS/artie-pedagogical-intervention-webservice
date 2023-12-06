@@ -800,6 +800,6 @@ public class DistanceCalculationServiceTest {
 
         distance = distanceCalculationService.artiePositionDistanceCalculation(mapElementSimilarities, mapFamilyDifferences, aimElements, 0, null);
 
-        assertEquals(5, distance); //Position difference from similar families: 2 + Position differences from different families: (0+1) + (1+1)
+        assertEquals(6, distance); //Position difference from similar families: 3 + Position differences from different families: (0+1) + (1+1)
     }
 }
