@@ -876,4 +876,38 @@ public class DistanceCalculationServiceTest {
         distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
         assertEquals(1.0, distance);
     }
+
+    @Test
+    void aptedInputDistanceCalculationTest(){
+
+        //A- Same origin and aim and different CASE
+        String aim = "{{family1-element1[Name:A,Steps:30]}}";
+        String origin = "{{family1-element1[Name:a,Steps:30]}}";
+        double distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //B- String input difference and different CASE
+        aim = "{{family1-element1[Name:A,Steps:30]}}";
+        origin = "{{family1-element1[Name:B,Steps:30]}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //C- Number input difference and different CASE
+        aim = "{{family1-element1[Name:A,Steps:30]}}";
+        origin = "{{family1-element1[Name:a,Steps:40]}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //D- Number input difference with 0 value in the aim and different CASE
+        aim = "{{family1-element1[Name:A,Steps:0]}}";
+        origin = "{{family1-element1[Name:a,Steps:30]}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //E- Number and String inputs difference and different CASE
+        aim = "{{family1-element1[Name:A,Steps:40]}}";
+        origin = "{{family1-element1[Name:b,Steps:30]}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+    }
 }
