@@ -1,11 +1,9 @@
 package artie.pedagogicalintervention.webservice.dto;
 
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareBlock;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @AllArgsConstructor
@@ -39,6 +37,7 @@ public class PedagogicalSoftwareBlockDTO extends PedagogicalSoftwareBlock implem
 	/**
 	 * Overrides clone
 	 */
+	@Override
 	public PedagogicalSoftwareBlockDTO clone() {
 		PedagogicalSoftwareBlock cloneSuper = super.clone();
 		return new PedagogicalSoftwareBlockDTO(cloneSuper, this.elementPosition);

@@ -751,6 +751,12 @@ public class DistanceCalculationService {
         return diffPosition;
     }
 
+    /**
+     * Functionm to calculate the APTED distance
+     * @param origin
+     * @param aim
+     * @return
+     */
     public double aptedDistanceCalculation(String origin, String aim){
         BracketStringInputParser inputParser = new BracketStringInputParser();
         Node<StringNodeData> originNode = inputParser.fromString(origin);

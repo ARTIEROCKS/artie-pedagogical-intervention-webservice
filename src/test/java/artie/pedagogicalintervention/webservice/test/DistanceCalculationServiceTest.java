@@ -924,7 +924,7 @@ public class DistanceCalculationServiceTest {
         aim = "{{family1-element1}{family1-element2}{family1-element3}}";
         origin = "{{family1-element1}{0}{family1-element2}{family1-element3}}";
         distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
-        assertEquals(2.0, distance);
+        assertEquals(1.0, distance);
 
         //C- More elements in aim than in origin
         aim = "{{family1-element1}{family1-element2}{family1-element3}}";

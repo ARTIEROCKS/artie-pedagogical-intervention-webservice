@@ -30,6 +30,8 @@ public class PedagogicalSoftwareBlock implements Cloneable {
 	 * @param inputs
 	 * @param next
 	 * @param nested
+	 * @param previous
+	 * @param parent
 	 */
 	public PedagogicalSoftwareBlock(String id, String elementName, String elementFamily, List<PedagogicalSoftwareInput> inputs,
 									PedagogicalSoftwareBlock next, List<PedagogicalSoftwareBlock> nested,
@@ -73,13 +75,13 @@ public class PedagogicalSoftwareBlock implements Cloneable {
 	    //Checks if all the inputs are equals
 	    boolean result = this.inputs.size() == objBlock.getInputs().size();
 	    for(PedagogicalSoftwareInput i : this.inputs) {
-	    	result = result && (objBlock.getInputs().stream().filter(oi -> oi.equals(i)).count() > 0);
+	    	result = result && (objBlock.getInputs().stream().anyMatch(oi -> oi.equals(i)));
 	    }
 	    
 	    //Checks if all the nested elements are equals
 	    result = result && this.nested.size() == objBlock.getNested().size();
 	    for(PedagogicalSoftwareBlock e : this.nested) {
-	    	result = result && (objBlock.getNested().stream().filter(oe -> oe.equals(e)).count() > 0);
+	    	result = result && (objBlock.getNested().stream().anyMatch(oe -> oe.equals(e)));
 	    }
 	    
 		return result;
@@ -89,10 +91,11 @@ public class PedagogicalSoftwareBlock implements Cloneable {
 	/**
 	 * Overrides clone
 	 */
+	@Override
 	public PedagogicalSoftwareBlock clone(){
-		
-		List<PedagogicalSoftwareInput> cloneInputs = (this.inputs != null ? this.inputs.stream().map(i -> i.clone()).collect(Collectors.toList()) : null);
-		List<PedagogicalSoftwareBlock> cloneNested = (this.nested != null ? this.nested.stream().map(n -> n.clone()).collect(Collectors.toList()) : null);
+
+		List<PedagogicalSoftwareInput> cloneInputs = (this.inputs != null ? this.inputs.stream().map(PedagogicalSoftwareInput::clone).collect(Collectors.toList()) : null);
+		List<PedagogicalSoftwareBlock> cloneNested = (this.nested != null ? this.nested.stream().map(PedagogicalSoftwareBlock::clone).collect(Collectors.toList()) : null);
 		PedagogicalSoftwareBlock cloneNext = null;
 		PedagogicalSoftwareBlock clonePrevious = null;
 		PedagogicalSoftwareBlock cloneParent = null;
