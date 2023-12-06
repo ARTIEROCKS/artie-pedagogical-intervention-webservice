@@ -41,12 +41,12 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	    if (this.getClass() != obj.getClass()) return false;
 	    PedagogicalSoftwareInput objInput = (PedagogicalSoftwareInput) obj;
 
-	    if(!this.name.toLowerCase().equals(objInput.getName().toLowerCase())) return false;
-	    if(!this.opcode.toLowerCase().equals(objInput.getOpcode().toLowerCase())) return false;
+	    if(!this.name.equalsIgnoreCase(objInput.getName())) return false;
+	    if(!this.opcode.equalsIgnoreCase(objInput.getOpcode())) return false;
 	    
 	    boolean result = this.fields.size()== objInput.getFields().size();
 	    for(PedagogicalSoftwareField field : this.fields) {
-	    	result = result && (objInput.getFields().stream().filter(f -> f.equals(field)).count() > 0);
+	    	result = result && (objInput.getFields().stream().anyMatch(f -> f.equals(field)));
 	    }
 		
 		return result;
@@ -58,7 +58,23 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	 */
 	public PedagogicalSoftwareInput clone() {
 		
-		List<PedagogicalSoftwareField> cloneFields = this.fields.stream().map(f -> f.clone()).collect(Collectors.toList());
+		List<PedagogicalSoftwareField> cloneFields = this.fields.stream().map(PedagogicalSoftwareField::clone).collect(Collectors.toList());
 		return new PedagogicalSoftwareInput(name, opcode, cloneFields);
+	}
+
+	/**
+	 * Overrides clone
+	 * @return
+	 */
+	@Override
+	public String toString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("[").append(name).append("-").append(opcode);
+		stringBuilder.append("(");
+		for (PedagogicalSoftwareField field : fields) {
+			stringBuilder.append(field.toString());
+		}
+		stringBuilder.append(")").append("]");
+		return stringBuilder.toString();
 	}
 }
