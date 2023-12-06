@@ -63,7 +63,7 @@ public class PedagogicalSoftwareService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		headers.add("apiKey", this.apiKey);
-		this.entity = new HttpEntity<String>("parameters", headers);
+		this.entity = new HttpEntity<>("parameters", headers);
 	}
 
 	/**
@@ -82,19 +82,19 @@ public class PedagogicalSoftwareService {
 		SolutionDistance distance = null;
 		double maximumDistance = 0;
 		double grade = 0;
-		if (pedagogicalSoftwareSolution != null && pedagogicalSoftwareSolution.size() > 0) {
+		if (pedagogicalSoftwareSolution != null && !pedagogicalSoftwareSolution.isEmpty()) {
 
-			//2.1- Gets the distance
+			//2.1 Gets the distance
 			Map<String, Object> mapDistance = distanceCalculationService.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
 			distance = (SolutionDistance)mapDistance.get("distance");
 			maximumDistance = (double)mapDistance.get("maximumDistance");
 			pedagogicalSoftwareData.setSolutionDistance(distance);
 
-			//2.2- Calculates and sets the grade
+			//2.2 Calculates and sets the grade
 			grade = this.calculateGrade(maximumDistance, distance.getTotalDistance(), 10);
 			pedagogicalSoftwareData.setGrade(grade);
 
-			//2.3- We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
+			//2.3 We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
 			if(pedagogicalSoftwareData.getExercise().isEvaluation() && distance.getTotalDistance() == 0 & pedagogicalSoftwareData.getStudent().getCompetence() == 0){
 				//We set the competence as the level of the exercise
 				pedagogicalSoftwareData.getStudent().setCompetence(pedagogicalSoftwareData.getExercise().getLevel());
@@ -114,10 +114,10 @@ public class PedagogicalSoftwareService {
 		//3- Creating the return object
 		HelpResult helpResult = new HelpResult(objSaved.getId(), objSaved.isPredictedNeedHelp(), false, null, distance);
 		if(pedagogicalSoftwareData.isRequestHelp() && distance == null){
-			//3.1- If the distance is null, and we have requested help, there must be an error
+			//3.1 If the distance is null, and we have requested help, there must be an error
 			response = new Response(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
 		}else{
-			//3.2- We send that everything is OK and the help result object
+			//3.2 We send that everything is OK and the help result object
 			response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString(), helpResult));
 		}
 
@@ -166,7 +166,7 @@ public class PedagogicalSoftwareService {
 	public List<Exercise> findFinishedExercisesByUserId(String userId){
 
 		//1- Gets the finished exercises of the user ID
-		List<Exercise> listFinishedExercises = this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
+		return this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
 																		.stream()
 																		.filter(fe -> (fe.getStudent().getUserId().equals(userId) &&
 																							(fe.getSolutionDistance().getTotalDistance() > 0 ||
@@ -179,8 +179,6 @@ public class PedagogicalSoftwareService {
 																							    e.getScreenShot(), e.getBinary(), e.getValidSolution(), e.getExercise().isEvaluation(), e.getExercise().getLevel());
 																		})
 																		.collect(Collectors.toList());
-
-		return listFinishedExercises;
 	}
 
 	/**
@@ -217,7 +215,7 @@ public class PedagogicalSoftwareService {
 		//2- Sets the validated value
 		if(pedagogicalSoftwareData != null){
 
-			//2.1- If there is a validation
+			//2.1 If there is a validation
 			if(validated == ValidSolutionEnum.VALIDATED.getValue()){
 
 				//We set the distance of the pedagogical software data to 0
@@ -272,7 +270,7 @@ public class PedagogicalSoftwareService {
 	public double calculateGrade(double maximumDistance, double currentDistance, double maximumGrade){
 
 		//1- Checks that the current distance is not bigger than the maximum
-		currentDistance = currentDistance > maximumDistance ? maximumDistance : currentDistance;
+		currentDistance = Math.min(currentDistance, maximumDistance);
 
 		//2- Formula that calculates the grade
 		return (maximumGrade - ((maximumGrade*currentDistance) / maximumDistance));
@@ -309,6 +307,8 @@ public class PedagogicalSoftwareService {
 	/**
 	 * Function to update the answeredNeededHelp in base of the id of the PedagogicalSoftwareData
 	 * @param id
+	 * @param answeredNeedHelp
+	 * @return
 	 */
 	public String updateAnsweredNeedHelpById(String id, boolean answeredNeedHelp){
 
@@ -329,7 +329,8 @@ public class PedagogicalSoftwareService {
 				PedagogicalSoftwareSolution pss = this.pedagogicalSoftwareSolutionRepository.findById(psd.getSolutionDistance().getSolutionId()).orElse(null);
 
 				// 2- Calculates the distance and the next steps
-				SolutionDistance solutionDistance = distanceCalculationService.distanceCalculation(psd, pss);
+                assert pss != null;
+                SolutionDistance solutionDistance = distanceCalculationService.distanceCalculation(psd, pss);
 
 				// 3- Gets the new grade of the user
 				double newGrade = this.calculateGrade(pss.getMaximumDistance(), solutionDistance.getTotalDistance(), 10);
