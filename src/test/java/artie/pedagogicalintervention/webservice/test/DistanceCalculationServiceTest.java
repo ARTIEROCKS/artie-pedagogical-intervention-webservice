@@ -910,4 +910,26 @@ public class DistanceCalculationServiceTest {
         distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
         assertEquals(1.0, distance);
     }
+
+    @Test
+    void aptedPositionDistanceCalculationTest(){
+
+        //A- Same positions in origin and aim
+        String aim = "{{family1-element1}{family1-element2}{family1-element3}}";
+        String origin = "{{family1-element1}{family1-element2}{family1-element3}}";
+        double distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(0.0, distance);
+
+        //B- Different positions in origin and aim with same elements
+        aim = "{{family1-element1}{family1-element2}{family1-element3}}";
+        origin = "{{family1-element1}{0}{family1-element2}{family1-element3}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(2.0, distance);
+
+        //C- More elements in aim than in origin
+        aim = "{{family1-element1}{family1-element2}{family1-element3}}";
+        origin = "{{family1-element1}{0}{family1-element2}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(2.0, distance);
+    }
 }
