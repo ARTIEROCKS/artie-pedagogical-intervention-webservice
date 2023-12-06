@@ -802,4 +802,38 @@ public class DistanceCalculationServiceTest {
 
         assertEquals(6, distance); //Position difference from similar families: 3 + Position differences from different families: (0+1) + (1+1)
     }
+
+    @Test
+    void aptedFamilyDistanceCalculationTest(){
+
+        //A- Same origin and aim comparison
+        String aim = "{{family1}{family2}{family3}}";
+        String origin = "{{family1}{family2}{family3}}";
+        double distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(0.0, distance);
+
+        //B- More in origin
+        aim = "{{family1}{family2}{family3}}";
+        origin = "{{family1}{family2}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //C- More in aim comparison
+        aim = "{{family1}{family2}}";
+        origin = "{{family1}{family2}{family3}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //D- Difference in origin and in aim
+        aim = "{{family1}{family2}{family4}}";
+        origin = "{{family1}{family2}{family5}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(1.0, distance);
+
+        //E- Difference in origin and in aim, but more (one element repeated) in origin
+        aim = "{{family1}{family2}{family4}{family4}}";
+        origin = "{{family1}{family2}{family5}}";
+        distance = distanceCalculationService.aptedDistanceCalculation(origin, aim);
+        assertEquals(2.0, distance);
+    }
 }
