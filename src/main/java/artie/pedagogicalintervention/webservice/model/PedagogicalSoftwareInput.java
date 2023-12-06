@@ -69,12 +69,12 @@ public class PedagogicalSoftwareInput implements Cloneable {
 	@Override
 	public String toString(){
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("[").append(name).append("-").append(opcode);
-		stringBuilder.append("(");
+		stringBuilder.append("(").append(name).append("-").append(opcode);
+		stringBuilder.append("[");
 		for (PedagogicalSoftwareField field : fields) {
 			stringBuilder.append(field.toString());
 		}
-		stringBuilder.append(")").append("]");
+		stringBuilder.append("]").append(")");
 		return stringBuilder.toString();
 	}
 }
