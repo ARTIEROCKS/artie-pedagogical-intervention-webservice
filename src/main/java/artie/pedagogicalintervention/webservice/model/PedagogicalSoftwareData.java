@@ -25,6 +25,7 @@ public class PedagogicalSoftwareData {
 	private StudentDTO student;
 	private Exercise exercise;
 	private SolutionDistance solutionDistance = new SolutionDistance();
+	private double aptedDistance;
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
 	private boolean predictedNeedHelp;
@@ -88,12 +89,13 @@ public class PedagogicalSoftwareData {
 	 * @param screenShot
 	 * @param binary
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
+	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, double aptedDistance, List<PedagogicalSoftwareElement> elements,
 								   boolean requestHelp, boolean predictedNeedHelp, boolean answeredNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade,
 								   Date lastLogin, Date lastExerciseChange, String screenShot, String binary) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
+		this.aptedDistance = aptedDistance;
 		this.elements = elements;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
