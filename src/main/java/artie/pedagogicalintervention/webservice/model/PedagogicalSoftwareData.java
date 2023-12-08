@@ -25,9 +25,11 @@ public class PedagogicalSoftwareData {
 	private StudentDTO student;
 	private Exercise exercise;
 	private SolutionDistance solutionDistance = new SolutionDistance();
+	private double maximumDistance;
 	private double aptedDistance;
 	private String tree;
 	private String solutionTree;
+	private double maximumTreeDistance;
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
 	private boolean predictedNeedHelp;
@@ -42,6 +44,7 @@ public class PedagogicalSoftwareData {
 	private boolean finishedExercise;
 	private int validSolution;
 	private double grade;
+	private double treeGrade;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, hh:mm:ss")
 	private Date lastLogin;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, hh:mm:ss")
