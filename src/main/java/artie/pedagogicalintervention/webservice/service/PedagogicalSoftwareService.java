@@ -370,7 +370,7 @@ public class PedagogicalSoftwareService {
 		// If we have the pedagogical software data
 		if(psd != null){
 
-			logger.trace("PedagogicalSoftwareData id: " + id + " - Predicted Need Help: " + psd.isPredictedNeedHelp() " - Answered Need Help: " + answeredNeedHelp);
+			logger.trace("PedagogicalSoftwareData id: " + id + " - Predicted Need Help: " + psd.isPredictedNeedHelp() + " - Answered Need Help: " + answeredNeedHelp);
 			psd.setAnsweredNeedHelp(answeredNeedHelp);
 
 			// We check if the user wants help
