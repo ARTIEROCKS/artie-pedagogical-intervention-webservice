@@ -5,6 +5,8 @@ import artie.common.web.dto.SoftwareData;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -16,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.Objects;
 
 @Service
 public class HelpModelService {
@@ -28,9 +31,11 @@ public class HelpModelService {
     @Value("${artie.webservices.help.url}")
     private String helpWebserviceUrl;
 
+    private Logger logger;
+
     @Autowired
     public HelpModelService(RestTemplateBuilder builder){this.restTemplate = builder.build();}
-    public HelpModelService(){}
+    public HelpModelService(){logger = LoggerFactory.getLogger(HelpModelService.class);}
 
     @PostConstruct
     public void setUp(){
@@ -38,6 +43,7 @@ public class HelpModelService {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("apiKey", this.apiKey);
         this.entity = new HttpEntity<String>("parameters", headers);
+        logger = LoggerFactory.getLogger(HelpModelService.class);
     }
 
     /**
@@ -48,6 +54,7 @@ public class HelpModelService {
     public boolean predict(PedagogicalSoftwareData pedagogicalSoftwareData) {
 
         boolean result = false;
+        logger.info("Predicting if the student " + pedagogicalSoftwareData.getStudent().getId() + " needs help");
 
         try {
             //1- Gets the parent of the pedagogical software data, that will be sent
@@ -60,16 +67,18 @@ public class HelpModelService {
             Response response = new ObjectMapper().readValue(wsResponse, Response.class);
 
             //If there are an error in the response, we print the error
-            if(response != null && response.getBody() != null && response.getBody().getMessage() == ResponseCodeEnum.ERROR.toString()){
+            if(response != null && response.getBody() != null && Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString())){
                 System.out.println((String)response.getBody().getObject());
+                logger.error("Error during the help need prediction: " + (String)response.getBody().getObject());
             }
 
             result = response != null &&
-                    response.getBody().getMessage() != ResponseCodeEnum.ERROR.toString() &&
-                    response.getBody().getObject() != null ? ((int)response.getBody().getObject() == 1 ? true : false ): false;
+                    !Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString()) &&
+                    response.getBody().getObject() != null && ((int) response.getBody().getObject() == 1);
+            logger.trace("Help need prediction: " + result + " for the student id: " + pedagogicalSoftwareData.getStudent().getId());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error during the help need prediction: " + e.getMessage());
         }
 
         //3- Returns the boolean body object

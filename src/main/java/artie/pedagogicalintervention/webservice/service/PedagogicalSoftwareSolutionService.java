@@ -13,6 +13,8 @@ import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSo
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +39,12 @@ public class PedagogicalSoftwareSolutionService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	private Logger logger;
+
 	@PostConstruct
 	public void setUp(){
 		this.objectMapper.registerModule(new JavaTimeModule());
+		logger = LoggerFactory.getLogger(PedagogicalSoftwareSolutionService.class);
 	}
 	
 	/**
@@ -50,12 +55,10 @@ public class PedagogicalSoftwareSolutionService {
 		
 		Response response = new Response(null);
 		PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pss);
-		
-		if(objSaved != null) {
-			response = new Response(new ResponseBody("OK"));
-		}
-		
-		return response.toJSON();
+
+        response = new Response(new ResponseBody("OK"));
+
+        return response.toJSON();
 	}
 	
 	/**
@@ -63,7 +66,8 @@ public class PedagogicalSoftwareSolutionService {
 	 * @param pse
 	 */
 	public String add(String pse) {
-		
+
+		logger.info("Adding new pedagogical software solution");
 		Response response = new Response(null);
 		
 		try {					
@@ -78,23 +82,25 @@ public class PedagogicalSoftwareSolutionService {
 			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareSolution.getExercise().getId(), pedagogicalSoftwareSolution.getUserId());
 			
 			//4- If there is an existing pedagogical software solution, we update its data
-			if(pedagogicalSoftwareSolutions.size() > 0 ) {
+			if(!pedagogicalSoftwareSolutions.isEmpty()) {
+				logger.trace("Updating the pedagogical software solution");
+
 				PedagogicalSoftwareSolution pedagogicalSoftwareSolutionDb = pedagogicalSoftwareSolutions.get(0);
 				pedagogicalSoftwareSolutionDb.setElements(pedagogicalSoftwareSolution.getElements());
 				pedagogicalSoftwareSolutionDb.setScreenShot(pedagogicalSoftwareSolution.getScreenShot());
 				pedagogicalSoftwareSolutionDb.setBinary(pedagogicalSoftwareSolution.getBinary());
 				pedagogicalSoftwareSolutionDb.setMaximumDistance(pedagogicalSoftwareSolution.getMaximumDistance());
 				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
-				
-				if(objSaved != null) {
-					response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
-				}
-			}else {
+
+                response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
+				logger.trace("Added the pedagogical solution data in DB");
+            }else {
 				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
 				response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
+				logger.trace("Added the pedagogical solution data in DB");
 			}
 		}catch(JsonProcessingException e) {
-			e.printStackTrace();
+			logger.error("Error processing the following JSON: " + pse + ". \n + Error: " + e.getMessage());
 		}
 		
 		return response.toJSON();
@@ -152,7 +158,7 @@ public class PedagogicalSoftwareSolutionService {
 
 		if(solution != null){
 			//2- Checks if the solution comes from the validation of an exercise and we invalidate it
-			if(solution.getPedagogicalSoftwareDataId() != null && solution.getPedagogicalSoftwareDataId() != ""){
+			if(solution.getPedagogicalSoftwareDataId() != null && !solution.getPedagogicalSoftwareDataId().isEmpty()){
 
 				PedagogicalSoftwareData pedagogicalSoftwareData = this.pedagogicalSoftwareDataRepository.findById(solution.getPedagogicalSoftwareDataId()).orElse(null);
 				if(pedagogicalSoftwareData != null){

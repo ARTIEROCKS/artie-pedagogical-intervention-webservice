@@ -9,6 +9,8 @@ import artie.pedagogicalintervention.webservice.model.PedagogicalSentence;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,10 +54,13 @@ public class InterventionService {
     private PedagogicalSentenceService pedagogicalSentenceService;
     private HttpEntity<String> entity;
 
+    private Logger logger;
+
     @Autowired
     public InterventionService(RabbitTemplate rabbitTemplate, RestTemplateBuilder builder){
         this.restTemplate = builder.build();
         this.rabbitTemplate = rabbitTemplate;
+        logger = LoggerFactory.getLogger(InterventionService.class);
     }
 
     @PostConstruct
@@ -63,6 +68,7 @@ public class InterventionService {
         this.headers = new HttpHeaders();
         this.headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         this.headers.add("apiKey", this.apiKey);
+        logger = LoggerFactory.getLogger(InterventionService.class);
     }
 
     /**
@@ -70,6 +76,7 @@ public class InterventionService {
      * @param id
      */
     public void buildAndSendInterventionByPedagogicalSoftwareDataId(String id) throws JsonProcessingException {
+        logger.info("Building and sending the intervention by pedagogical software data id: " + id);
         PedagogicalSoftwareData psd = this.pedagogicalSoftwareService.findById(id);
         this.buildAndSendIntervention(psd);
     }
@@ -96,15 +103,18 @@ public class InterventionService {
      */
     public void buildAndSendIntervention(PedagogicalSoftwareData pedagogicalSoftwareData) throws JsonProcessingException {
 
+        logger.info("Building and sending the intervention for id" + pedagogicalSoftwareData.getId());
         PrologQueryDTO prologQuery = PrologQueryDTO.builder()
                                         .institutionId(pedagogicalSoftwareData.getStudent().getInstitutionId())
                                         .build();
 
         //1.1 Gets the emotional state of the student
-        String emotionalState = this.emotionalStateService.predict(pedagogicalSoftwareData.getStudent().getUserId()).getEmotionalState();
-        if (emotionalState == null || emotionalState == "NONE"){
+        String userId = pedagogicalSoftwareData.getStudent().getUserId();
+        String emotionalState = this.emotionalStateService.predict(userId).getEmotionalState();
+        if (emotionalState == null || emotionalState.equals("NONE")){
             emotionalState = "neutral";
         }
+        logger.trace("Emotional state: " + emotionalState + " for user id: " + userId);
 
         //1.2 Gets the eyes
         prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Sentence," + emotionalState.toLowerCase() + ").");
@@ -112,18 +122,23 @@ public class InterventionService {
         PrologAnswerDTO[][] answer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
         assert answer != null;
         String eyes = getValueFromPrologAnswer(answer, "Eye");
+        logger.trace("Eyes: " + eyes + " for emotional state " + emotionalState + " and user id: " + userId);
 
         //1.3 Gets the tone of the voice
         String toneOfVoice = getValueFromPrologAnswer(answer, "Tone");
+        logger.trace("Tone of voice: " + toneOfVoice + " for emotional state " + emotionalState + " and user id: " + userId);
 
         //1.4 Gets the voice speed
         String voiceSpeed = getValueFromPrologAnswer(answer, "Speed");
+        logger.trace("Voice speed: " + voiceSpeed + " for emotional state " + emotionalState + " and user id: " + userId);
 
         //1.5 Gets the gaze
         String gaze = pedagogicalSoftwareData.getStudent().getUserId();
+        logger.trace("Gaze: " + gaze + " for emotional state " + emotionalState + " and user id: " + userId);
         
         //1.6 Gets the gesture
         String gesture = getValueFromPrologAnswer(answer, "Gesture");
+        logger.trace("Gesture: " + gesture + " for emotional state " + emotionalState + " and user id: " + userId);
 
         //1.7 Gets the posture
         String posture = "stand";
@@ -134,6 +149,7 @@ public class InterventionService {
         String sentence = "";
         if (!pedagogicalSentenceList.isEmpty()) {
             sentence = pedagogicalSentenceList.get(0).getSentence();
+            logger.trace("Sentence: " + sentence + " for emotional state " + emotionalState + " and user id: " + userId);
         }
 
         //2. Building the BMLe with the first sentence found
@@ -142,6 +158,7 @@ public class InterventionService {
                           posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed, sentence);
 
         String bmle = generatorService.generateBMLE(bml);
+        logger.trace("BMLE generated for user id " + userId + ": " + bmle);
 
         //3. Sends the BMLe to the queue message to let the robot process the messages
         // Declare the queue if it doesn't exist
