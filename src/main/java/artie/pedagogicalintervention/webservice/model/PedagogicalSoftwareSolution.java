@@ -91,4 +91,13 @@ public class  PedagogicalSoftwareSolution {
 	public void addElement(PedagogicalSoftwareElement element) {
 		this.elements.add(element);
 	}
+
+	@Override
+	public String toString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		for(PedagogicalSoftwareElement element: elements){
+			stringBuilder.append(element.toString());
+		}
+		return stringBuilder.toString();
+	}
 }

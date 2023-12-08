@@ -82,6 +82,9 @@ public class PedagogicalSoftwareService {
 		SolutionDistance distance = null;
 		double maximumDistance = 0;
 		double grade = 0;
+		double apted = 0;
+		String pedagogicalSoftwareDataTree;
+		String pedagogicalSoftwareSolutionTree;
 		if (pedagogicalSoftwareSolution != null && !pedagogicalSoftwareSolution.isEmpty()) {
 
 			//2.1 Gets the distance
@@ -90,11 +93,20 @@ public class PedagogicalSoftwareService {
 			maximumDistance = (double)mapDistance.get("maximumDistance");
 			pedagogicalSoftwareData.setSolutionDistance(distance);
 
-			//2.2 Calculates and sets the grade
+			//2.2 Gets the APTED
+			pedagogicalSoftwareDataTree = pedagogicalSoftwareData.toString();
+			pedagogicalSoftwareSolutionTree = pedagogicalSoftwareSolution.toString();
+
+			apted = distanceCalculationService.aptedDistanceCalculation(pedagogicalSoftwareDataTree, pedagogicalSoftwareSolutionTree);
+			pedagogicalSoftwareData.setAptedDistance(apted);
+			pedagogicalSoftwareData.setTree(pedagogicalSoftwareDataTree);
+			pedagogicalSoftwareData.setSolutionTree(pedagogicalSoftwareSolutionTree);
+
+			//2.3 Calculates and sets the grade in base of ARTIE distance
 			grade = this.calculateGrade(maximumDistance, distance.getTotalDistance(), 10);
 			pedagogicalSoftwareData.setGrade(grade);
 
-			//2.3 We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
+			//2.4 We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
 			if(pedagogicalSoftwareData.getExercise().isEvaluation() && distance.getTotalDistance() == 0 & pedagogicalSoftwareData.getStudent().getCompetence() == 0){
 				//We set the competence as the level of the exercise
 				pedagogicalSoftwareData.getStudent().setCompetence(pedagogicalSoftwareData.getExercise().getLevel());

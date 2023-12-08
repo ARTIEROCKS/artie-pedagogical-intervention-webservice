@@ -26,6 +26,8 @@ public class PedagogicalSoftwareData {
 	private Exercise exercise;
 	private SolutionDistance solutionDistance = new SolutionDistance();
 	private double aptedDistance;
+	private String tree;
+	private String solutionTree;
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
 	private boolean predictedNeedHelp;
@@ -89,13 +91,14 @@ public class PedagogicalSoftwareData {
 	 * @param screenShot
 	 * @param binary
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, double aptedDistance, List<PedagogicalSoftwareElement> elements,
+	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, double aptedDistance, String tree, List<PedagogicalSoftwareElement> elements,
 								   boolean requestHelp, boolean predictedNeedHelp, boolean answeredNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade,
 								   Date lastLogin, Date lastExerciseChange, String screenShot, String binary) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
 		this.aptedDistance = aptedDistance;
+		this.tree = tree;
 		this.elements = elements;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
@@ -124,5 +127,14 @@ public class PedagogicalSoftwareData {
 		return new SoftwareData(st, this.exercise, this.solutionDistance,
 								this.secondsHelpOpen, this.finishedExercise, this.validSolution,
 								this.grade, this.lastLogin, this.lastExerciseChange);
+	}
+
+	@Override
+	public String toString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		for(PedagogicalSoftwareElement element: elements){
+			stringBuilder.append(element.toString());
+		}
+		return stringBuilder.toString();
 	}
 }
