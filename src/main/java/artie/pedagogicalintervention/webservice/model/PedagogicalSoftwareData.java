@@ -1,24 +1,20 @@
 package artie.pedagogicalintervention.webservice.model;
 
+import artie.common.web.dto.Exercise;
+import artie.common.web.dto.SoftwareData;
+import artie.common.web.dto.SolutionDistance;
+import artie.common.web.dto.Student;
+import artie.common.web.enums.ValidSolutionEnum;
+import artie.pedagogicalintervention.webservice.dto.StudentDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Id;
-
-import artie.common.web.dto.SoftwareData;
-import artie.common.web.dto.SolutionDistance;
-import artie.common.web.dto.Student;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import artie.common.web.enums.ValidSolutionEnum;
-import artie.common.web.dto.Exercise;
-import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 
 @Data
 @Document(collection="PedagogicalSoftwareData")
@@ -29,6 +25,11 @@ public class PedagogicalSoftwareData {
 	private StudentDTO student;
 	private Exercise exercise;
 	private SolutionDistance solutionDistance = new SolutionDistance();
+	private double maximumDistance;
+	private double aptedDistance;
+	private String tree;
+	private String solutionTree;
+	private double maximumTreeDistance;
 	private LocalDateTime dateTime;
 	private boolean requestHelp;
 	private boolean predictedNeedHelp;
@@ -43,6 +44,7 @@ public class PedagogicalSoftwareData {
 	private boolean finishedExercise;
 	private int validSolution;
 	private double grade;
+	private double treeGrade;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, hh:mm:ss")
 	private Date lastLogin;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy, hh:mm:ss")
@@ -92,12 +94,14 @@ public class PedagogicalSoftwareData {
 	 * @param screenShot
 	 * @param binary
 	 */
-	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, List<PedagogicalSoftwareElement> elements,
+	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, double aptedDistance, String tree, List<PedagogicalSoftwareElement> elements,
 								   boolean requestHelp, boolean predictedNeedHelp, boolean answeredNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade,
 								   Date lastLogin, Date lastExerciseChange, String screenShot, String binary) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
+		this.aptedDistance = aptedDistance;
+		this.tree = tree;
 		this.elements = elements;
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = requestHelp;
@@ -126,5 +130,14 @@ public class PedagogicalSoftwareData {
 		return new SoftwareData(st, this.exercise, this.solutionDistance,
 								this.secondsHelpOpen, this.finishedExercise, this.validSolution,
 								this.grade, this.lastLogin, this.lastExerciseChange);
+	}
+
+	@Override
+	public String toString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		for(PedagogicalSoftwareElement element: elements){
+			stringBuilder.append(element.toString());
+		}
+		return stringBuilder.toString();
 	}
 }

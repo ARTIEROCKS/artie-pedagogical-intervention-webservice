@@ -1,15 +1,15 @@
 package artie.pedagogicalintervention.webservice.test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareInput;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class PedagogicalSoftwareInputTest {
 
@@ -50,6 +50,16 @@ class PedagogicalSoftwareInputTest {
 		assertNotEquals(input1, input2);
 		assertNotEquals(input2, input21);
 		assertNotEquals(input21, input22);
+	}
+
+	@Test
+	void toStringInputTest(){
+		assertEquals(input1.toString(),"(name1-name1[$name1:value1$$name11:value11$])");
+		assertEquals(input11.toString(),"(Name1-Name1[$name1:value1$$name11:value11$])");
+		assertEquals(input111.toString(),"(NAME1-NAME1[$name1:value1$$name11:value11$])");
+		assertEquals(input2.toString(),"(name2-name2[$name2:value2$$name21:value21$])");
+		assertEquals(input21.toString(),"(name21-name21[$name2:value2$$name21:value21$])");
+		assertEquals(input22.toString(),"(name21-name21[$name1:value1$$name11:value11$])");
 	}
 
 }

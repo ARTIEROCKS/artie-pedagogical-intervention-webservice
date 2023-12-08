@@ -1,7 +1,7 @@
 package artie.pedagogicalintervention.webservice.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

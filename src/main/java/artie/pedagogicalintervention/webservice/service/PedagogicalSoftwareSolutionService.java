@@ -1,26 +1,25 @@
 package artie.pedagogicalintervention.webservice.service;
 
-import java.util.List;
-
+import artie.common.web.dto.Exercise;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
 import artie.common.web.dto.SolutionDistance;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
+import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import artie.common.web.dto.Exercise;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
-import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
-
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Service
 public class PedagogicalSoftwareSolutionService {
@@ -35,11 +34,17 @@ public class PedagogicalSoftwareSolutionService {
 	private PedagogicalSoftwareService pedagogicalSoftwareService;
 
 	@Autowired
+	private DistanceCalculationService distanceCalculationService;
+
+	@Autowired
 	private ObjectMapper objectMapper;
+
+	private Logger logger;
 
 	@PostConstruct
 	public void setUp(){
 		this.objectMapper.registerModule(new JavaTimeModule());
+		logger = LoggerFactory.getLogger(PedagogicalSoftwareSolutionService.class);
 	}
 	
 	/**
@@ -50,12 +55,10 @@ public class PedagogicalSoftwareSolutionService {
 		
 		Response response = new Response(null);
 		PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pss);
-		
-		if(objSaved != null) {
-			response = new Response(new ResponseBody("OK"));
-		}
-		
-		return response.toJSON();
+
+        response = new Response(new ResponseBody("OK"));
+
+        return response.toJSON();
 	}
 	
 	/**
@@ -63,7 +66,8 @@ public class PedagogicalSoftwareSolutionService {
 	 * @param pse
 	 */
 	public String add(String pse) {
-		
+
+		logger.info("Adding new pedagogical software solution");
 		Response response = new Response(null);
 		
 		try {					
@@ -71,30 +75,32 @@ public class PedagogicalSoftwareSolutionService {
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = this.objectMapper.readValue(pse, PedagogicalSoftwareSolution.class);
 
 			//2- Calculates and sets the maximum distance of this solution
-			SolutionDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			SolutionDistance pedagogicalSoftwareDistance = this.distanceCalculationService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
 			
 			//3- Searches if there is a solution for this exercise
 			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareSolution.getExercise().getId(), pedagogicalSoftwareSolution.getUserId());
 			
 			//4- If there is an existing pedagogical software solution, we update its data
-			if(pedagogicalSoftwareSolutions.size() > 0 ) {
+			if(!pedagogicalSoftwareSolutions.isEmpty()) {
+				logger.trace("Updating the pedagogical software solution");
+
 				PedagogicalSoftwareSolution pedagogicalSoftwareSolutionDb = pedagogicalSoftwareSolutions.get(0);
 				pedagogicalSoftwareSolutionDb.setElements(pedagogicalSoftwareSolution.getElements());
 				pedagogicalSoftwareSolutionDb.setScreenShot(pedagogicalSoftwareSolution.getScreenShot());
 				pedagogicalSoftwareSolutionDb.setBinary(pedagogicalSoftwareSolution.getBinary());
 				pedagogicalSoftwareSolutionDb.setMaximumDistance(pedagogicalSoftwareSolution.getMaximumDistance());
 				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
-				
-				if(objSaved != null) {
-					response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
-				}
-			}else {
+
+                response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
+				logger.trace("Added the pedagogical solution data in DB");
+            }else {
 				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
 				response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
+				logger.trace("Added the pedagogical solution data in DB");
 			}
 		}catch(JsonProcessingException e) {
-			e.printStackTrace();
+			logger.error("Error processing the following JSON: " + pse + ". \n + Error: " + e.getMessage());
 		}
 		
 		return response.toJSON();
@@ -118,7 +124,7 @@ public class PedagogicalSoftwareSolutionService {
 																										pedagogicalSoftwareData.getBinary(),
 																										pedagogicalSoftwareData.getElements(), 0);
 			//Calculates the maximum distance for this solution
-			SolutionDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			SolutionDistance pedagogicalSoftwareDistance = this.distanceCalculationService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
 
 			//Sets the maximum distance to this solution
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
@@ -152,7 +158,7 @@ public class PedagogicalSoftwareSolutionService {
 
 		if(solution != null){
 			//2- Checks if the solution comes from the validation of an exercise and we invalidate it
-			if(solution.getPedagogicalSoftwareDataId() != null && solution.getPedagogicalSoftwareDataId() != ""){
+			if(solution.getPedagogicalSoftwareDataId() != null && !solution.getPedagogicalSoftwareDataId().isEmpty()){
 
 				PedagogicalSoftwareData pedagogicalSoftwareData = this.pedagogicalSoftwareDataRepository.findById(solution.getPedagogicalSoftwareDataId()).orElse(null);
 				if(pedagogicalSoftwareData != null){

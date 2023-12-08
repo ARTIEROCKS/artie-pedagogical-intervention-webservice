@@ -55,4 +55,15 @@ public class PedagogicalSoftwareElement {
      * @param block
      */
     public void addBlock(PedagogicalSoftwareBlock block){this.blocks.add(block);}
+
+    @Override
+    public String toString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{");
+        for(PedagogicalSoftwareBlock block: blocks){
+            stringBuilder.append(block.toString());
+        }
+        stringBuilder.append("}");
+        return stringBuilder.toString();
+    }
 }

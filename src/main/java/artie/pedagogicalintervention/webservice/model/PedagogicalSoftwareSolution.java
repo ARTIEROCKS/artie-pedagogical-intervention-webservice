@@ -1,16 +1,13 @@
 package artie.pedagogicalintervention.webservice.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Id;
-
-import lombok.AllArgsConstructor;
+import artie.common.web.dto.Exercise;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import artie.common.web.dto.Exercise;
+import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -93,5 +90,14 @@ public class  PedagogicalSoftwareSolution {
 
 	public void addElement(PedagogicalSoftwareElement element) {
 		this.elements.add(element);
+	}
+
+	@Override
+	public String toString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		for(PedagogicalSoftwareElement element: elements){
+			stringBuilder.append(element.toString());
+		}
+		return stringBuilder.toString();
 	}
 }
