@@ -81,7 +81,9 @@ public class PedagogicalSoftwareService {
 		// 2- If there is at least 1 solution, we get the distances
 		SolutionDistance distance = null;
 		double maximumDistance = 0;
+		double maximumTreeDistance = 0;
 		double grade = 0;
+		double treeGrade = 0;
 		double apted = 0;
 		String pedagogicalSoftwareDataTree;
 		String pedagogicalSoftwareSolutionTree;
@@ -92,19 +94,24 @@ public class PedagogicalSoftwareService {
 			distance = (SolutionDistance)mapDistance.get("distance");
 			maximumDistance = (double)mapDistance.get("maximumDistance");
 			pedagogicalSoftwareData.setSolutionDistance(distance);
+			pedagogicalSoftwareData.setMaximumDistance(maximumDistance);
 
 			//2.2 Gets the APTED
 			pedagogicalSoftwareDataTree = pedagogicalSoftwareData.toString();
 			pedagogicalSoftwareSolutionTree = pedagogicalSoftwareSolution.toString();
 
 			apted = distanceCalculationService.aptedDistanceCalculation(pedagogicalSoftwareDataTree, pedagogicalSoftwareSolutionTree);
+			maximumTreeDistance = distanceCalculationService.aptedDistanceCalculation("{}", pedagogicalSoftwareSolutionTree);
 			pedagogicalSoftwareData.setAptedDistance(apted);
 			pedagogicalSoftwareData.setTree(pedagogicalSoftwareDataTree);
 			pedagogicalSoftwareData.setSolutionTree(pedagogicalSoftwareSolutionTree);
+			pedagogicalSoftwareData.setMaximumTreeDistance(maximumTreeDistance);
 
-			//2.3 Calculates and sets the grade in base of ARTIE distance
+			//2.3 Calculates and sets the different grades (ARTIE and APTED)
 			grade = this.calculateGrade(maximumDistance, distance.getTotalDistance(), 10);
+			treeGrade = this.calculateGrade(maximumTreeDistance, apted, 10);
 			pedagogicalSoftwareData.setGrade(grade);
+			pedagogicalSoftwareData.setTreeGrade(treeGrade);
 
 			//2.4 We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
 			if(pedagogicalSoftwareData.getExercise().isEvaluation() && distance.getTotalDistance() == 0 & pedagogicalSoftwareData.getStudent().getCompetence() == 0){
