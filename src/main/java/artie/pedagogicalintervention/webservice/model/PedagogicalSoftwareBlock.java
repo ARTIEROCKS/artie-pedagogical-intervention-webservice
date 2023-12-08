@@ -112,4 +112,20 @@ public class PedagogicalSoftwareBlock implements Cloneable {
 		
 		return new PedagogicalSoftwareBlock(this.id, this.elementName, this.elementFamily, cloneInputs, cloneNext, cloneNested, clonePrevious, cloneParent);
 	}
+
+	@Override
+	public String toString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("{").append(elementFamily).append("-").append(elementName);
+		stringBuilder.append("[");
+		for(PedagogicalSoftwareInput input: inputs){
+			stringBuilder.append(input.toString());
+		}
+		stringBuilder.append("]");
+		for(PedagogicalSoftwareBlock element: nested){
+			stringBuilder.append(element.toString());
+		}
+		stringBuilder.append("}");
+		return stringBuilder.toString();
+	}
 }

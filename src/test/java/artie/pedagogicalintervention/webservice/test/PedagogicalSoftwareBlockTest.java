@@ -87,4 +87,13 @@ class PedagogicalSoftwareBlockTest {
 		assertNotEquals(this.element22, this.element23);
 	}
 
+	@Test
+	void toStringElementTest(){
+		assertEquals(element1.toString(),"{family1-name1[(input1-input1[$field1:value1$$field11:value11$])]{nestedFamily1-nested1[(input1-input1[$field1:value1$$field11:value11$])]}}");
+		assertEquals(element2.toString(),"{family2-name2[(input2-input2[$field2:value2$$field21:value21$])]{nestedFamily2-nested2[(input2-input2[$field2:value2$$field21:value21$])]}}");
+		assertEquals(element21.toString(),"{family2-name2[(input2-input2[$field21:value21$$field211:value211$])]{nestedFamily21-nested21[(input2-input2[$field21:value21$$field211:value211$])]}}");
+		assertEquals(element22.toString(),"{family22-name2[(input2-input2[$field21:value21$$field211:value211$])]{nestedFamily21-nested21[(input2-input2[$field21:value21$$field211:value211$])]}}");
+		assertEquals(element23.toString(),"{family22-name23[(input2-input2[$field21:value21$$field211:value211$])]{nestedFamily21-nested21[(input2-input2[$field21:value21$$field211:value211$])]}}");
+	}
+
 }
