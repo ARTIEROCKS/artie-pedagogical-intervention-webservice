@@ -59,9 +59,7 @@ public class PedagogicalSoftwareService {
 
 	private Logger logger;
 
-	public PedagogicalSoftwareService(){
-		logger = LoggerFactory.getLogger(PedagogicalSoftwareService.class);
-	}
+	public PedagogicalSoftwareService(){}
 
 	@PostConstruct
 	public void setUp(){
@@ -71,6 +69,8 @@ public class PedagogicalSoftwareService {
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		headers.add("apiKey", this.apiKey);
 		this.entity = new HttpEntity<>("parameters", headers);
+
+		logger = LoggerFactory.getLogger(PedagogicalSoftwareService.class);
 	}
 
 	/**

@@ -13,6 +13,8 @@ import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSo
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +39,12 @@ public class PedagogicalSoftwareSolutionService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	private Logger logger;
+
 	@PostConstruct
 	public void setUp(){
 		this.objectMapper.registerModule(new JavaTimeModule());
+		logger = LoggerFactory.getLogger(PedagogicalSoftwareSolutionService.class);
 	}
 	
 	/**
@@ -61,7 +66,8 @@ public class PedagogicalSoftwareSolutionService {
 	 * @param pse
 	 */
 	public String add(String pse) {
-		
+
+		logger.info("Adding new pedagogical software solution");
 		Response response = new Response(null);
 		
 		try {					
@@ -77,6 +83,8 @@ public class PedagogicalSoftwareSolutionService {
 			
 			//4- If there is an existing pedagogical software solution, we update its data
 			if(!pedagogicalSoftwareSolutions.isEmpty()) {
+				logger.trace("Updating the pedagogical software solution");
+
 				PedagogicalSoftwareSolution pedagogicalSoftwareSolutionDb = pedagogicalSoftwareSolutions.get(0);
 				pedagogicalSoftwareSolutionDb.setElements(pedagogicalSoftwareSolution.getElements());
 				pedagogicalSoftwareSolutionDb.setScreenShot(pedagogicalSoftwareSolution.getScreenShot());
@@ -85,12 +93,14 @@ public class PedagogicalSoftwareSolutionService {
 				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
 
                 response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
+				logger.trace("Added the pedagogical solution data in DB");
             }else {
 				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
 				response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
+				logger.trace("Added the pedagogical solution data in DB");
 			}
 		}catch(JsonProcessingException e) {
-			e.printStackTrace();
+			logger.error("Error processing the following JSON: " + pse + ". \n + Error: " + e.getMessage());
 		}
 		
 		return response.toJSON();
