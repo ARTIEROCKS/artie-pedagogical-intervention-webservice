@@ -11,6 +11,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import one.util.streamex.StreamEx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -54,7 +56,12 @@ public class PedagogicalSoftwareService {
 	public PedagogicalSoftwareService(RestTemplateBuilder builder){
 		this.restTemplate = builder.build();
 	}
-	public PedagogicalSoftwareService(){}
+
+	private Logger logger;
+
+	public PedagogicalSoftwareService(){
+		logger = LoggerFactory.getLogger(PedagogicalSoftwareService.class);
+	}
 
 	@PostConstruct
 	public void setUp(){
@@ -76,6 +83,7 @@ public class PedagogicalSoftwareService {
 		Response response = new Response(null);
 
 		// 1- Looks for the solution to the exercise
+		logger.trace("Looking for the solution to the exercise");
 		List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareData.getExercise().getId(), pedagogicalSoftwareData.getStudent().getUserId());
 
 		// 2- If there is at least 1 solution, we get the distances
@@ -113,18 +121,23 @@ public class PedagogicalSoftwareService {
 			pedagogicalSoftwareData.setGrade(grade);
 			pedagogicalSoftwareData.setTreeGrade(treeGrade);
 
+			logger.trace("Distances calculated. Maximum ARTIE Distance: " + maximumDistance + " - ARTIE Distance: " + distance.getTotalDistance() + " - ARTIE Grade: " + grade +
+					     " - Maximum APTED Distance: " + maximumTreeDistance + " - APTED Distance: " + apted + " - APTED Grade: " + treeGrade);
+
 			//2.4 We look if the exercise is an evaluation or not, and distance is 0, and the student has not set the competence
 			if(pedagogicalSoftwareData.getExercise().isEvaluation() && distance.getTotalDistance() == 0 & pedagogicalSoftwareData.getStudent().getCompetence() == 0){
 				//We set the competence as the level of the exercise
 				pedagogicalSoftwareData.getStudent().setCompetence(pedagogicalSoftwareData.getExercise().getLevel());
 				ResponseEntity<Response> wsResponse = this.restTemplate.exchange(this.updateCompetenceUrl + "?studentId=" + pedagogicalSoftwareData.getStudent().getId() + "&competence=" + pedagogicalSoftwareData.getExercise().getLevel(), HttpMethod.GET, this.entity, Response.class);
 				response = wsResponse.getBody();
+				logger.trace("Setting the student competence as " + pedagogicalSoftwareData.getExercise().getLevel());
 			}else if (pedagogicalSoftwareData.getExercise().isEvaluation() && distance.getTotalDistance() == 0){
 				//If the exercise is an evaluation, and the distance is 0, we set the competence of the student
 				int level = (pedagogicalSoftwareData.getExercise().getLevel() - 1 == 0 ? pedagogicalSoftwareData.getExercise().getLevel() : pedagogicalSoftwareData.getExercise().getLevel() - 1);
 				pedagogicalSoftwareData.getStudent().setCompetence(level);
 				ResponseEntity<Response> wsResponse = this.restTemplate.exchange(this.updateCompetenceUrl + "?studentId=" + pedagogicalSoftwareData.getStudent().getId() + "&competence=" + level, HttpMethod.GET, this.entity, Response.class);
 				response = wsResponse.getBody();
+				logger.trace("Setting the student competence as " + level);
 			}
 		}
 
@@ -135,9 +148,19 @@ public class PedagogicalSoftwareService {
 		if(pedagogicalSoftwareData.isRequestHelp() && distance == null){
 			//3.1 If the distance is null, and we have requested help, there must be an error
 			response = new Response(new ResponseBody(ResponseCodeEnum.ERROR.toString()));
-		}else{
+            try {
+                logger.error("The distance is null and there is help requested from the student:" + this.objectMapper.writeValueAsString(pedagogicalSoftwareData.getStudent()));
+            } catch (JsonProcessingException e) {
+                logger.error("Error trying to map an object to JSON: " + e.getMessage());
+            }
+        }else{
 			//3.2 We send that everything is OK and the help result object
 			response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString(), helpResult));
+			try {
+				logger.trace("Help result (" + this.objectMapper.writeValueAsString(helpResult) + ") from the student:" + this.objectMapper.writeValueAsString(pedagogicalSoftwareData.getStudent()));
+			} catch (JsonProcessingException e) {
+				logger.error("Error trying to map an object to JSON: " + e.getMessage());
+			}
 		}
 
 		return response.toJSON();
@@ -151,27 +174,31 @@ public class PedagogicalSoftwareService {
 	public String add(String psd) {
 
 		String response = "";
+		logger.info("Adding new pedagogical software data");
 
 		try {
 
 			// 1. Transforms the string into the pedagogical software data
 			PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
 					PedagogicalSoftwareData.class);
+			logger.trace("JSON transformed into an object");
 
 			// 2.1 Calls the help model to get if the help must be shown or not
 			boolean helpNeeded = false;
 			try{
 				helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
+				logger.trace("Predicted help need: " + helpNeeded);
 			}catch(Exception ex){
-				ex.printStackTrace();
+				logger.error("Error predicting help need: " + ex.getMessage());
 			}
 
 			// 2.2 Adds the predicted need help into the response
 			pedagogicalSoftwareData.setPredictedNeedHelp(helpNeeded);
 			response = this.add(pedagogicalSoftwareData);
+			logger.trace("Added the pedagogical software data in DB");
 
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.error("Error processing the following JSON: " + psd + ". \n + Error: " + e.getMessage());
 		}
 
 		return response;
@@ -227,6 +254,8 @@ public class PedagogicalSoftwareService {
 	 * @param validated
 	 */
 	public void validateFinishedExerciseByPedagogicalDataId(String pedagogicalDataId, int validated){
+
+		logger.info("Validating finished exercise: " + pedagogicalDataId + " as " + validated );
 
 		//1- Searches the pedagogical software data by its ID
 		PedagogicalSoftwareData pedagogicalSoftwareData = this.pedagogicalSoftwareDataRepository.findById(pedagogicalDataId).orElse(null);
@@ -331,6 +360,8 @@ public class PedagogicalSoftwareService {
 	 */
 	public String updateAnsweredNeedHelpById(String id, boolean answeredNeedHelp){
 
+		logger.trace("Updating answered need help");
+
 		Response response = new Response();
 
 		//Updates the pedagogical software data with the answered need help information
@@ -339,6 +370,7 @@ public class PedagogicalSoftwareService {
 		// If we have the pedagogical software data
 		if(psd != null){
 
+			logger.trace("PedagogicalSoftwareData id: " + id + " - Predicted Need Help: " + psd.isPredictedNeedHelp() " - Answered Need Help: " + answeredNeedHelp);
 			psd.setAnsweredNeedHelp(answeredNeedHelp);
 
 			// We check if the user wants help
