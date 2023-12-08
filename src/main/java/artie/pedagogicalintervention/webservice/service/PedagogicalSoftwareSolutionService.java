@@ -1,26 +1,23 @@
 package artie.pedagogicalintervention.webservice.service;
 
-import java.util.List;
-
+import artie.common.web.dto.Exercise;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.ResponseBody;
 import artie.common.web.dto.SolutionDistance;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
+import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import artie.common.web.dto.Exercise;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
-import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareSolutionRepository;
-
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Service
 public class PedagogicalSoftwareSolutionService {
@@ -33,6 +30,9 @@ public class PedagogicalSoftwareSolutionService {
 
 	@Autowired
 	private PedagogicalSoftwareService pedagogicalSoftwareService;
+
+	@Autowired
+	private DistanceCalculationService distanceCalculationService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -71,7 +71,7 @@ public class PedagogicalSoftwareSolutionService {
 			PedagogicalSoftwareSolution pedagogicalSoftwareSolution = this.objectMapper.readValue(pse, PedagogicalSoftwareSolution.class);
 
 			//2- Calculates and sets the maximum distance of this solution
-			SolutionDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			SolutionDistance pedagogicalSoftwareDistance = this.distanceCalculationService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
 			
 			//3- Searches if there is a solution for this exercise
@@ -118,7 +118,7 @@ public class PedagogicalSoftwareSolutionService {
 																										pedagogicalSoftwareData.getBinary(),
 																										pedagogicalSoftwareData.getElements(), 0);
 			//Calculates the maximum distance for this solution
-			SolutionDistance pedagogicalSoftwareDistance = this.pedagogicalSoftwareService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+			SolutionDistance pedagogicalSoftwareDistance = this.distanceCalculationService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
 
 			//Sets the maximum distance to this solution
 			pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());

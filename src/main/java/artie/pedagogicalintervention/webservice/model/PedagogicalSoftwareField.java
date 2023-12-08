@@ -24,12 +24,13 @@ public class PedagogicalSoftwareField implements Cloneable {
 	    if (this.getClass() != obj.getClass()) return false;
 		PedagogicalSoftwareField objField = (PedagogicalSoftwareField) obj;
 		
-		return (this.name.toLowerCase().equals(objField.getName().toLowerCase()) && this.value.toLowerCase().equals(objField.getValue().toLowerCase()));
+		return (this.name.equalsIgnoreCase(objField.getName()) && this.value.equalsIgnoreCase(objField.getValue()));
 	}
 	
 	/**
 	 * Overrides clone
 	 */
+	@Override
 	public PedagogicalSoftwareField clone() {
 		return new PedagogicalSoftwareField(name, value);
 	}
@@ -50,9 +51,14 @@ public class PedagogicalSoftwareField implements Cloneable {
 	public double getDoubleValue() {
 		
 		if(this.isNumeric()) {
-			return Double.valueOf(this.value);
+			return Double.parseDouble(this.value);
 		}else {
 			return 0;
 		}
+	}
+
+	@Override
+	public String toString(){
+		return "$"+name+":"+value+"$";
 	}
 }

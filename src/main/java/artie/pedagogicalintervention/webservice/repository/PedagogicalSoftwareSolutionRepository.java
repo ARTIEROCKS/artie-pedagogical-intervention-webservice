@@ -1,11 +1,9 @@
 package artie.pedagogicalintervention.webservice.repository;
 
-import java.util.List;
-
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import artie.common.web.dto.Exercise;
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
+import java.util.List;
 
 public interface PedagogicalSoftwareSolutionRepository extends MongoRepository<PedagogicalSoftwareSolution, String>{
 	List<PedagogicalSoftwareSolution> findByUserId(String userId);

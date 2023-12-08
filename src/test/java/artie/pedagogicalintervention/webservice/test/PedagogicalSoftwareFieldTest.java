@@ -1,11 +1,11 @@
 package artie.pedagogicalintervention.webservice.test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareField;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class PedagogicalSoftwareFieldTest {
 
@@ -34,6 +34,15 @@ class PedagogicalSoftwareFieldTest {
 		assertNotEquals(this.field1, this.field21);
 		assertNotEquals(this.field1, this.field22);
 		assertNotEquals(this.field21, this.field22);
+	}
+
+	@Test
+	void toStringTest(){
+		assertEquals(this.field1.toString(),"$field1:value1$");
+		assertEquals(this.field11.toString(),"$Field1:Value1$");
+		assertEquals(this.field111.toString(),"$FIELD1:VALUE1$");
+		assertEquals(this.field21.toString(),"$field2:value1$");
+		assertEquals(this.field22.toString(),"$field2:value2$");
 	}
 
 }
