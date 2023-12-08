@@ -10,14 +10,22 @@ import at.unisalzburg.dbresearch.apted.distance.APTED;
 import at.unisalzburg.dbresearch.apted.node.Node;
 import at.unisalzburg.dbresearch.apted.node.StringNodeData;
 import at.unisalzburg.dbresearch.apted.parser.BracketStringInputParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class DistanceCalculationService {
 
+    private Logger logger;
 
+    @PostConstruct
+    public void setUp(){
+        logger = LoggerFactory.getLogger(DistanceCalculationService.class);
+    }
 
     /**
      * Function to get all the blocks in a single list
@@ -93,6 +101,7 @@ public class DistanceCalculationService {
      */
     public Map<String, Object> distanceCalculation(PedagogicalSoftwareData origin, List<PedagogicalSoftwareSolution> aims){
 
+        logger.info("Getting the ARTIE distance calculation");
         Map<String, Object> result = new HashMap<>();
         SolutionDistance nearestDistance = null;
         double maximumDistance = 0;
@@ -100,6 +109,7 @@ public class DistanceCalculationService {
         //1- Gets the distance between all the solutions
         for(PedagogicalSoftwareSolution aim : aims){
             SolutionDistance distance = this.distanceCalculation(origin, aim);
+            logger.debug("ARTIE distance (" + distance + ") between origin: " + origin.toString() + " and aim: " + aim.toString());
 
             //2- Sets the nearest distance
             if(nearestDistance == null || distance.getTotalDistance() < nearestDistance.getTotalDistance()){
@@ -107,6 +117,8 @@ public class DistanceCalculationService {
                 maximumDistance = aim.getMaximumDistance();
             }
         }
+
+        logger.trace("ARTIE Distance calculation: " + nearestDistance + " - maximum distance calculation: " + maximumDistance);
 
         result.put("distance", nearestDistance);
         result.put("maximumDistance", maximumDistance);
@@ -758,12 +770,18 @@ public class DistanceCalculationService {
      * @return
      */
     public double aptedDistanceCalculation(String origin, String aim){
+
+        logger.info("Getting the APTED distance calculation");
         BracketStringInputParser inputParser = new BracketStringInputParser();
         Node<StringNodeData> originNode = inputParser.fromString(origin);
         Node<StringNodeData> aimNode = inputParser.fromString(aim);
 
         //Initializing APTED
         APTED<StringUnitCostModel, StringNodeData> apted = new APTED<>(new StringUnitCostModel());
+        double distance = apted.computeEditDistance(originNode, aimNode);
+
+        logger.trace("APTED Distance calculation: " + distance);
+        logger.debug("APTED Distance calculation (" + distance + ") from: " + origin + " to : " + aim);
 
         //APTED execution
         return apted.computeEditDistance(originNode, aimNode);
