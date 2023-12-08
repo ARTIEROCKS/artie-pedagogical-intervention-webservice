@@ -5,6 +5,8 @@ import artie.pedagogicalintervention.webservice.model.EmotionalStateMessage;
 import artie.sensor.common.dto.SensorObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +37,8 @@ public class EmotionalStateService {
     @Value("${artie.webservices.emotional.url}")
     private String emotionalWebserviceUrl;
 
+    private Logger logger;
+
 
     @Autowired
     public EmotionalStateService(RabbitTemplate rabbitTemplate, RestTemplateBuilder builder) {
@@ -49,6 +53,7 @@ public class EmotionalStateService {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("apiKey", this.apiKey);
         this.entity = new HttpEntity<String>("parameters", headers);
+        logger = LoggerFactory.getLogger(EmotionalStateService.class);
     }
 
 
@@ -60,6 +65,7 @@ public class EmotionalStateService {
     public void sendEmotionalStateMessage(List<SensorObject> messages, String externalId) {
 
         // Declare the queue if it doesn't exist
+        logger.info("Sending emotional state messages to external id " + externalId);
         rabbitTemplate.execute(channel -> {
             channel.queueDeclare(this.queue, true, false, false, null);
             return null;
@@ -69,10 +75,12 @@ public class EmotionalStateService {
         messages.forEach(d -> {
             String json = null;
             try {
+                logger.trace("Sending emotional message to rabbit queue");
                 json = mapper.writeValueAsString(new EmotionalStateMessage(d, externalId));
+                logger.debug("Sending emotional message: " + json);
                 rabbitTemplate.convertAndSend(this.queue, json);
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                logger.error("Error parsing JSON: " + e.getMessage());
             }
         });
     }
@@ -84,6 +92,7 @@ public class EmotionalStateService {
      */
     public EmotionalStateDTO predict(String studentId) {
 
+        logger.info("Predicting emotional state for student id: " + studentId);
         EmotionalStateDTO emotionalState = null;
 
         try {
@@ -93,9 +102,10 @@ public class EmotionalStateService {
 
             //2- Transforms the string into the object
             emotionalState = new ObjectMapper().readValue(wsResponse, EmotionalStateDTO.class);
+            logger.trace("Emotional state dectected: " + emotionalState + " for student id: " + studentId);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error when trying to predict emotional state: " + e.getMessage());
         }
 
         //3- Returns the boolean body object

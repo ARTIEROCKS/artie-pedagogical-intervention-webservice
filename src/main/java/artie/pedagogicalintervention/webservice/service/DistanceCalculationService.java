@@ -22,6 +22,8 @@ public class DistanceCalculationService {
 
     private Logger logger;
 
+    public DistanceCalculationService(){logger = LoggerFactory.getLogger(DistanceCalculationService.class);}
+
     @PostConstruct
     public void setUp(){
         logger = LoggerFactory.getLogger(DistanceCalculationService.class);
