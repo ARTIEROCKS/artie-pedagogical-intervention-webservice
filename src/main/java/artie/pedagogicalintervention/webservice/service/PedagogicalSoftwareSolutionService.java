@@ -50,12 +50,10 @@ public class PedagogicalSoftwareSolutionService {
 		
 		Response response = new Response(null);
 		PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pss);
-		
-		if(objSaved != null) {
-			response = new Response(new ResponseBody("OK"));
-		}
-		
-		return response.toJSON();
+
+        response = new Response(new ResponseBody("OK"));
+
+        return response.toJSON();
 	}
 	
 	/**
@@ -78,18 +76,16 @@ public class PedagogicalSoftwareSolutionService {
 			List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolutions = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareSolution.getExercise().getId(), pedagogicalSoftwareSolution.getUserId());
 			
 			//4- If there is an existing pedagogical software solution, we update its data
-			if(pedagogicalSoftwareSolutions.size() > 0 ) {
+			if(!pedagogicalSoftwareSolutions.isEmpty()) {
 				PedagogicalSoftwareSolution pedagogicalSoftwareSolutionDb = pedagogicalSoftwareSolutions.get(0);
 				pedagogicalSoftwareSolutionDb.setElements(pedagogicalSoftwareSolution.getElements());
 				pedagogicalSoftwareSolutionDb.setScreenShot(pedagogicalSoftwareSolution.getScreenShot());
 				pedagogicalSoftwareSolutionDb.setBinary(pedagogicalSoftwareSolution.getBinary());
 				pedagogicalSoftwareSolutionDb.setMaximumDistance(pedagogicalSoftwareSolution.getMaximumDistance());
 				PedagogicalSoftwareSolution objSaved = this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolutionDb);
-				
-				if(objSaved != null) {
-					response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
-				}
-			}else {
+
+                response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
+            }else {
 				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
 				response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString()));
 			}
@@ -152,7 +148,7 @@ public class PedagogicalSoftwareSolutionService {
 
 		if(solution != null){
 			//2- Checks if the solution comes from the validation of an exercise and we invalidate it
-			if(solution.getPedagogicalSoftwareDataId() != null && solution.getPedagogicalSoftwareDataId() != ""){
+			if(solution.getPedagogicalSoftwareDataId() != null && !solution.getPedagogicalSoftwareDataId().isEmpty()){
 
 				PedagogicalSoftwareData pedagogicalSoftwareData = this.pedagogicalSoftwareDataRepository.findById(solution.getPedagogicalSoftwareDataId()).orElse(null);
 				if(pedagogicalSoftwareData != null){
