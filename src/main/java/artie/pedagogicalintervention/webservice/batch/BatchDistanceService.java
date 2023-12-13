@@ -101,5 +101,8 @@ public class BatchDistanceService {
             log.info("Finished the process of Pedagogical Software Data id " + psd.getId());
         }
 
+        log.info("Updating all the elements");
+        softwareService.updateAll(elements);
+        log.info("Updating process finished");
     }
 }
