@@ -67,14 +67,14 @@ public class BatchDistanceService {
                 maximumTreeDistance = distanceCalculationService.aptedDistanceCalculation("{}", solutionTree);
                 aptedDistance = distanceCalculationService.aptedDistanceCalculation(tree, solutionTree);
             }
-            log.trace("Old APTED Distance: " + psd.getAptedDistance() + " - New APTED Distance: " + aptedDistance);
+            log.info("Old APTED Distance: " + psd.getAptedDistance() + " - New APTED Distance: " + aptedDistance);
 
             //Calculates the grades
             double artieGrade = 0.0;
             double aptedGrade = 0.0;
             if(maximumDistance != null && bestDistance != null) {
                 artieGrade = softwareService.calculateGrade(maximumDistance.getTotalDistance(), bestDistance.getTotalDistance(), 10);
-                log.trace("Old ARTIE Grade: " + psd.getGrade() + " - New ARTIE Grade: " + artieGrade);
+                log.info("Old ARTIE Grade: " + psd.getGrade() + " - New ARTIE Grade: " + artieGrade);
             }
             aptedGrade = softwareService.calculateGrade(maximumTreeDistance, aptedDistance, 10);
             log.trace("Old Tree Grade: " + psd.getTreeGrade() + " - New Tree Grade: " + aptedGrade);
