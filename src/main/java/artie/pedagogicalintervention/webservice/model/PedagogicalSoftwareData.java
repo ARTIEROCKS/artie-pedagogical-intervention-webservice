@@ -28,6 +28,7 @@ public class PedagogicalSoftwareData {
 	private double maximumDistance;
 	private double aptedDistance;
 	private String tree;
+	private PedagogicalSoftwareSolution relatedSolution;
 	private String solutionTree;
 	private double maximumTreeDistance;
 	private LocalDateTime dateTime;
