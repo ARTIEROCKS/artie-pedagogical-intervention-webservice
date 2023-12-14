@@ -126,6 +126,12 @@ public class PedagogicalSoftwareBlock implements Cloneable {
 			stringBuilder.append(element.toString());
 		}
 		stringBuilder.append("}");
+
+		//We add the next element to String
+		if (next!=null) {
+            stringBuilder.append(next.toString());
+		}
+
 		return stringBuilder.toString();
 	}
 }

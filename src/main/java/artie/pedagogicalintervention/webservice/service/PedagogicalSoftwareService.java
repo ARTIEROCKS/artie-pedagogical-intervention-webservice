@@ -74,6 +74,22 @@ public class PedagogicalSoftwareService {
 	}
 
 	/**
+	 * Function to find all the elements in the database
+	 * @return
+	 */
+	public List<PedagogicalSoftwareData> findAll(){
+		return this.pedagogicalSoftwareDataRepository.findAll();
+	}
+
+	/**
+	 * Function to update a pedagogical software data
+	 * @param psd
+	 */
+	public void updateAll(List<PedagogicalSoftwareData> psd){
+		this.pedagogicalSoftwareDataRepository.saveAll(psd);
+	}
+
+	/**
 	 * Function to add the pedagogical software data in the database
 	 * 
 	 * @param pedagogicalSoftwareData
