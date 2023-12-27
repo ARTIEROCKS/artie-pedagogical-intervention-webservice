@@ -100,7 +100,11 @@ public class PedagogicalSoftwareService {
 
 		// 1- Looks for the solution to the exercise
 		logger.trace("Looking for the solution to the exercise");
-		List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareData.getExercise().getId(), pedagogicalSoftwareData.getStudent().getUserId());
+		List<PedagogicalSoftwareSolution> pedagogicalSoftwareSolution = null;
+
+		if(pedagogicalSoftwareData.getExercise() != null && pedagogicalSoftwareData.getStudent()!= null){
+			pedagogicalSoftwareSolution = this.pedagogicalSoftwareSolutionRepository.findByExercise_IdAndUserId(pedagogicalSoftwareData.getExercise().getId(), pedagogicalSoftwareData.getStudent().getUserId());
+		}
 
 		// 2- If there is at least 1 solution, we get the distances
 		SolutionDistance distance = null;
@@ -111,7 +115,7 @@ public class PedagogicalSoftwareService {
 		double apted = 0;
 		String pedagogicalSoftwareDataTree;
 		String pedagogicalSoftwareSolutionTree;
-		if (pedagogicalSoftwareSolution != null && !pedagogicalSoftwareSolution.isEmpty()) {
+		if (pedagogicalSoftwareSolution != null) {
 
 			//2.1 Gets the distance
 			Map<String, Object> mapDistance = distanceCalculationService.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
