@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,6 +35,7 @@ public class BatchDistanceService {
             //Calculates the maximum tree distance
             double maximumTreeDistance = distanceCalculationService.aptedDistanceCalculation("{}", solution.toString());
             solution.setMaximumTreeDistance(maximumTreeDistance);
+            solution.setTree(solution.toString());
 
             //Saves the solution
             solutionService.save(solution);
@@ -47,11 +49,17 @@ public class BatchDistanceService {
             log.info("Starting the process of Pedagogical Software Data id " + psd.getId());
 
             //We get all the possible solutions in the database for this exercise
-            log.trace("Getting all the possible solutions for the exercise id (" + psd.getExercise().getId() +") and the student id (" + psd.getStudent().getId() + ")");
-            solutions = solutionService.findByExerciseAndUserId(psd.getExercise(), psd.getStudent().getUserId());
+            if(psd.getExercise() != null && psd.getStudent() != null) {
+                log.trace("Getting all the possible solutions for the exercise id (" + psd.getExercise().getId() +") and the student id (" + psd.getStudent().getId() + ")");
+                solutions = solutionService.findByExerciseAndUserId(psd.getExercise(), psd.getStudent().getUserId());
+            }else{
+                solutions = new ArrayList<>();
+            }
 
             //Calculates ARTIE distances between the pedagogical software data and the different solutions
-            log.info("Calculating ARTIE distances. Solutions found: " + solutions.size() + " for exercise id (" + psd.getExercise().getId() +") and the student id (" + psd.getStudent().getId() + ")");
+            if(psd.getExercise() != null && psd.getStudent() != null) {
+                log.info("Calculating ARTIE distances. Solutions found: " + solutions.size() + " for exercise id (" + psd.getExercise().getId() + ") and the student id (" + psd.getStudent().getId() + ")");
+            }
             PedagogicalSoftwareSolution bestSolution = null;
             SolutionDistance bestDistance = null;
             SolutionDistance currentDistance;
@@ -77,14 +85,16 @@ public class BatchDistanceService {
                 }
             }
 
-            if(bestDistance != null) {
+            if(bestDistance != null && psd.getSolutionDistance() != null) {
                 log.trace("Old ARTIE Distance: " + psd.getSolutionDistance().getTotalDistance() + " - New ARTIE Distance: " + bestDistance.getTotalDistance());
             }else{
                 log.error("ARTIE Distance is NULL");
             }
 
             //Calculates the APTED distances with respect the best solution
-            log.info("Calculating APTED distances. Solutions found: " + solutions.size() + " for exercise id (" + psd.getExercise().getId() +") and the student id (" + psd.getStudent().getId() + ")");
+            if(psd.getExercise() != null && psd.getStudent() != null) {
+                log.info("Calculating APTED distances. Solutions found: " + solutions.size() + " for exercise id (" + psd.getExercise().getId() + ") and the student id (" + psd.getStudent().getId() + ")");
+            }
             SolutionDistance maximumDistance = null;
             double maximumTreeDistance = 0.0;
             double aptedDistance = 0.0;
