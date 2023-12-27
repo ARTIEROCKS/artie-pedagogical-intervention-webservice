@@ -295,9 +295,11 @@ public class PedagogicalSoftwareService {
 
 				//Calculates the maximum distance for this solution
 				SolutionDistance pedagogicalSoftwareDistance = distanceCalculationService.distanceCalculation(new PedagogicalSoftwareData(), pedagogicalSoftwareSolution);
+				double maximumTreeDistance = distanceCalculationService.aptedDistanceCalculation("{}", pedagogicalSoftwareSolution.toString());
 
 				//Sets the maximum distance to this solution
 				pedagogicalSoftwareSolution.setMaximumDistance(pedagogicalSoftwareDistance.getTotalDistance());
+				pedagogicalSoftwareSolution.setMaximumTreeDistance(maximumTreeDistance);
 
 				//Save the pedagogical software solution in the database
 				this.pedagogicalSoftwareSolutionRepository.save(pedagogicalSoftwareSolution);
@@ -316,7 +318,16 @@ public class PedagogicalSoftwareService {
 
 				double maximumDistance = (double)mapDistance.get("maximumDistance");
 				double grade = this.calculateGrade(maximumDistance, pedagogicalSoftwareDistance.getTotalDistance(), 10);
+				pedagogicalSoftwareData.setMaximumDistance(maximumDistance);
 				pedagogicalSoftwareData.setGrade(grade);
+
+				//Calculating the APTED distances
+				double treeDistance = (double) mapDistance.get("treeDistance");
+				double maximumTreeDistance = (double) mapDistance.get("maximumTreeDistance");
+				double treeGrade = this.calculateGrade(maximumTreeDistance, treeDistance, 10);
+				pedagogicalSoftwareData.setAptedDistance(treeDistance);
+				pedagogicalSoftwareData.setMaximumTreeDistance(maximumTreeDistance);
+				pedagogicalSoftwareData.setTreeGrade(treeGrade);
 			}
 
 			pedagogicalSoftwareData.setValidSolution(validated);
@@ -398,13 +409,17 @@ public class PedagogicalSoftwareService {
 				// 2- Calculates the distance and the next steps
                 assert pss != null;
                 SolutionDistance solutionDistance = distanceCalculationService.distanceCalculation(psd, pss);
+				double solutionTreeDistance = distanceCalculationService.aptedDistanceCalculation(psd.toString(), pss.toString());
 
 				// 3- Gets the new grade of the user
 				double newGrade = this.calculateGrade(pss.getMaximumDistance(), solutionDistance.getTotalDistance(), 10);
+				double newTreeGrade = this.calculateGrade(pss.getMaximumTreeDistance(), solutionTreeDistance, 10);
 
 				// 4- Updates the pedagogical software data
 				psd.setSolutionDistance(solutionDistance);
 				psd.setGrade(newGrade);
+				psd.setAptedDistance(solutionTreeDistance);
+				psd.setTreeGrade(newTreeGrade);
 			}
 
 			this.pedagogicalSoftwareDataRepository.save(psd);

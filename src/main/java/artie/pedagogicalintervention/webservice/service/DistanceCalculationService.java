@@ -105,27 +105,41 @@ public class DistanceCalculationService {
      */
     public Map<String, Object> distanceCalculation(PedagogicalSoftwareData origin, List<PedagogicalSoftwareSolution> aims){
 
-        logger.info("Getting the ARTIE distance calculation");
+        logger.info("Getting the ARTIE and APTED distance calculation");
         Map<String, Object> result = new HashMap<>();
         SolutionDistance nearestDistance = null;
         double maximumDistance = 0;
+        double nearestTreeDistance = -1;
+        double maximumTreeDistance = 0;
 
         //1- Gets the distance between all the solutions
         for(PedagogicalSoftwareSolution aim : aims){
             SolutionDistance distance = this.distanceCalculation(origin, aim);
             logger.debug("ARTIE distance (" + distance + ") between origin: " + origin.toString() + " and aim: " + aim.toString());
 
-            //2- Sets the nearest distance
+            double treeDistance = this.aptedDistanceCalculation(origin.toString(), aim.toString());
+            logger.debug("APTED distance (" + treeDistance + ") between origin: " + origin.toString() + " and aim: " + aim.toString());
+
+            //2- Sets the nearest ARTIE distance
             if(nearestDistance == null || distance.getTotalDistance() < nearestDistance.getTotalDistance()){
                 nearestDistance = distance;
                 maximumDistance = aim.getMaximumDistance();
             }
+
+            //3- Sets the nearest APTED distance
+            if(nearestTreeDistance == -1 || treeDistance < nearestTreeDistance ){
+                nearestTreeDistance = treeDistance;
+                maximumTreeDistance = aim.getMaximumTreeDistance();
+            }
         }
 
         logger.trace("ARTIE Distance calculation: " + nearestDistance + " - maximum distance calculation: " + maximumDistance);
+        logger.trace("APTED Distance calculation: " + nearestTreeDistance + " - maximum distance calculation: " + maximumTreeDistance);
 
         result.put("distance", nearestDistance);
         result.put("maximumDistance", maximumDistance);
+        result.put("treeDistance", nearestTreeDistance);
+        result.put("maximumTreeDistance", maximumTreeDistance);
         return result;
     }
 
@@ -768,7 +782,7 @@ public class DistanceCalculationService {
     }
 
     /**
-     * Functionm to calculate the APTED distance
+     * Function to calculate the APTED distance
      * @param origin
      * @param aim
      * @return

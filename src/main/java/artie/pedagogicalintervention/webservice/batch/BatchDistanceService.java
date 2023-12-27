@@ -25,6 +25,21 @@ public class BatchDistanceService {
 
     public void process(){
 
+        //Getting all the pedagogical software solutions elements
+        List<PedagogicalSoftwareSolution> solutions = solutionService.findAll();
+        log.info("Found " + solutions.size() + " solutions");
+        for(PedagogicalSoftwareSolution solution: solutions){
+            log.info("Starting the process of Pedagogical Software Solution id " + solution.getId());
+
+            //Calculates the maximum tree distance
+            double maximumTreeDistance = distanceCalculationService.aptedDistanceCalculation("{}", solution.toString());
+            solution.setMaximumTreeDistance(maximumTreeDistance);
+
+            //Saves the solution
+            solutionService.save(solution);
+        }
+
+        //Getting all the pedagogical software data elements
         List<PedagogicalSoftwareData> elements = softwareService.findAll();
         log.info("Found " +elements.size() + " elements");
 
@@ -33,18 +48,32 @@ public class BatchDistanceService {
 
             //We get all the possible solutions in the database for this exercise
             log.trace("Getting all the possible solutions for the exercise id (" + psd.getExercise().getId() +") and the student id (" + psd.getStudent().getId() + ")");
-            List<PedagogicalSoftwareSolution> solutions = solutionService.findByExerciseAndUserId(psd.getExercise(), psd.getStudent().getUserId());
+            solutions = solutionService.findByExerciseAndUserId(psd.getExercise(), psd.getStudent().getUserId());
 
             //Calculates ARTIE distances between the pedagogical software data and the different solutions
             log.info("Calculating ARTIE distances. Solutions found: " + solutions.size() + " for exercise id (" + psd.getExercise().getId() +") and the student id (" + psd.getStudent().getId() + ")");
             PedagogicalSoftwareSolution bestSolution = null;
             SolutionDistance bestDistance = null;
             SolutionDistance currentDistance;
+
+            PedagogicalSoftwareSolution bestTreeSolution = null;
+            double bestTreeDistance = -1;
+            double currentTreeDistance = 0;
+
             for (PedagogicalSoftwareSolution solution: solutions){
+
+                //Gets the best solution in base of the ARTIE distance
                 currentDistance = distanceCalculationService.distanceCalculation(psd, solution);
                 if (bestDistance == null || bestDistance.getTotalDistance() > currentDistance.getTotalDistance()) {
                     bestDistance = currentDistance;
                     bestSolution = solution;
+                }
+
+                //Gets the best solution in base of the tree distance
+                currentTreeDistance = distanceCalculationService.aptedDistanceCalculation(psd.toString(), solution.toString());
+                if(bestTreeDistance == -1 || bestTreeDistance > currentTreeDistance){
+                    bestTreeDistance = currentTreeDistance;
+                    bestTreeSolution = solution;
                 }
             }
 
@@ -61,9 +90,15 @@ public class BatchDistanceService {
             double aptedDistance = 0.0;
             String tree  = psd.toString();
             String solutionTree = "";
+
+            //Calculating the ARTIE distance with respect the best solution get by the same method
             if (bestSolution != null) {
                 maximumDistance = distanceCalculationService.distanceCalculation(new PedagogicalSoftwareData(), bestSolution);
-                solutionTree = bestSolution.toString();
+            }
+
+            //Calculating the APTED distance with respect the best solution get by the same method
+            if(bestTreeSolution != null){
+                solutionTree = bestTreeSolution.toString();
                 maximumTreeDistance = distanceCalculationService.aptedDistanceCalculation("{}", solutionTree);
                 aptedDistance = distanceCalculationService.aptedDistanceCalculation(tree, solutionTree);
             }
