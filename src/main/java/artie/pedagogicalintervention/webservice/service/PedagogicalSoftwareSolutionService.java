@@ -199,4 +199,20 @@ public class PedagogicalSoftwareSolutionService {
 	public PedagogicalSoftwareSolution findById(String id){
 		return this.pedagogicalSoftwareSolutionRepository.findById(id).orElse(null);
 	}
+
+	/**
+	 * Function to return all the pedagogical software solutions in the database
+	 * @return
+	 */
+	public List<PedagogicalSoftwareSolution> findAll(){
+		return this.pedagogicalSoftwareSolutionRepository.findAll();
+	}
+
+	/**
+	 * Function to save a solution in the database
+	 * @param solution
+	 */
+	public void save(PedagogicalSoftwareSolution solution){
+		this.pedagogicalSoftwareSolutionRepository.save(solution);
+	}
 }

@@ -23,7 +23,9 @@ public class  PedagogicalSoftwareSolution {
 	private String screenShot;
 	private String binary;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
+	private String tree;
 	private double maximumDistance;
+	private double maximumTreeDistance;
 
 	public void setExercise(Exercise exercise) {
 		this.exercise = exercise;

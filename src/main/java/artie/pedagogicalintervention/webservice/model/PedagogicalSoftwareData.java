@@ -7,6 +7,7 @@ import artie.common.web.dto.Student;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -29,6 +30,7 @@ public class PedagogicalSoftwareData {
 	private double aptedDistance;
 	private String tree;
 	private PedagogicalSoftwareSolution relatedSolution;
+	private PedagogicalSoftwareSolution treeRelatedSolution;
 	private String solutionTree;
 	private double maximumTreeDistance;
 	private LocalDateTime dateTime;
