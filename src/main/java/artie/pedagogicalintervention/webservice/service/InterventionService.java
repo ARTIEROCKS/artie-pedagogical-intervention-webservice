@@ -3,6 +3,7 @@ package artie.pedagogicalintervention.webservice.service;
 import artie.generator.dto.bmle.BML;
 import artie.generator.service.GeneratorService;
 import artie.generator.service.GeneratorServiceImpl;
+import artie.pedagogicalintervention.webservice.dto.EmotionalStateDTO;
 import artie.pedagogicalintervention.webservice.dto.PrologAnswerDTO;
 import artie.pedagogicalintervention.webservice.dto.PrologQueryDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSentence;
@@ -110,9 +111,11 @@ public class InterventionService {
 
         //1.1 Gets the emotional state of the student
         String userId = pedagogicalSoftwareData.getStudent().getUserId();
-        String emotionalState = this.emotionalStateService.predict(userId).getEmotionalState();
-        if (emotionalState == null || emotionalState.equals("NONE")){
-            emotionalState = "neutral";
+        EmotionalStateDTO emotionalStateDTO = this.emotionalStateService.predict(userId);
+
+        String emotionalState = "neutral";
+        if (emotionalStateDTO != null && emotionalStateDTO.getEmotionalState() != null && !emotionalStateDTO.getEmotionalState().equals("NONE")){
+            emotionalState = emotionalStateDTO.getEmotionalState().toLowerCase();
         }
         logger.trace("Emotional state: " + emotionalState + " for user id: " + userId);
 
