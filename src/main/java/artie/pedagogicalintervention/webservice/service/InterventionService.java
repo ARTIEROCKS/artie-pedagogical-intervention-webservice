@@ -104,7 +104,7 @@ public class InterventionService {
      */
     public void buildAndSendIntervention(PedagogicalSoftwareData pedagogicalSoftwareData) throws JsonProcessingException {
 
-        logger.info("Building and sending the intervention for id" + pedagogicalSoftwareData.getId());
+        logger.info("Building and sending the intervention for id " + pedagogicalSoftwareData.getId());
         PrologQueryDTO prologQuery = PrologQueryDTO.builder()
                                         .institutionId(pedagogicalSoftwareData.getStudent().getInstitutionId())
                                         .build();
@@ -122,54 +122,60 @@ public class InterventionService {
         //1.2 Gets the eyes
         prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Sentence," + emotionalState.toLowerCase() + ").");
         HttpEntity<PrologQueryDTO> request = new HttpEntity<>(prologQuery, headers);
-        PrologAnswerDTO[][] answer = restTemplate.postForObject(interventionWebserviceUrl,request, PrologAnswerDTO[][].class);
-        assert answer != null;
-        String eyes = getValueFromPrologAnswer(answer, "Eye");
-        logger.trace("Eyes: " + eyes + " for emotional state " + emotionalState + " and user id: " + userId);
 
-        //1.3 Gets the tone of the voice
-        String toneOfVoice = getValueFromPrologAnswer(answer, "Tone");
-        logger.trace("Tone of voice: " + toneOfVoice + " for emotional state " + emotionalState + " and user id: " + userId);
+        try {
+            PrologAnswerDTO[][] answer = restTemplate.postForObject(interventionWebserviceUrl, request, PrologAnswerDTO[][].class);
+            assert answer != null;
+            String eyes = getValueFromPrologAnswer(answer, "Eye");
+            logger.trace("Eyes: " + eyes + " for emotional state " + emotionalState + " and user id: " + userId);
 
-        //1.4 Gets the voice speed
-        String voiceSpeed = getValueFromPrologAnswer(answer, "Speed");
-        logger.trace("Voice speed: " + voiceSpeed + " for emotional state " + emotionalState + " and user id: " + userId);
+            //1.3 Gets the tone of the voice
+            String toneOfVoice = getValueFromPrologAnswer(answer, "Tone");
+            logger.trace("Tone of voice: " + toneOfVoice + " for emotional state " + emotionalState + " and user id: " + userId);
 
-        //1.5 Gets the gaze
-        String gaze = pedagogicalSoftwareData.getStudent().getUserId();
-        logger.trace("Gaze: " + gaze + " for emotional state " + emotionalState + " and user id: " + userId);
-        
-        //1.6 Gets the gesture
-        String gesture = getValueFromPrologAnswer(answer, "Gesture");
-        logger.trace("Gesture: " + gesture + " for emotional state " + emotionalState + " and user id: " + userId);
+            //1.4 Gets the voice speed
+            String voiceSpeed = getValueFromPrologAnswer(answer, "Speed");
+            logger.trace("Voice speed: " + voiceSpeed + " for emotional state " + emotionalState + " and user id: " + userId);
 
-        //1.7 Gets the posture
-        String posture = "stand";
+            //1.5 Gets the gaze
+            String gaze = pedagogicalSoftwareData.getStudent().getUserId();
+            logger.trace("Gaze: " + gaze + " for emotional state " + emotionalState + " and user id: " + userId);
 
-        //1.8 The text is given by a key, so we have to first get the sentence from the db
-        String sentenceKey = getValueFromPrologAnswer(answer, "Sentence");
-        List<PedagogicalSentence> pedagogicalSentenceList = this.pedagogicalSentenceService.findByInstitutionIdAndSentenceKey(pedagogicalSoftwareData.getStudent().getInstitutionId(), sentenceKey);
-        String sentence = "";
-        if (!pedagogicalSentenceList.isEmpty()) {
-            sentence = pedagogicalSentenceList.get(0).getSentence();
-            logger.trace("Sentence: " + sentence + " for emotional state " + emotionalState + " and user id: " + userId);
+            //1.6 Gets the gesture
+            String gesture = getValueFromPrologAnswer(answer, "Gesture");
+            logger.trace("Gesture: " + gesture + " for emotional state " + emotionalState + " and user id: " + userId);
+
+            //1.7 Gets the posture
+            String posture = "stand";
+
+            //1.8 The text is given by a key, so we have to first get the sentence from the db
+            String sentenceKey = getValueFromPrologAnswer(answer, "Sentence");
+            List<PedagogicalSentence> pedagogicalSentenceList = this.pedagogicalSentenceService.findByInstitutionIdAndSentenceKey(pedagogicalSoftwareData.getStudent().getInstitutionId(), sentenceKey);
+            String sentence = "";
+            if (!pedagogicalSentenceList.isEmpty()) {
+                sentence = pedagogicalSentenceList.get(0).getSentence();
+                logger.trace("Sentence: " + sentence + " for emotional state " + emotionalState + " and user id: " + userId);
+            }
+
+            //2. Building the BMLe with the first sentence found
+            BML bml = new BML(pedagogicalSoftwareData.getId(),
+                    pedagogicalSoftwareData.getStudent().getUserId(),
+                    posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed, sentence);
+
+            String bmle = generatorService.generateBMLE(bml);
+            logger.trace("BMLE generated for user id " + userId + ": " + bmle);
+
+            //3. Sends the BMLe to the queue message to let the robot process the messages
+            // Declare the queue if it doesn't exist
+            rabbitTemplate.execute(channel -> {
+                channel.queueDeclare(this.queue, true, false, false, null);
+                return null;
+            });
+            rabbitTemplate.convertAndSend(this.queue, bmle);
         }
-
-        //2. Building the BMLe with the first sentence found
-        BML bml = new BML(pedagogicalSoftwareData.getId(),
-                          pedagogicalSoftwareData.getStudent().getUserId(),
-                          posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed, sentence);
-
-        String bmle = generatorService.generateBMLE(bml);
-        logger.trace("BMLE generated for user id " + userId + ": " + bmle);
-
-        //3. Sends the BMLe to the queue message to let the robot process the messages
-        // Declare the queue if it doesn't exist
-        rabbitTemplate.execute(channel -> {
-            channel.queueDeclare(this.queue, true, false, false, null);
-            return null;
-        });
-        rabbitTemplate.convertAndSend(this.queue, bmle);
+        catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
     }
 
     /**

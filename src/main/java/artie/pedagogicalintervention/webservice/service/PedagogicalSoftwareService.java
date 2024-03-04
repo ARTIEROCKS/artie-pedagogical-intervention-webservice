@@ -115,7 +115,7 @@ public class PedagogicalSoftwareService {
 		double apted = 0;
 		String pedagogicalSoftwareDataTree;
 		String pedagogicalSoftwareSolutionTree;
-		if (pedagogicalSoftwareSolution != null) {
+		if (pedagogicalSoftwareSolution != null && !pedagogicalSoftwareSolution.isEmpty()) {
 
 			//2.1 Gets the distance
 			Map<String, Object> mapDistance = distanceCalculationService.distanceCalculation(pedagogicalSoftwareData, pedagogicalSoftwareSolution);
