@@ -45,19 +45,19 @@ public class BatchDistanceService {
         List<PedagogicalSoftwareData> elements = softwareService.findAll();
         log.info("Found " +elements.size() + " elements");
 
-        for(PedagogicalSoftwareData psd: elements){
+        for(PedagogicalSoftwareData psd: elements) {
             log.info("Starting the process of Pedagogical Software Data id " + psd.getId());
 
             //We get all the possible solutions in the database for this exercise
-            if(psd.getExercise() != null && psd.getStudent() != null) {
-                log.trace("Getting all the possible solutions for the exercise id (" + psd.getExercise().getId() +") and the student id (" + psd.getStudent().getId() + ")");
+            if (psd.getExercise() != null && psd.getStudent() != null) {
+                log.trace("Getting all the possible solutions for the exercise id (" + psd.getExercise().getId() + ") and the student id (" + psd.getStudent().getId() + ")");
                 solutions = solutionService.findByExerciseAndUserId(psd.getExercise(), psd.getStudent().getUserId());
-            }else{
+            } else {
                 solutions = new ArrayList<>();
             }
 
             //Calculates ARTIE distances between the pedagogical software data and the different solutions
-            if(psd.getExercise() != null && psd.getStudent() != null) {
+            if (psd.getExercise() != null && psd.getStudent() != null) {
                 log.info("Calculating ARTIE distances. Solutions found: " + solutions.size() + " for exercise id (" + psd.getExercise().getId() + ") and the student id (" + psd.getStudent().getId() + ")");
             }
             PedagogicalSoftwareSolution bestSolution = null;
@@ -68,7 +68,7 @@ public class BatchDistanceService {
             double bestTreeDistance = -1;
             double currentTreeDistance = 0;
 
-            for (PedagogicalSoftwareSolution solution: solutions){
+            for (PedagogicalSoftwareSolution solution : solutions) {
 
                 //Gets the best solution in base of the ARTIE distance
                 currentDistance = distanceCalculationService.distanceCalculation(psd, solution);
@@ -79,26 +79,26 @@ public class BatchDistanceService {
 
                 //Gets the best solution in base of the tree distance
                 currentTreeDistance = distanceCalculationService.aptedDistanceCalculation(psd.toString(), solution.toString());
-                if(bestTreeDistance == -1 || bestTreeDistance > currentTreeDistance){
+                if (bestTreeDistance == -1 || bestTreeDistance > currentTreeDistance) {
                     bestTreeDistance = currentTreeDistance;
                     bestTreeSolution = solution;
                 }
             }
 
-            if(bestDistance != null && psd.getSolutionDistance() != null) {
+            if (bestDistance != null && psd.getSolutionDistance() != null) {
                 log.trace("Old ARTIE Distance: " + psd.getSolutionDistance().getTotalDistance() + " - New ARTIE Distance: " + bestDistance.getTotalDistance());
-            }else{
+            } else {
                 log.error("ARTIE Distance is NULL");
             }
 
             //Calculates the APTED distances with respect the best solution
-            if(psd.getExercise() != null && psd.getStudent() != null) {
+            if (psd.getExercise() != null && psd.getStudent() != null) {
                 log.info("Calculating APTED distances. Solutions found: " + solutions.size() + " for exercise id (" + psd.getExercise().getId() + ") and the student id (" + psd.getStudent().getId() + ")");
             }
             SolutionDistance maximumDistance = null;
             double maximumTreeDistance = 0.0;
             double aptedDistance = 0.0;
-            String tree  = psd.toString();
+            String tree = psd.toString();
             String solutionTree = "";
 
             //Calculating the ARTIE distance with respect the best solution get by the same method
@@ -107,7 +107,7 @@ public class BatchDistanceService {
             }
 
             //Calculating the APTED distance with respect the best solution get by the same method
-            if(bestTreeSolution != null){
+            if (bestTreeSolution != null) {
                 solutionTree = bestTreeSolution.toString();
                 maximumTreeDistance = distanceCalculationService.aptedDistanceCalculation("{}", solutionTree);
                 aptedDistance = distanceCalculationService.aptedDistanceCalculation(tree, solutionTree);
@@ -117,7 +117,7 @@ public class BatchDistanceService {
             //Calculates the grades
             double artieGrade = 0.0;
             double aptedGrade = 0.0;
-            if(maximumDistance != null && bestDistance != null) {
+            if (maximumDistance != null && bestDistance != null) {
                 artieGrade = softwareService.calculateGrade(maximumDistance.getTotalDistance(), bestDistance.getTotalDistance(), 10);
                 log.info("Old ARTIE Grade: " + psd.getGrade() + " - New ARTIE Grade: " + artieGrade);
             }
@@ -126,10 +126,10 @@ public class BatchDistanceService {
 
             //Sets all the information within the distance object
             psd.setRelatedSolution(bestSolution);
-            if(maximumDistance != null) {
+            if (maximumDistance != null) {
                 psd.setMaximumDistance(maximumDistance.getTotalDistance());
             }
-            if(bestDistance != null){
+            if (bestDistance != null) {
                 psd.setSolutionDistance(bestDistance);
             }
             psd.setGrade(artieGrade);
@@ -144,10 +144,12 @@ public class BatchDistanceService {
 
             //Transforms the pedagogical software data in the record
             log.info("Finished the process of Pedagogical Software Data id " + psd.getId());
-        }
 
-        log.info("Updating all the elements");
-        softwareService.updateAll(elements);
+            //Updating the element
+            log.info("Updating the element");
+            softwareService.update(psd);
+            log.info("Updating successful");
+        }
         log.info("Updating process finished");
     }
 }
