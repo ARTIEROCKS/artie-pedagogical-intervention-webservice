@@ -788,21 +788,25 @@ public class DistanceCalculationService {
      * @return
      */
     public double aptedDistanceCalculation(String origin, String aim){
+        try {
+            logger.info("Getting the APTED distance calculation");
+            BracketStringInputParser inputParser = new BracketStringInputParser();
+            Node<StringNodeData> originNode = inputParser.fromString(origin);
+            Node<StringNodeData> aimNode = inputParser.fromString(aim);
 
-        logger.info("Getting the APTED distance calculation");
-        BracketStringInputParser inputParser = new BracketStringInputParser();
-        Node<StringNodeData> originNode = inputParser.fromString(origin);
-        Node<StringNodeData> aimNode = inputParser.fromString(aim);
+            //Initializing APTED
+            APTED<StringUnitCostModel, StringNodeData> apted = new APTED<>(new StringUnitCostModel());
+            double distance = apted.computeEditDistance(originNode, aimNode);
 
-        //Initializing APTED
-        APTED<StringUnitCostModel, StringNodeData> apted = new APTED<>(new StringUnitCostModel());
-        double distance = apted.computeEditDistance(originNode, aimNode);
+            logger.trace("APTED Distance calculation: " + distance);
+            logger.debug("APTED Distance calculation (" + distance + ") from: " + origin + " to : " + aim);
 
-        logger.trace("APTED Distance calculation: " + distance);
-        logger.debug("APTED Distance calculation (" + distance + ") from: " + origin + " to : " + aim);
-
-        //APTED execution
-        return apted.computeEditDistance(originNode, aimNode);
+            //APTED execution
+            return apted.computeEditDistance(originNode, aimNode);
+        } catch (Exception ex){
+            logger.error("APTED distance calculation error: {}", ex.toString());
+            return -1;
+        }
     }
 
 }
