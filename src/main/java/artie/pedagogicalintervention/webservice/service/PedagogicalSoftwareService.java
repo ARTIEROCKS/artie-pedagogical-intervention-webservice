@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -79,6 +82,20 @@ public class PedagogicalSoftwareService {
 	 */
 	public List<PedagogicalSoftwareData> findAll(){
 		return this.pedagogicalSoftwareDataRepository.findAll();
+	}
+
+	/**
+	 * Function to paginate the information
+	 * @param pageNumber
+	 * @param pageSize
+	 * @return
+	 */
+	public Page<PedagogicalSoftwareData> findAllPaginated(int pageNumber, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		return this.pedagogicalSoftwareDataRepository.findAll(pageable);
+	}
+	public Page<PedagogicalSoftwareData> findAllPaginated(Pageable pageable) {
+		return this.pedagogicalSoftwareDataRepository.findAll(pageable);
 	}
 
 	/**
