@@ -11,4 +11,5 @@ public class MessageDTO {
     private String userId;
     private String contextId;
     private String message;
+    private String prompt;
 }

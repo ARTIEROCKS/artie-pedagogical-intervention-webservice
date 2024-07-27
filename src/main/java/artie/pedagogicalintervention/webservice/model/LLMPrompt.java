@@ -8,11 +8,11 @@ import javax.persistence.Id;
 
 @Data
 @NoArgsConstructor
-@Document(collection="PedagogicalSentence")
-public class PedagogicalSentence {
+@Document(collection="LLMPrompt")
+public class LLMPrompt {
     @Id
     private String id;
     private String institutionId;
-    private String sentenceKey;
-    private String sentence;
+    private String promptKey;
+    private String prompt;
 }
