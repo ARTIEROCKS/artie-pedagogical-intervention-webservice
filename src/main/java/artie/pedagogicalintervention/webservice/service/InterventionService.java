@@ -4,6 +4,7 @@ import artie.generator.dto.bmle.BML;
 import artie.generator.service.GeneratorService;
 import artie.generator.service.GeneratorServiceImpl;
 import artie.pedagogicalintervention.webservice.dto.EmotionalStateDTO;
+import artie.pedagogicalintervention.webservice.dto.MessageDTO;
 import artie.pedagogicalintervention.webservice.dto.PrologAnswerDTO;
 import artie.pedagogicalintervention.webservice.dto.PrologQueryDTO;
 import artie.pedagogicalintervention.webservice.model.LLMPrompt;
@@ -12,7 +13,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -24,7 +29,9 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class InterventionService {
@@ -37,9 +44,13 @@ public class InterventionService {
     private RestTemplate restTemplate;
     private HttpHeaders headers;
     private final RabbitTemplate rabbitTemplate;
+    private final AmqpAdmin amqpAdmin;
 
     @Value("${artie.webservices.interventions.queue}")
-    private String queue;
+    private String interventionsQueue;
+
+    @Value("${artie.webservices.conversations.queue}")
+    private String conversationsQueue;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -57,13 +68,15 @@ public class InterventionService {
 
     @Autowired
     private ChatClientService chatClientService;
+    private Map<String, PedagogicalSoftwareData> mapUserContext;
 
     private Logger logger;
 
     @Autowired
-    public InterventionService(RabbitTemplate rabbitTemplate, RestTemplateBuilder builder){
+    public InterventionService(RabbitTemplate rabbitTemplate, RestTemplateBuilder builder, AmqpAdmin amqpAdmin){
         this.restTemplate = builder.build();
         this.rabbitTemplate = rabbitTemplate;
+        this.amqpAdmin = amqpAdmin;
         logger = LoggerFactory.getLogger(InterventionService.class);
     }
 
@@ -72,7 +85,14 @@ public class InterventionService {
         this.headers = new HttpHeaders();
         this.headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         this.headers.add("apiKey", this.apiKey);
+        this.mapUserContext = new HashMap<>();
         logger = LoggerFactory.getLogger(InterventionService.class);
+
+        // Declare the queue if it doesn't exist
+        Queue interventionsQueue = new Queue(this.interventionsQueue, true);
+        Queue conversationsQueue = new Queue(this.conversationsQueue, true);
+        this.amqpAdmin.declareQueue(interventionsQueue);
+        this.amqpAdmin.declareQueue(conversationsQueue);
     }
 
     /**
@@ -113,10 +133,16 @@ public class InterventionService {
                                         .institutionId(pedagogicalSoftwareData.getStudent().getInstitutionId())
                                         .build();
 
-        //1.1 Gets the emotional state of the student
+        //1.0 Creates the mapping for his/her last pedagogical software data
         String userId = pedagogicalSoftwareData.getStudent().getUserId();
-        EmotionalStateDTO emotionalStateDTO = this.emotionalStateService.predict(userId);
+        if (!mapUserContext.containsKey(userId)){
+            mapUserContext.put(userId, pedagogicalSoftwareData);
+        }else{
+            mapUserContext.replace(userId, pedagogicalSoftwareData);
+        }
 
+        //1.1 Gets the emotional state of the student
+        EmotionalStateDTO emotionalStateDTO = this.emotionalStateService.predict(userId);
         String emotionalState = "neutral";
         if (emotionalStateDTO != null && emotionalStateDTO.getEmotionalState() != null && !emotionalStateDTO.getEmotionalState().equals("NONE")){
             emotionalState = emotionalStateDTO.getEmotionalState().toLowerCase();
@@ -124,7 +150,7 @@ public class InterventionService {
         logger.trace("Emotional state: " + emotionalState + " for user id: " + userId);
 
         //1.2 Gets the eyes
-        prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Sentence," + emotionalState.toLowerCase() + ").");
+        prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Prompt," + emotionalState.toLowerCase() + ").");
         HttpEntity<PrologQueryDTO> request = new HttpEntity<>(prologQuery, headers);
 
         try {
@@ -142,7 +168,7 @@ public class InterventionService {
             logger.trace("Voice speed: " + voiceSpeed + " for emotional state " + emotionalState + " and user id: " + userId);
 
             //1.5 Gets the gaze
-            String gaze = pedagogicalSoftwareData.getStudent().getUserId();
+            String gaze = getValueFromPrologAnswer(answer, "Gaze");
             logger.trace("Gaze: " + gaze + " for emotional state " + emotionalState + " and user id: " + userId);
 
             //1.6 Gets the gesture
@@ -168,7 +194,7 @@ public class InterventionService {
 
             if (sentence == null) {
                 logger.trace("Sentence is null. Getting sentence from conversation service.");
-                sentence = chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
+                sentence = chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt, pedagogicalSoftwareData);
             }
             logger.trace("LLM Sentence: " + sentence);
 
@@ -183,10 +209,10 @@ public class InterventionService {
             //3. Sends the BMLe to the queue message to let the robot process the messages
             // Declare the queue if it doesn't exist
             rabbitTemplate.execute(channel -> {
-                channel.queueDeclare(this.queue, true, false, false, null);
+                channel.queueDeclare(this.interventionsQueue, true, false, false, null);
                 return null;
             });
-            rabbitTemplate.convertAndSend(this.queue, bmle);
+            rabbitTemplate.convertAndSend(this.interventionsQueue, bmle);
         }
         catch (Exception ex){
             logger.error(ex.getMessage());
@@ -214,5 +240,27 @@ public class InterventionService {
             }
         }
         return value;
+    }
+
+    @RabbitListener(queues = "${artie.webservices.conversations.queue}")
+    public void receiveMessage(String messageContent) {
+        try {
+            // Parse the message content
+            MessageDTO message = objectMapper.readValue(messageContent, MessageDTO.class);
+
+            // Gets the answer from the chat
+            PedagogicalSoftwareData psd = this.mapUserContext.get(message.getUserId());
+            String reply = chatClientService.getResponse(message.getUserId(), message.getContextId(), message.getMessage(), message.getPrompt(), psd);
+
+            // Log or handle the reply as needed
+            logger.info("Reply: " + reply);
+
+            //Builds the intervention with the reply from the Chat Client service
+            buildAndSendIntervention(psd, reply);
+
+        } catch (Exception e) {
+            // Handle exception
+            logger.error("Failed to process message: " + e.getMessage());
+        }
     }
 }
