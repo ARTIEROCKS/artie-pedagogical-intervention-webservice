@@ -18,6 +18,11 @@ public class ChatClientService {
     private Logger logger;
 
     public String getResponse(String userId, String contextId, String message, String prompt, PedagogicalSoftwareData psd) {
+        if (chatBlockingStub == null) {
+            logger.error("chatBlockingStub is null");
+            throw new IllegalStateException("chatBlockingStub is not initialized");
+        }
+
         ChatRequest request = ChatRequest.newBuilder()
                 .setUserId(userId)
                 .setContextId(contextId)

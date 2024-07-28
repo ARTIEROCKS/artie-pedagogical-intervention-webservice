@@ -77,7 +77,6 @@ public class InterventionService {
         this.restTemplate = builder.build();
         this.rabbitTemplate = rabbitTemplate;
         this.amqpAdmin = amqpAdmin;
-        logger = LoggerFactory.getLogger(InterventionService.class);
     }
 
     @PostConstruct
