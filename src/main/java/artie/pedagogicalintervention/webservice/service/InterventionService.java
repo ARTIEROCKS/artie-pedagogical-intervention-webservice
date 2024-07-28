@@ -193,7 +193,7 @@ public class InterventionService {
 
             if (sentence == null) {
                 logger.trace("Sentence is null. Getting sentence from conversation service.");
-                sentence = chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt, pedagogicalSoftwareData);
+                sentence = chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
             }
             logger.trace("LLM Sentence: " + sentence);
 
@@ -249,7 +249,7 @@ public class InterventionService {
 
             // Gets the answer from the chat
             PedagogicalSoftwareData psd = this.mapUserContext.get(message.getUserId());
-            String reply = chatClientService.getResponse(message.getUserId(), message.getContextId(), message.getMessage(), message.getPrompt(), psd);
+            String reply = chatClientService.getResponse(message.getUserId(), message.getContextId(), message.getMessage(), message.getPrompt());
 
             // Log or handle the reply as needed
             logger.info("Reply: " + reply);
