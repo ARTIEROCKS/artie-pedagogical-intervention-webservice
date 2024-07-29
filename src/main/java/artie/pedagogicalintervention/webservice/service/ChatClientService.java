@@ -3,19 +3,18 @@ package artie.pedagogicalintervention.webservice.service;
 import artie.pedagogicalintervention.webservice.stubs.ChatGrpc;
 import artie.pedagogicalintervention.webservice.stubs.ChatRequest;
 import artie.pedagogicalintervention.webservice.stubs.ChatResponse;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class ChatClientService {
 
     private final Logger logger = LoggerFactory.getLogger(ChatClientService.class);
-    private final ChatGrpc.ChatBlockingStub chatClient;
 
-    public ChatClientService(ChatGrpc.ChatBlockingStub chatClient) {
-        this.chatClient = chatClient;
-    }
+    @GrpcClient("chat")
+    private ChatGrpc.ChatBlockingStub chatClient;
 
     public String getResponse(String userId, String contextId, String message, String prompt) {
         ChatRequest request = ChatRequest.newBuilder()
