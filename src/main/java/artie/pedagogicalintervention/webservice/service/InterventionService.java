@@ -17,7 +17,6 @@ import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -193,7 +192,7 @@ public class InterventionService {
 
             if (sentence == null) {
                 logger.trace("Sentence is null. Getting sentence from conversation service.");
-                sentence = chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
+                sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
             }
             logger.trace("LLM Sentence: " + sentence);
 
@@ -249,7 +248,7 @@ public class InterventionService {
 
             // Gets the answer from the chat
             PedagogicalSoftwareData psd = this.mapUserContext.get(message.getUserId());
-            String reply = chatClientService.getResponse(message.getUserId(), message.getContextId(), message.getMessage(), message.getPrompt());
+            String reply = this.chatClientService.getResponse(message.getUserId(), message.getContextId(), message.getMessage(), message.getPrompt());
 
             // Log or handle the reply as needed
             logger.info("Reply: " + reply);
