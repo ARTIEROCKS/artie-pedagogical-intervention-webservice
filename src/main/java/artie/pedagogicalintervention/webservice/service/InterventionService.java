@@ -11,6 +11,7 @@ import artie.pedagogicalintervention.webservice.model.LLMPrompt;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -67,6 +68,7 @@ public class InterventionService {
 
     @Autowired
     private ChatClientService chatClientService;
+    @Getter
     private Map<String, PedagogicalSoftwareData> mapUserContext;
 
     private Logger logger;
@@ -92,7 +94,7 @@ public class InterventionService {
         this.amqpAdmin.declareQueue(interventionsQueue);
         this.amqpAdmin.declareQueue(conversationsQueue);
     }
-
+    
     /**
      * Function to send the intervention from the pedagogical software data id
      * @param id
@@ -240,25 +242,4 @@ public class InterventionService {
         return value;
     }
 
-    @RabbitListener(queues = "${artie.webservices.conversations.queue}")
-    public void receiveMessage(String messageContent) {
-        try {
-            // Parse the message content
-            MessageDTO message = objectMapper.readValue(messageContent, MessageDTO.class);
-
-            // Gets the answer from the chat
-            PedagogicalSoftwareData psd = this.mapUserContext.get(message.getUserId());
-            String reply = this.chatClientService.getResponse(message.getUserId(), message.getContextId(), message.getMessage(), message.getPrompt());
-
-            // Log or handle the reply as needed
-            logger.info("Reply: " + reply);
-
-            //Builds the intervention with the reply from the Chat Client service
-            buildAndSendIntervention(psd, reply);
-
-        } catch (Exception e) {
-            // Handle exception
-            logger.error("Failed to process message: " + e.getMessage());
-        }
-    }
 }
