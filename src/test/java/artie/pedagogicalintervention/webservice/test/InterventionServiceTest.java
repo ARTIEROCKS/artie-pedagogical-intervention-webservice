@@ -17,7 +17,7 @@ public class InterventionServiceTest {
     @BeforeEach
     void setUp() throws Exception {
         mapper = new ObjectMapper();
-        interventionService = new InterventionService(null, new RestTemplateBuilder());
+        interventionService = new InterventionService(null, new RestTemplateBuilder(), null);
     }
 
     @Test
