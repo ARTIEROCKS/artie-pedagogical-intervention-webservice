@@ -3,10 +3,7 @@ package artie.pedagogicalintervention.webservice.service;
 import artie.generator.dto.bmle.BML;
 import artie.generator.service.GeneratorService;
 import artie.generator.service.GeneratorServiceImpl;
-import artie.pedagogicalintervention.webservice.dto.EmotionalStateDTO;
-import artie.pedagogicalintervention.webservice.dto.MessageDTO;
-import artie.pedagogicalintervention.webservice.dto.PrologAnswerDTO;
-import artie.pedagogicalintervention.webservice.dto.PrologQueryDTO;
+import artie.pedagogicalintervention.webservice.dto.*;
 import artie.pedagogicalintervention.webservice.model.LLMPrompt;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -185,6 +182,8 @@ public class InterventionService {
 
             if (!LLMPromptList.isEmpty()) {
                 prompt = LLMPromptList.get(0).getPrompt();
+                //Adds the statement of the exercise to the prompt
+                prompt += pedagogicalSoftwareData.getExercise().getDescription();
                 logger.trace("Prompt: " + prompt + " for emotional state " + emotionalState + " and user id: " + userId);
             }
 
@@ -196,12 +195,16 @@ public class InterventionService {
                 logger.trace("Sentence is null. Getting sentence from conversation service.");
                 sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
             }
+
+            //1.10 Checks if the conversation should be ended or not
+            ConversationDTO conversation = objectMapper.readValue(sentence, ConversationDTO.class);
             logger.trace("LLM Sentence: " + sentence);
 
             //2. Building the BMLe with the first sentence found
             BML bml = new BML(pedagogicalSoftwareData.getId(),
                     pedagogicalSoftwareData.getStudent().getUserId(),
-                    posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed, sentence);
+                    posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed,
+                    conversation.getMessage(), conversation.getEnd());
 
             String bmle = generatorService.generateBMLE(bml);
             logger.trace("BMLE generated for user id " + userId + ": " + bmle);

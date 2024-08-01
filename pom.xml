@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>artie</groupId>
 			<artifactId>generator</artifactId>
-			<version>0.2.2-RELEASE</version>
+			<version>0.3.0-RELEASE</version>
 		</dependency>
 
 		<!-- TOOLS -->
