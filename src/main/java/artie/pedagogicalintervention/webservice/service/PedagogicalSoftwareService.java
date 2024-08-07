@@ -232,7 +232,7 @@ public class PedagogicalSoftwareService {
 			boolean helpNeeded = false;
 			try{
 				helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
-				logger.trace("Predicted help need: " + helpNeeded);
+				logger.info("Predicted help need: " + helpNeeded);
 			}catch(Exception ex){
 				logger.error("Error predicting help need: " + ex.getMessage());
 			}
@@ -240,7 +240,7 @@ public class PedagogicalSoftwareService {
 			// 2.2 Adds the predicted need help into the response
 			pedagogicalSoftwareData.setPredictedNeedHelp(helpNeeded);
 			response = this.add(pedagogicalSoftwareData);
-			logger.trace("Added the pedagogical software data in DB");
+			logger.info("Added the pedagogical software data in DB");
 
 		} catch (JsonProcessingException e) {
 			logger.error("Error processing the following JSON: " + psd + ". \n + Error: " + e.getMessage());

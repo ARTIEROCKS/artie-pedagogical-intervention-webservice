@@ -62,6 +62,7 @@ public class HelpModelService {
 
             //2- Calls for the webservice
             String wsResponse = restTemplate.postForObject(helpWebserviceUrl + "/predict", softwareData, String.class);
+            logger.info("Result for the prediction for the student " + pedagogicalSoftwareData.getStudent().getId() + ": " + wsResponse);
 
             //3- Transforms the string into the object
             Response response = new ObjectMapper().readValue(wsResponse, Response.class);
@@ -75,7 +76,7 @@ public class HelpModelService {
             result = response != null &&
                     !Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString()) &&
                     response.getBody().getObject() != null && ((int) response.getBody().getObject() == 1);
-            logger.trace("Help need prediction: " + result + " for the student id: " + pedagogicalSoftwareData.getStudent().getId());
+            logger.info("Help need prediction: " + result + " for the student id: " + pedagogicalSoftwareData.getStudent().getId());
 
         } catch (Exception e) {
             logger.error("Error during the help need prediction: " + e.getMessage());
