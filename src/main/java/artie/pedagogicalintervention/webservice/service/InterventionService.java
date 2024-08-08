@@ -144,7 +144,7 @@ public class InterventionService {
         if (emotionalStateDTO != null && emotionalStateDTO.getEmotionalState() != null && !emotionalStateDTO.getEmotionalState().equals("NONE")){
             emotionalState = emotionalStateDTO.getEmotionalState().toLowerCase();
         }
-        logger.trace("Emotional state: " + emotionalState + " for user id: " + userId);
+        logger.info("Emotional state: " + emotionalState + " for user id: " + userId);
 
         //1.2 Gets the eyes
         prologQuery.setQuery("pedagogicalIntervention(Eye,Tone,Speed,Gesture,Prompt," + emotionalState.toLowerCase() + ").");
@@ -184,7 +184,7 @@ public class InterventionService {
                 prompt = LLMPromptList.get(0).getPrompt();
                 //Adds the statement of the exercise to the prompt
                 prompt += pedagogicalSoftwareData.getExercise().getDescription();
-                logger.trace("Prompt: " + prompt + " for emotional state " + emotionalState + " and user id: " + userId);
+                logger.info("Prompt: " + prompt + " for emotional state " + emotionalState + " and user id: " + userId);
             }
 
             //1.9 Creates the context and gets the message to be read by the robot, if it has not been obtained out of the function
@@ -198,7 +198,7 @@ public class InterventionService {
 
             //1.10 Checks if the conversation should be ended or not
             ConversationDTO conversation = objectMapper.readValue(sentence, ConversationDTO.class);
-            logger.trace("LLM Sentence: " + sentence);
+            logger.info("LLM Sentence: " + sentence);
 
             //2. Building the BMLe with the first sentence found
             BML bml = new BML(pedagogicalSoftwareData.getId(),
@@ -207,7 +207,7 @@ public class InterventionService {
                     conversation.getMessage(), conversation.getEnd());
 
             String bmle = generatorService.generateBMLE(bml);
-            logger.trace("BMLE generated for user id " + userId + ": " + bmle);
+            logger.info("BMLE generated for user id " + userId + ": " + bmle);
 
             //3. Sends the BMLe to the queue message to let the robot process the messages
             // Declare the queue if it doesn't exist
