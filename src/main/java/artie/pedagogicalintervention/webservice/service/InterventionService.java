@@ -183,6 +183,7 @@ public class InterventionService {
             if (!LLMPromptList.isEmpty()) {
                 prompt = LLMPromptList.get(0).getPrompt();
                 //Adds the statement of the exercise to the prompt
+                //TODO: Review instead of putting the exercise description, setting blocks description
                 prompt += pedagogicalSoftwareData.getExercise().getDescription();
                 logger.info("Prompt: " + prompt + " for emotional state " + emotionalState + " and user id: " + userId);
             }
