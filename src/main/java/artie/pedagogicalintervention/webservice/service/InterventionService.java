@@ -197,7 +197,7 @@ public class InterventionService {
             String sentence = robotMessage;
 
             if (sentence == null) {
-                logger.trace("Sentence is null. Getting sentence from conversation service.");
+                logger.info("Sentence is null. Getting sentence from conversation service.");
                 sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
             }
 

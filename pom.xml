@@ -13,7 +13,7 @@
 
 	<groupId>artie.web</groupId>
 	<artifactId>pedagogicalinterventionws</artifactId>
-	<version>0.20.3-RELEASE</version>
+	<version>0.21.0-RELEASE</version>
 	<name>pedagogical intervention webservice</name>
 	<description>ARTIE Pedagogical intervention webservice</description>
 
