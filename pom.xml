@@ -13,7 +13,7 @@
 
 	<groupId>artie.web</groupId>
 	<artifactId>pedagogicalinterventionws</artifactId>
-	<version>0.20.3-RELEASE</version>
+	<version>0.21.0-RELEASE</version>
 	<name>pedagogical intervention webservice</name>
 	<description>ARTIE Pedagogical intervention webservice</description>
 
@@ -21,6 +21,7 @@
 		<java.version>17</java.version>
 		<grpc.version>1.50.2</grpc.version>
 		<protobuf.version>3.21.5</protobuf.version>
+		<lombok.version>1.18.30</lombok.version>
 	</properties>
 
 	<repositories>
@@ -71,7 +72,7 @@
 		<dependency>
 			<groupId>artie.web</groupId>
 			<artifactId>common</artifactId>
-			<version>0.11.1-RELEASE</version>
+			<version>0.12.0-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>artie.web</groupId>
@@ -202,6 +203,19 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.30</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+        	</plugin>
 		</plugins>
 	</build>
 </project>

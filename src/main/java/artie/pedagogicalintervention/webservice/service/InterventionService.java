@@ -99,7 +99,11 @@ public class InterventionService {
     public void buildAndSendInterventionByPedagogicalSoftwareDataId(String id) throws JsonProcessingException {
         logger.info("Building and sending the intervention by pedagogical software data id: " + id);
         PedagogicalSoftwareData psd = this.pedagogicalSoftwareService.findById(id);
-        this.buildAndSendIntervention(psd, null);
+
+        //Checks if the student is interacting with the robot
+        if(psd.getStudent().isInteractsWithRobot()) {
+            this.buildAndSendIntervention(psd, null);
+        }
     }
 
     /**
@@ -111,8 +115,8 @@ public class InterventionService {
         PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
                 PedagogicalSoftwareData.class);
 
-        //We send the intervention if the student has requested help
-        if(pedagogicalSoftwareData.isRequestHelp()) {
+        //We send the intervention if the student has requested help and the student is interacting with the robot
+        if(pedagogicalSoftwareData.isRequestHelp() && pedagogicalSoftwareData.getStudent().isInteractsWithRobot()) {
             this.buildAndSendIntervention(pedagogicalSoftwareData, null);
         }
     }
@@ -183,6 +187,7 @@ public class InterventionService {
             if (!LLMPromptList.isEmpty()) {
                 prompt = LLMPromptList.get(0).getPrompt();
                 //Adds the statement of the exercise to the prompt
+                //TODO: Review instead of putting the exercise description, setting blocks description
                 prompt += pedagogicalSoftwareData.getExercise().getDescription();
                 logger.info("Prompt: " + prompt + " for emotional state " + emotionalState + " and user id: " + userId);
             }
@@ -192,7 +197,7 @@ public class InterventionService {
             String sentence = robotMessage;
 
             if (sentence == null) {
-                logger.trace("Sentence is null. Getting sentence from conversation service.");
+                logger.info("Sentence is null. Getting sentence from conversation service.");
                 sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
             }
 
