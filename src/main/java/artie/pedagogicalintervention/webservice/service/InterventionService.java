@@ -99,7 +99,11 @@ public class InterventionService {
     public void buildAndSendInterventionByPedagogicalSoftwareDataId(String id) throws JsonProcessingException {
         logger.info("Building and sending the intervention by pedagogical software data id: " + id);
         PedagogicalSoftwareData psd = this.pedagogicalSoftwareService.findById(id);
-        this.buildAndSendIntervention(psd, null);
+
+        //Checks if the student is interacting with the robot
+        if(psd.getStudent().isInteractsWithRobot()) {
+            this.buildAndSendIntervention(psd, null);
+        }
     }
 
     /**
@@ -111,8 +115,8 @@ public class InterventionService {
         PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
                 PedagogicalSoftwareData.class);
 
-        //We send the intervention if the student has requested help
-        if(pedagogicalSoftwareData.isRequestHelp()) {
+        //We send the intervention if the student has requested help and the student is interacting with the robot
+        if(pedagogicalSoftwareData.isRequestHelp() && pedagogicalSoftwareData.getStudent().isInteractsWithRobot()) {
             this.buildAndSendIntervention(pedagogicalSoftwareData, null);
         }
     }

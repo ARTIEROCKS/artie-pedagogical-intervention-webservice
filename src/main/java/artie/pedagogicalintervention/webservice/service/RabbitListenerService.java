@@ -40,7 +40,8 @@ public class RabbitListenerService implements MessageListener {
             logger.info("Reply: " + reply);
 
             //Builds the intervention with the reply from the Chat Client service
-            if (psd != null) {
+            //Also checks if the user is currently interacting with the robot
+            if (psd != null && psd.getStudent().isInteractsWithRobot()) {
                 interventionService.buildAndSendIntervention(psd, reply);
             }else{
                 logger.error("Pedagogical Software Data is null, so any intervention can be performed");
