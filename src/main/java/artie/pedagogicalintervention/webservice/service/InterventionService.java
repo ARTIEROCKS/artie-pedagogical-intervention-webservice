@@ -168,18 +168,14 @@ public class InterventionService {
             String voiceSpeed = getValueFromPrologAnswer(answer, "Speed");
             logger.trace("Voice speed: " + voiceSpeed + " for emotional state " + emotionalState + " and user id: " + userId);
 
-            //1.5 Gets the gaze
-            String gaze = getValueFromPrologAnswer(answer, "Gaze");
-            logger.trace("Gaze: " + gaze + " for emotional state " + emotionalState + " and user id: " + userId);
-
-            //1.6 Gets the gesture
+            //1.5 Gets the gesture
             String gesture = getValueFromPrologAnswer(answer, "Gesture");
             logger.trace("Gesture: " + gesture + " for emotional state " + emotionalState + " and user id: " + userId);
 
-            //1.7 Gets the posture
+            //1.6 Gets the posture
             String posture = "stand";
 
-            //1.8 The LLM prompt is given by a key, so we have to first get the prompt from the db
+            //1.7 The LLM prompt is given by a key, so we have to first get the prompt from the db
             String prompt = "";
             String promptKey = getValueFromPrologAnswer(answer, "Prompt");
             List<LLMPrompt> LLMPromptList = this.LLMPromptService.findByInstitutionIdAndPromptKey(pedagogicalSoftwareData.getStudent().getInstitutionId(), promptKey);
@@ -192,7 +188,7 @@ public class InterventionService {
                 logger.info("Prompt: " + prompt + " for emotional state " + emotionalState + " and user id: " + userId);
             }
 
-            //1.9 Creates the context and gets the message to be read by the robot, if it has not been obtained out of the function
+            //1.8 Creates the context and gets the message to be read by the robot, if it has not been obtained out of the function
             String contextId = pedagogicalSoftwareData.getStudent().getId() + "-" + pedagogicalSoftwareData.getExercise().getId();
             String sentence = robotMessage;
 
@@ -201,14 +197,14 @@ public class InterventionService {
                 sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
             }
 
-            //1.10 Checks if the conversation should be ended or not
+            //1.9 Checks if the conversation should be ended or not
             ConversationDTO conversation = objectMapper.readValue(sentence, ConversationDTO.class);
             logger.info("LLM Sentence: " + sentence);
 
             //2. Building the BMLe with the first sentence found
-            BML bml = new BML(pedagogicalSoftwareData.getId(),
-                    pedagogicalSoftwareData.getStudent().getUserId(),
-                    posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed,
+            BML bml = new BML(pedagogicalSoftwareData.getStudent().getUserId(),
+                    contextId,
+                    posture, contextId, eyes, gesture, toneOfVoice, voiceSpeed,
                     conversation.getMessage(), conversation.getEnd());
 
             String bmle = generatorService.generateBMLE(bml);
