@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +47,9 @@ public class InterventionService {
 
     @Value("${artie.webservices.conversations.queue}")
     private String conversationsQueue;
+
+    @Value("${artie.webservices.teacherHelpRequests.queue}")
+    private String teacherHelpRequestsQueue;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -88,8 +90,10 @@ public class InterventionService {
         // Declare the queue if it doesn't exist
         Queue interventionsQueue = new Queue(this.interventionsQueue, true);
         Queue conversationsQueue = new Queue(this.conversationsQueue, true);
+        Queue teacherHelpRequestsQueue = new Queue(this.teacherHelpRequestsQueue, true);
         this.amqpAdmin.declareQueue(interventionsQueue);
         this.amqpAdmin.declareQueue(conversationsQueue);
+        this.amqpAdmin.declareQueue(teacherHelpRequestsQueue);
     }
     
     /**

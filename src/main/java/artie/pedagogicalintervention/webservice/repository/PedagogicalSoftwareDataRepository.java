@@ -11,4 +11,5 @@ public interface PedagogicalSoftwareDataRepository extends MongoRepository<Pedag
     List<PedagogicalSoftwareData> findByFinishedExercise(boolean finishedExercise);
     List<PedagogicalSoftwareData> findByStudent_IdAndExerciseId(String studentId, String exerciseId);
     List<PedagogicalSoftwareData> findByStudent_Id(String studentId);
+    PedagogicalSoftwareData findFirstByStudent_IdOrderByDateTimeDesc(String studentId);
 }
