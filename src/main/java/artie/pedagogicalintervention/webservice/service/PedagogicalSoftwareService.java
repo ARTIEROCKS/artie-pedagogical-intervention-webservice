@@ -458,4 +458,13 @@ public class PedagogicalSoftwareService {
 		}
 		return response.toJSON();
 	}
+
+	/**
+	 * Function to get the last pedagogical data from a student
+	 * @param studentId
+	 * @return
+	 */
+	public PedagogicalSoftwareData getLastRecordByStudentId(String studentId) {
+		return pedagogicalSoftwareDataRepository.findFirstByStudent_IdOrderByDateTimeDesc(studentId);
+	}
 }

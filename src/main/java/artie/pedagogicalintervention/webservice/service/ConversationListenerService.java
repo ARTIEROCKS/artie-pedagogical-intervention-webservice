@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class RabbitListenerService implements MessageListener {
+public class ConversationListenerService implements MessageListener {
 
     @Autowired
     private InterventionService interventionService;
@@ -20,7 +20,7 @@ public class RabbitListenerService implements MessageListener {
     private ObjectMapper objectMapper;
     @Autowired
     private ChatClientService chatClientService;
-    private final Logger logger = LoggerFactory.getLogger(RabbitListenerService.class);
+    private final Logger logger = LoggerFactory.getLogger(ConversationListenerService.class);
 
 
     public void onMessage(Message message) {
