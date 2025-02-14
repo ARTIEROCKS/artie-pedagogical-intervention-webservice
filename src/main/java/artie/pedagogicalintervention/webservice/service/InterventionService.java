@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +47,9 @@ public class InterventionService {
 
     @Value("${artie.webservices.conversations.queue}")
     private String conversationsQueue;
+
+    @Value("${artie.webservices.teacherHelpRequests.queue}")
+    private String teacherHelpRequestsQueue;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -88,8 +90,10 @@ public class InterventionService {
         // Declare the queue if it doesn't exist
         Queue interventionsQueue = new Queue(this.interventionsQueue, true);
         Queue conversationsQueue = new Queue(this.conversationsQueue, true);
+        Queue teacherHelpRequestsQueue = new Queue(this.teacherHelpRequestsQueue, true);
         this.amqpAdmin.declareQueue(interventionsQueue);
         this.amqpAdmin.declareQueue(conversationsQueue);
+        this.amqpAdmin.declareQueue(teacherHelpRequestsQueue);
     }
     
     /**
@@ -99,7 +103,11 @@ public class InterventionService {
     public void buildAndSendInterventionByPedagogicalSoftwareDataId(String id) throws JsonProcessingException {
         logger.info("Building and sending the intervention by pedagogical software data id: " + id);
         PedagogicalSoftwareData psd = this.pedagogicalSoftwareService.findById(id);
-        this.buildAndSendIntervention(psd, null);
+
+        //Checks if the student is interacting with the robot
+        if(psd.getStudent().isInteractsWithRobot()) {
+            this.buildAndSendIntervention(psd, null);
+        }
     }
 
     /**
@@ -111,8 +119,8 @@ public class InterventionService {
         PedagogicalSoftwareData pedagogicalSoftwareData = this.objectMapper.readValue(psd,
                 PedagogicalSoftwareData.class);
 
-        //We send the intervention if the student has requested help
-        if(pedagogicalSoftwareData.isRequestHelp()) {
+        //We send the intervention if the student has requested help and the student is interacting with the robot
+        if(pedagogicalSoftwareData.isRequestHelp() && pedagogicalSoftwareData.getStudent().isInteractsWithRobot()) {
             this.buildAndSendIntervention(pedagogicalSoftwareData, null);
         }
     }
@@ -164,18 +172,14 @@ public class InterventionService {
             String voiceSpeed = getValueFromPrologAnswer(answer, "Speed");
             logger.trace("Voice speed: " + voiceSpeed + " for emotional state " + emotionalState + " and user id: " + userId);
 
-            //1.5 Gets the gaze
-            String gaze = getValueFromPrologAnswer(answer, "Gaze");
-            logger.trace("Gaze: " + gaze + " for emotional state " + emotionalState + " and user id: " + userId);
-
-            //1.6 Gets the gesture
+            //1.5 Gets the gesture
             String gesture = getValueFromPrologAnswer(answer, "Gesture");
             logger.trace("Gesture: " + gesture + " for emotional state " + emotionalState + " and user id: " + userId);
 
-            //1.7 Gets the posture
+            //1.6 Gets the posture
             String posture = "stand";
 
-            //1.8 The LLM prompt is given by a key, so we have to first get the prompt from the db
+            //1.7 The LLM prompt is given by a key, so we have to first get the prompt from the db
             String prompt = "";
             String promptKey = getValueFromPrologAnswer(answer, "Prompt");
             List<LLMPrompt> LLMPromptList = this.LLMPromptService.findByInstitutionIdAndPromptKey(pedagogicalSoftwareData.getStudent().getInstitutionId(), promptKey);
@@ -188,23 +192,23 @@ public class InterventionService {
                 logger.info("Prompt: " + prompt + " for emotional state " + emotionalState + " and user id: " + userId);
             }
 
-            //1.9 Creates the context and gets the message to be read by the robot, if it has not been obtained out of the function
+            //1.8 Creates the context and gets the message to be read by the robot, if it has not been obtained out of the function
             String contextId = pedagogicalSoftwareData.getStudent().getId() + "-" + pedagogicalSoftwareData.getExercise().getId();
             String sentence = robotMessage;
 
             if (sentence == null) {
-                logger.trace("Sentence is null. Getting sentence from conversation service.");
+                logger.info("Sentence is null. Getting sentence from conversation service.");
                 sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
             }
 
-            //1.10 Checks if the conversation should be ended or not
+            //1.9 Checks if the conversation should be ended or not
             ConversationDTO conversation = objectMapper.readValue(sentence, ConversationDTO.class);
             logger.info("LLM Sentence: " + sentence);
 
             //2. Building the BMLe with the first sentence found
-            BML bml = new BML(pedagogicalSoftwareData.getId(),
-                    pedagogicalSoftwareData.getStudent().getUserId(),
-                    posture, gaze, eyes, gesture, toneOfVoice, voiceSpeed,
+            BML bml = new BML(pedagogicalSoftwareData.getStudent().getUserId(),
+                    contextId,
+                    posture, contextId, eyes, gesture, toneOfVoice, voiceSpeed,
                     conversation.getMessage(), conversation.getEnd());
 
             String bmle = generatorService.generateBMLE(bml);

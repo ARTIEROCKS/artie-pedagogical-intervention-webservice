@@ -1,6 +1,7 @@
 package artie.pedagogicalintervention.webservice.config;
 
-import artie.pedagogicalintervention.webservice.service.RabbitListenerService;
+import artie.pedagogicalintervention.webservice.service.ConversationListenerService;
+import artie.pedagogicalintervention.webservice.service.TeacherHelpRequestListenerService;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
@@ -14,7 +15,10 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Value("${artie.webservices.conversations.queue}")
-    String queueName;
+    String conversationsQueueName;
+
+    @Value("${artie.webservices.teacherHelpRequests.queue}")
+    String teacherHelpRequestsQueueName;
 
     @Value("${spring.rabbitmq.username}")
     String username;
@@ -23,42 +27,34 @@ public class RabbitMQConfig {
     private String password;
 
     @Autowired
-    private RabbitListenerService rabbitListenerService;
+    private ConversationListenerService conversationListenerService;
+    @Autowired
+    private TeacherHelpRequestListenerService teacherHelpRequestListenerService;
 
     @Bean
-    Queue queue() {
-        return new Queue(queueName, false);
+    Queue conversationsQueue() {
+        return new Queue(conversationsQueueName, false);
     }
+
+    @Bean
+    Queue teacherHelpRequestsQueue(){return new Queue(teacherHelpRequestsQueueName, false);}
 
     //create MessageListenerContainer using default connection factory
     @Bean
-    MessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory ) {
+    MessageListenerContainer conversationListenerContainer(ConnectionFactory connectionFactory ) {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory);
-        simpleMessageListenerContainer.setQueues(queue());
-        simpleMessageListenerContainer.setMessageListener(rabbitListenerService);
+        simpleMessageListenerContainer.setQueues(conversationsQueue());
+        simpleMessageListenerContainer.setMessageListener(conversationListenerService);
         return simpleMessageListenerContainer;
-
     }
 
-    //create custom connection factory
-	/*@Bean
-	ConnectionFactory connectionFactory() {
-		CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("localhost");
-		cachingConnectionFactory.setUsername(username);
-		cachingConnectionFactory.setUsername(password);
-		return cachingConnectionFactory;
-	}*/
-
-    //create MessageListenerContainer using custom connection factory
-	/*@Bean
-	MessageListenerContainer messageListenerContainer() {
-		SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
-		simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-		simpleMessageListenerContainer.setQueues(queue());
-		simpleMessageListenerContainer.setMessageListener(new RabbitMQListner());
-		return simpleMessageListenerContainer;
-
-	}*/
-
+    @Bean
+    MessageListenerContainer teacherHelpRequestListenerContainer(ConnectionFactory connectionFactory ) {
+        SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
+        simpleMessageListenerContainer.setConnectionFactory(connectionFactory);
+        simpleMessageListenerContainer.setQueues(teacherHelpRequestsQueue());
+        simpleMessageListenerContainer.setMessageListener(teacherHelpRequestListenerService);
+        return simpleMessageListenerContainer;
+    }
 }

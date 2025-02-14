@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class RabbitListenerService implements MessageListener {
+public class ConversationListenerService implements MessageListener {
 
     @Autowired
     private InterventionService interventionService;
@@ -20,7 +20,7 @@ public class RabbitListenerService implements MessageListener {
     private ObjectMapper objectMapper;
     @Autowired
     private ChatClientService chatClientService;
-    private final Logger logger = LoggerFactory.getLogger(RabbitListenerService.class);
+    private final Logger logger = LoggerFactory.getLogger(ConversationListenerService.class);
 
 
     public void onMessage(Message message) {
@@ -40,7 +40,8 @@ public class RabbitListenerService implements MessageListener {
             logger.info("Reply: " + reply);
 
             //Builds the intervention with the reply from the Chat Client service
-            if (psd != null) {
+            //Also checks if the user is currently interacting with the robot
+            if (psd != null && psd.getStudent().isInteractsWithRobot()) {
                 interventionService.buildAndSendIntervention(psd, reply);
             }else{
                 logger.error("Pedagogical Software Data is null, so any intervention can be performed");

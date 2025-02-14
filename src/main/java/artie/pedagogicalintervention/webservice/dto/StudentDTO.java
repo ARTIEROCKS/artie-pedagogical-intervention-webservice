@@ -32,8 +32,9 @@ public class StudentDTO extends Student {
 	 */
 	public StudentDTO(String id, String name, String lastName, String studentNumber,int gender, int motherTongue,
 					  int age, int competence, int motivation, boolean recordFace, boolean recordInteractions,
-					  String institutionId, String userId) {
-		super(id, name, lastName, studentNumber, gender, motherTongue, age, competence, motivation, recordFace, recordInteractions);
+					  boolean interactsWithRobot, String institutionId, String userId) {
+		super(id, name, lastName, studentNumber, gender, motherTongue, age, competence, motivation, recordFace,
+				recordInteractions, interactsWithRobot);
 
 		this.institutionId = institutionId;
 		this.userId = userId;
