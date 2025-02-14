@@ -16,12 +16,12 @@ public class ChatClientService {
     @GrpcClient("chat")
     private ChatGrpc.ChatBlockingStub chatClient;
 
-    public String getResponse(String userId, String contextId, String message, String prompt) {
+    public String getResponse(String userId, String contextId, String userPrompt, String systemPrompt) {
         ChatRequest request = ChatRequest.newBuilder()
                 .setUserId(userId)
                 .setContextId(contextId)
-                .setMessage(message)
-                .setPrompt(prompt)
+                .setUserPrompt(userPrompt)
+                .setSystemPrompt(systemPrompt)
                 .build();
         ChatResponse response = chatClient.getResponse(request);
         return response.getReply();

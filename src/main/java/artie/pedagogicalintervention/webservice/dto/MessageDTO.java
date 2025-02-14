@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class MessageDTO {
     private String userId;
     private String contextId;
-    private String message;
-    private String prompt;
+    private String userPrompt;
+    private String systemPrompt;
 }

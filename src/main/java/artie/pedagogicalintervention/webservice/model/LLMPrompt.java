@@ -15,4 +15,5 @@ public class LLMPrompt {
     private String institutionId;
     private String promptKey;
     private String prompt;
+    private String role;
 }

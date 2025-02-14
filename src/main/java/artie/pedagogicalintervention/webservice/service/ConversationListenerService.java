@@ -34,7 +34,7 @@ public class ConversationListenerService implements MessageListener {
             // Gets the answer from the chat
             Map<String, PedagogicalSoftwareData> mapUserContext = interventionService.getMapUserContext();
             PedagogicalSoftwareData psd = mapUserContext != null ? mapUserContext.get(messageDTO.getUserId()) : null;
-            String reply = chatClientService.getResponse(messageDTO.getUserId(), messageDTO.getContextId(), messageDTO.getMessage(), messageDTO.getPrompt());
+            String reply = chatClientService.getResponse(messageDTO.getUserId(), messageDTO.getContextId(), messageDTO.getUserPrompt(), messageDTO.getSystemPrompt());
 
             // Log or handle the reply as needed
             logger.info("Reply: " + reply);
