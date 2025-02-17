@@ -180,16 +180,25 @@ public class InterventionService {
             String posture = "stand";
 
             //1.7 The LLM prompt is given by a key, so we have to first get the prompt from the db
-            String prompt = "";
+            String strUserPrompt = "";
             String promptKey = getValueFromPrologAnswer(answer, "Prompt");
             List<LLMPrompt> LLMPromptList = this.LLMPromptService.findByInstitutionIdAndPromptKey(pedagogicalSoftwareData.getStudent().getInstitutionId(), promptKey);
 
-            if (!LLMPromptList.isEmpty()) {
-                prompt = LLMPromptList.get(0).getPrompt();
+            LLMPrompt systemPrompt = LLMPromptList.stream()
+                    .filter(p -> "system".equals(p.getRole()))
+                    .findFirst()
+                    .orElse(null);
+
+            LLMPrompt userPrompt = LLMPromptList.stream()
+                    .filter(p -> "user".equals(p.getRole()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (userPrompt != null) {
+                strUserPrompt = userPrompt.getPrompt();
                 //Adds the statement of the exercise to the prompt
-                //TODO: Review instead of putting the exercise description, setting blocks description
-                prompt += pedagogicalSoftwareData.getExercise().getDescription();
-                logger.info("Prompt: " + prompt + " for emotional state " + emotionalState + " and user id: " + userId);
+                strUserPrompt += pedagogicalSoftwareData.getSolutionDistance().getNextSteps().toString();
+                logger.info("Prompt: " + strUserPrompt + " for emotional state " + emotionalState + " and user id: " + userId);
             }
 
             //1.8 Creates the context and gets the message to be read by the robot, if it has not been obtained out of the function
@@ -198,7 +207,8 @@ public class InterventionService {
 
             if (sentence == null) {
                 logger.info("Sentence is null. Getting sentence from conversation service.");
-                sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, "", prompt);
+                assert systemPrompt != null;
+                sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, strUserPrompt, systemPrompt.getPrompt());
             }
 
             //1.9 Checks if the conversation should be ended or not
