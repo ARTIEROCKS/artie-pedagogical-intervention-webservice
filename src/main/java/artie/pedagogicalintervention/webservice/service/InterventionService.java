@@ -6,6 +6,7 @@ import artie.generator.service.GeneratorServiceImpl;
 import artie.pedagogicalintervention.webservice.dto.*;
 import artie.pedagogicalintervention.webservice.model.LLMPrompt;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
+import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -59,7 +60,7 @@ public class InterventionService {
     private EmotionalStateService emotionalStateService;
 
     @Autowired
-    private PedagogicalSoftwareService pedagogicalSoftwareService;
+    private PedagogicalSoftwareDataRepository pedagogicalSoftwareDataRepository;
 
     @Autowired
     private LLMPromptService LLMPromptService;
@@ -102,10 +103,10 @@ public class InterventionService {
      */
     public void buildAndSendInterventionByPedagogicalSoftwareDataId(String id) throws JsonProcessingException {
         logger.info("Building and sending the intervention by pedagogical software data id: " + id);
-        PedagogicalSoftwareData psd = this.pedagogicalSoftwareService.findById(id);
+        PedagogicalSoftwareData psd = this.pedagogicalSoftwareDataRepository.findById(id).orElse(null);
 
         //Checks if the student is interacting with the robot
-        if(psd.getStudent().isInteractsWithRobot()) {
+        if(psd != null && psd.getStudent().isInteractsWithRobot()) {
             this.buildAndSendIntervention(psd, null);
         }
     }

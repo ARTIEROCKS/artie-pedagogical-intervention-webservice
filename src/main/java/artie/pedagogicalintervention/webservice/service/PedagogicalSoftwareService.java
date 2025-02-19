@@ -3,6 +3,7 @@ package artie.pedagogicalintervention.webservice.service;
 import artie.common.web.dto.*;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
+import artie.common.web.interfaces.PedagogicalIntervention;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
@@ -48,6 +49,9 @@ public class PedagogicalSoftwareService {
 
 	@Autowired
 	private DistanceCalculationService distanceCalculationService;
+
+	@Autowired
+	private InterventionService interventionService;
 
 	@Value("${artie.webservices.student.updateCompetence.url}")
 	private String updateCompetenceUrl;
@@ -199,7 +203,17 @@ public class PedagogicalSoftwareService {
                 logger.error("Error trying to map an object to JSON: " + e.getMessage());
             }
         }else{
-			//3.2 We send that everything is OK and the help result object
+
+			//3.2.1 Performing the intervention
+			if(pedagogicalSoftwareData.isRequestHelp()){
+				try {
+				interventionService.buildAndSendIntervention(objSaved, null);
+				} catch(Exception e){
+					logger.error("Error when building and sending the intervention to the robot: " + e.getMessage());
+				}
+			}
+
+			//3.2.2 We send that everything is OK and the help result object
 			response = new Response(new ResponseBody(ResponseCodeEnum.OK.toString(), helpResult));
 			try {
 				logger.trace("Help result (" + this.objectMapper.writeValueAsString(helpResult) + ") from the student:" + this.objectMapper.writeValueAsString(pedagogicalSoftwareData.getStudent()));
