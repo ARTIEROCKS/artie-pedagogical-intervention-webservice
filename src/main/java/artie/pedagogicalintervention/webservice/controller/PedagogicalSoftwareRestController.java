@@ -42,8 +42,7 @@ public class PedagogicalSoftwareRestController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public String sendPedagogicalSoftwareData(@RequestBody String data) throws JsonProcessingException {
 
-		//We build the intervention to the robot queue
-		this.interventionService.buildAndSendIntervention(data);
+		//We add the intervention to the database and perform all the logic behind
 		return this.pedagogicalSoftwareService.add(data);
 	}
 
