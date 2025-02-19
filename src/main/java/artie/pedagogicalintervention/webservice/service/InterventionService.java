@@ -198,7 +198,12 @@ public class InterventionService {
             if (userPrompt != null) {
                 strUserPrompt = userPrompt.getPrompt();
                 //Adds the statement of the exercise to the prompt
-                strUserPrompt += pedagogicalSoftwareData.getSolutionDistance().getNextSteps().toString();
+                if(pedagogicalSoftwareData.getSolutionDistance() != null &&
+                        pedagogicalSoftwareData.getSolutionDistance().getNextSteps() != null) {
+                    strUserPrompt += pedagogicalSoftwareData.getSolutionDistance().getNextSteps().toString();
+                }else{
+                    strUserPrompt += "[]";
+                }
                 logger.info("Prompt: " + strUserPrompt + " for emotional state " + emotionalState + " and user id: " + userId);
             }
 
