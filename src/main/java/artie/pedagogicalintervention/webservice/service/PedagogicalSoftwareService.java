@@ -205,9 +205,9 @@ public class PedagogicalSoftwareService {
         }else{
 
 			//3.2.1 Performing the intervention
-			if(pedagogicalSoftwareData.isRequestHelp()){
+			if(pedagogicalSoftwareData.isRequestHelp() && pedagogicalSoftwareData.getStudent().isInteractsWithRobot()){
 				try {
-				interventionService.buildAndSendIntervention(objSaved, null);
+					interventionService.buildAndSendIntervention(objSaved, null);
 				} catch(Exception e){
 					logger.error("Error when building and sending the intervention to the robot: " + e.getMessage());
 				}
