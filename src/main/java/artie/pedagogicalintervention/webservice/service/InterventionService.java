@@ -214,7 +214,9 @@ public class InterventionService {
             if (sentence == null) {
                 logger.info("Sentence is null. Getting sentence from conversation service.");
                 assert systemPrompt != null;
-                String strSystemPrompt = systemPrompt.getPrompt().replace(":edad:", String.valueOf(pedagogicalSoftwareData.getStudent().getAge()));
+                String strSystemPrompt = systemPrompt.getPrompt()
+                        .replace(":age:", String.valueOf(pedagogicalSoftwareData.getStudent().getAge()))
+                        .replace(":level:", String.valueOf(pedagogicalSoftwareData.getStudent().getCompetence()) + "/3");
                 sentence = this.chatClientService.getResponse(pedagogicalSoftwareData.getStudent().getUserId(), contextId, strUserPrompt, strSystemPrompt);
             }
 
