@@ -9,8 +9,8 @@ RUN mvn -f /home/app/pom.xml clean package
 #
 # Package stage
 #
-FROM eclipse-temurin:17-jdk-jammy
+FROM amazoncorretto:17-alpine-jdk
 VOLUME /tmp
 EXPOSE 8080
 COPY target/*.jar app.jar
-ENTRYPOINT ["java","-Xmx4g","-jar","/app.jar"]
+ENTRYPOINT ["java","-Xmx8g","-jar","/app.jar"]
