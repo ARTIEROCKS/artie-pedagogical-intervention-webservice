@@ -21,6 +21,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class HelpModelService {
@@ -81,10 +83,42 @@ public class HelpModelService {
                     newFormatHelp = helpNode.asBoolean() && topLevelOk;
                 } else if (helpNode.isNumber()) {
                     newFormatHelp = helpNode.intValue() == 1 && topLevelOk;
-                } else if (bodyNode.isObject()) {
-                    // Map entire body to DTO and read helpNeeded/need_help via alias
+                }
+
+                // Map entire body to DTO and copy details if it's an object
+                if (bodyNode.isObject()) {
                     HelpModelDTO dto = mapper.treeToValue(bodyNode, HelpModelDTO.class);
-                    newFormatHelp = dto != null && Boolean.TRUE.equals(dto.getHelpNeeded()) && topLevelOk;
+                    if (dto != null) {
+                        // Fill extended prediction details into pedagogicalSoftwareData
+                        pedagogicalSoftwareData.setPredictedNeededHelpThreshold(dto.getThreshold());
+                        pedagogicalSoftwareData.setPredictedNeededHelpProbability(dto.getLastProbability());
+                        pedagogicalSoftwareData.setPredictedNeededHelpSequenceProbabilities(dto.getSequenceProbabilities());
+
+                        if (dto.getAttention() != null) {
+                            PedagogicalSoftwareData.PredictedNeededHelpAttention att = new PedagogicalSoftwareData.PredictedNeededHelpAttention();
+                            att.setAvailable(dto.getAttention().getAvailable());
+
+                            List<PedagogicalSoftwareData.PredictedNeededHelpTopK> topKList = null;
+                            if (dto.getAttention().getTopK() != null) {
+                                topKList = new ArrayList<>();
+                                for (HelpModelDTO.TopK k : dto.getAttention().getTopK()) {
+                                    if (k != null) {
+                                        topKList.add(new PedagogicalSoftwareData.PredictedNeededHelpTopK(k.getT(), k.getW()));
+                                    }
+                                }
+                            }
+                            att.setTopK(topKList);
+                            att.setSeqLen(dto.getAttention().getSeqLen());
+                            pedagogicalSoftwareData.setPredictedNeededHelpAttention(att);
+                        } else {
+                            pedagogicalSoftwareData.setPredictedNeededHelpAttention(null);
+                        }
+
+                        // Determine help flag also from DTO if not already set by helpNode
+                        if (!newFormatHelp && dto.getHelpNeeded() != null) {
+                            newFormatHelp = dto.getHelpNeeded() && topLevelOk;
+                        }
+                    }
                 } else if (bodyNode.isBoolean()) {
                     // legacy very-compact format: body is directly a boolean
                     newFormatHelp = bodyNode.asBoolean() && topLevelOk;
