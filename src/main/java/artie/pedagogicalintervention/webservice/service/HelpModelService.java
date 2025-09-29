@@ -3,8 +3,10 @@ package artie.pedagogicalintervention.webservice.service;
 import artie.common.web.dto.Response;
 import artie.common.web.dto.SoftwareData;
 import artie.common.web.enums.ResponseCodeEnum;
+import artie.pedagogicalintervention.webservice.dto.HelpModelDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,18 +66,58 @@ public class HelpModelService {
             String wsResponse = restTemplate.postForObject(helpWebserviceUrl + "/predict", softwareData, String.class);
             logger.info("Result for the prediction for the student " + pedagogicalSoftwareData.getStudent().getId() + ": " + wsResponse);
 
-            //3- Transforms the string into the object
-            Response response = new ObjectMapper().readValue(wsResponse, Response.class);
+            ObjectMapper mapper = new ObjectMapper();
 
-            //If there are an error in the response, we print the error
-            if(response != null && response.getBody() != null && Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString())){
-                System.out.println((String)response.getBody().getObject());
-                logger.error("Error during the help need prediction: " + (String)response.getBody().getObject());
+            // First, try to parse new/any JSON format directly
+            boolean newFormatHelp = false;
+            try {
+                JsonNode root = mapper.readTree(wsResponse);
+                JsonNode topMessage = root.path("message");
+                boolean topLevelOk = topMessage.isMissingNode() || !Objects.equals(topMessage.asText(), ResponseCodeEnum.ERROR.toString());
+
+                JsonNode bodyNode = root.path("body");
+                JsonNode helpNode = bodyNode.path("help_needed");
+                if (helpNode.isBoolean()) {
+                    newFormatHelp = helpNode.asBoolean() && topLevelOk;
+                } else if (helpNode.isNumber()) {
+                    newFormatHelp = helpNode.intValue() == 1 && topLevelOk;
+                } else if (bodyNode.isObject()) {
+                    // Map entire body to DTO and read helpNeeded/need_help via alias
+                    HelpModelDTO dto = mapper.treeToValue(bodyNode, HelpModelDTO.class);
+                    newFormatHelp = dto != null && Boolean.TRUE.equals(dto.getHelpNeeded()) && topLevelOk;
+                } else if (bodyNode.isBoolean()) {
+                    // legacy very-compact format: body is directly a boolean
+                    newFormatHelp = bodyNode.asBoolean() && topLevelOk;
+                } else if (bodyNode.isNumber()) {
+                    // legacy compact numeric format: body is directly 1/0
+                    newFormatHelp = bodyNode.intValue() == 1 && topLevelOk;
+                }
+            } catch (Exception ignored) {
+                // ignore tree parsing issues; legacy parsing might work
             }
 
-            result = response != null &&
-                    !Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString()) &&
-                    response.getBody().getObject() != null && ((int) response.getBody().getObject() == 1);
+            // Then, try legacy Response structure
+            boolean legacyHelp = false;
+            try {
+                Response response = mapper.readValue(wsResponse, Response.class);
+                if(response != null && response.getBody() != null && Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString())){
+                    System.out.println((String)response.getBody().getObject());
+                    logger.error("Error during the help need prediction: " + (String)response.getBody().getObject());
+                }
+                boolean legacyOk = response != null && response.getBody() != null && !Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString());
+                if (legacyOk && response.getBody().getObject() != null) {
+                    Object obj = response.getBody().getObject();
+                    if (obj instanceof Number) {
+                        legacyHelp = ((Number) obj).intValue() == 1;
+                    } else if (obj instanceof Boolean) {
+                        legacyHelp = (Boolean) obj;
+                    }
+                }
+            } catch (Exception ignored) {
+                // ignore legacy parsing issues
+            }
+
+            result = legacyHelp || newFormatHelp;
             logger.info("Help need prediction: " + result + " for the student id: " + pedagogicalSoftwareData.getStudent().getId());
 
         } catch (Exception e) {
