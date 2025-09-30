@@ -63,7 +63,7 @@ public class PedagogicalSoftwareService {
 		this.restTemplate = builder.build();
 	}
 
-	private Logger logger;
+	private Logger logger = LoggerFactory.getLogger(PedagogicalSoftwareService.class);
 
 	public PedagogicalSoftwareService(){}
 
