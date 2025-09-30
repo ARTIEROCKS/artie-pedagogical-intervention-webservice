@@ -13,7 +13,7 @@
 
 	<groupId>artie.web</groupId>
 	<artifactId>pedagogicalinterventionws</artifactId>
-	<version>0.26.0-RELEASE</version>
+	<version>0.27.0-RELEASE</version>
 	<name>pedagogical intervention webservice</name>
 	<description>ARTIE Pedagogical intervention webservice</description>
 
@@ -21,7 +21,7 @@
 		<java.version>17</java.version>
 		<grpc.version>1.50.2</grpc.version>
 		<protobuf.version>3.21.5</protobuf.version>
-		<lombok.version>1.18.30</lombok.version>
+		<lombok.version>1.18.36</lombok.version>
 	</properties>
 
 	<repositories>
@@ -121,7 +121,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.30</version>
+			<version>${lombok.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -207,15 +207,36 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+					<release>17</release>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-							<version>1.18.30</version>
+							<version>${lombok.version}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
         	</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>[17,18)</version>
+							<vendor>any</vendor>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

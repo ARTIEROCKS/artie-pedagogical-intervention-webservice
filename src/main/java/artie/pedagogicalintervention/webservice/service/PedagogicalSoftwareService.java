@@ -4,6 +4,7 @@ import artie.common.web.dto.*;
 import artie.common.web.enums.ResponseCodeEnum;
 import artie.common.web.enums.ValidSolutionEnum;
 import artie.common.web.interfaces.PedagogicalIntervention;
+import artie.pedagogicalintervention.webservice.dto.HelpModelDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareSolution;
 import artie.pedagogicalintervention.webservice.repository.PedagogicalSoftwareDataRepository;
@@ -25,9 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +63,7 @@ public class PedagogicalSoftwareService {
 		this.restTemplate = builder.build();
 	}
 
-	private Logger logger;
+	private Logger logger = LoggerFactory.getLogger(PedagogicalSoftwareService.class);
 
 	public PedagogicalSoftwareService(){}
 
@@ -242,17 +241,42 @@ public class PedagogicalSoftwareService {
 					PedagogicalSoftwareData.class);
 			logger.trace("JSON transformed into an object");
 
-			// 2.1 Calls the help model to get if the help must be shown or not
-			boolean helpNeeded = false;
+			// 2.1 Calls the help model to get the prediction DTO
+			HelpModelDTO helpDto = null;
 			try{
-				helpNeeded = this.helpModelService.predict(pedagogicalSoftwareData);
-				logger.info("Predicted help need: " + helpNeeded);
+				helpDto = this.helpModelService.predict(pedagogicalSoftwareData);
+				logger.info("Predicted help DTO: " + (helpDto != null ? helpDto.toString() : null));
 			}catch(Exception ex){
 				logger.error("Error predicting help need: " + ex.getMessage());
 			}
 
-			// 2.2 Adds the predicted need help into the response
+			// 2.2 Apply help DTO to pedagogicalSoftwareData
+			boolean helpNeeded = helpDto != null && Boolean.TRUE.equals(helpDto.getHelpNeeded());
 			pedagogicalSoftwareData.setPredictedNeedHelp(helpNeeded);
+			if (helpDto != null) {
+				pedagogicalSoftwareData.setPredictedNeededHelpThreshold(helpDto.getThreshold());
+				pedagogicalSoftwareData.setPredictedNeededHelpProbability(helpDto.getLastProbability());
+				pedagogicalSoftwareData.setPredictedNeededHelpSequenceProbabilities(helpDto.getSequenceProbabilities());
+				if (helpDto.getAttention() != null) {
+					PedagogicalSoftwareData.PredictedNeededHelpAttention att = new PedagogicalSoftwareData.PredictedNeededHelpAttention();
+					att.setAvailable(helpDto.getAttention().getAvailable());
+					att.setSeqLen(helpDto.getAttention().getSeqLen());
+					if (helpDto.getAttention().getTopK() != null) {
+						List<PedagogicalSoftwareData.PredictedNeededHelpTopK> topKList = new ArrayList<>();
+						helpDto.getAttention().getTopK().forEach(k -> {
+							if (k != null) topKList.add(new PedagogicalSoftwareData.PredictedNeededHelpTopK(k.getT(), k.getW()));
+						});
+						att.setTopK(topKList);
+					} else {
+						att.setTopK(null);
+					}
+					pedagogicalSoftwareData.setPredictedNeededHelpAttention(att);
+				} else {
+					pedagogicalSoftwareData.setPredictedNeededHelpAttention(null);
+				}
+			}
+
+			// 2.3 Add the pedagogical software data
 			response = this.add(pedagogicalSoftwareData);
 			logger.info("Added the pedagogical software data in DB");
 
@@ -272,18 +296,18 @@ public class PedagogicalSoftwareService {
 
 		//1- Gets the finished exercises of the user ID
 		return this.pedagogicalSoftwareDataRepository.findByFinishedExercise(true)
-																		.stream()
-																		.filter(fe -> (fe.getStudent().getUserId().equals(userId) &&
-																							(fe.getSolutionDistance().getTotalDistance() > 0 ||
-																									fe.getSolutionDistance().getTotalDistance() == -1 ||
-																									fe.getValidSolution() == ValidSolutionEnum.REJECTED.getValue() ||
-																									fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
-																		)
-																		.map(e ->{
-																			return new Exercise(e.getId(), e.getExercise().getName(), e.getExercise().getDescription(), e.getExercise().getFinishedExerciseId(),
-																							    e.getScreenShot(), e.getBinary(), e.getValidSolution(), e.getExercise().isEvaluation(), e.getExercise().getLevel());
-																		})
-																		.collect(Collectors.toList());
+														.stream()
+														.filter(fe -> (fe.getStudent().getUserId().equals(userId) &&
+																(fe.getSolutionDistance().getTotalDistance() > 0 ||
+																		fe.getSolutionDistance().getTotalDistance() == -1 ||
+																		fe.getValidSolution() == ValidSolutionEnum.REJECTED.getValue() ||
+																		fe.getValidSolution() == ValidSolutionEnum.VALIDATED.getValue()))
+								)
+								.map(e ->{
+									return new Exercise(e.getId(), e.getExercise().getName(), e.getExercise().getDescription(), e.getExercise().getFinishedExerciseId(),
+										    e.getScreenShot(), e.getBinary(), e.getValidSolution(), e.getExercise().isEvaluation(), e.getExercise().getLevel());
+								})
+								.collect(Collectors.toList());
 	}
 
 	/**

@@ -3,12 +3,11 @@ package artie.pedagogicalintervention.webservice.model;
 import artie.common.web.dto.Exercise;
 import artie.common.web.dto.SoftwareData;
 import artie.common.web.dto.SolutionDistance;
-import artie.common.web.dto.Student;
-import artie.common.web.enums.ValidSolutionEnum;
 import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -56,6 +55,29 @@ public class PedagogicalSoftwareData {
 	private String binary;
 	private List<PedagogicalSoftwareElement> elements = new ArrayList<>();
 
+	// New fields to store detailed help model prediction
+	private Double predictedNeededHelpThreshold;
+	private Double predictedNeededHelpProbability;
+	private List<Double> predictedNeededHelpSequenceProbabilities;
+	private PredictedNeededHelpAttention predictedNeededHelpAttention;
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class PredictedNeededHelpAttention {
+		private Boolean available;
+		private List<PredictedNeededHelpTopK> topK;
+		private Integer seqLen;
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class PredictedNeededHelpTopK {
+		private Integer t;
+		private Double w;
+	}
+
 	/**
 	 * Function to get all the blocks from inside the elements
 	 * @return
@@ -73,7 +95,7 @@ public class PedagogicalSoftwareData {
 		this.dateTime = LocalDateTime.now();
 		this.requestHelp = false;
 		this.finishedExercise = false;
-		this.validSolution = ValidSolutionEnum.WAITING_APPROVAL.getValue();
+		this.validSolution = artie.common.web.enums.ValidSolutionEnum.WAITING_APPROVAL.getValue();
 		this.screenShot = null;
 		this.predictedNeedHelp = false;
 		this.answeredNeedHelp = false;
@@ -98,8 +120,8 @@ public class PedagogicalSoftwareData {
 	 * @param binary
 	 */
 	public PedagogicalSoftwareData(StudentDTO student, Exercise exercise, SolutionDistance solutionDistance, double aptedDistance, String tree, List<PedagogicalSoftwareElement> elements,
-								   boolean requestHelp, boolean predictedNeedHelp, boolean answeredNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade,
-								   Date lastLogin, Date lastExerciseChange, String screenShot, String binary) {
+							   boolean requestHelp, boolean predictedNeedHelp, boolean answeredNeedHelp, double secondsHelpOpen, boolean finishedExercise, int validSolution, double grade,
+							   Date lastLogin, Date lastExerciseChange, String screenShot, String binary) {
 		this.student = student;
 		this.exercise = exercise;
 		this.solutionDistance = solutionDistance;
@@ -129,7 +151,7 @@ public class PedagogicalSoftwareData {
 	 * @return
 	 */
 	public SoftwareData toDTO(){
-		Student st = this.student;
+		artie.common.web.dto.Student st = this.student;
 		return new SoftwareData(st, this.exercise, this.solutionDistance,
 								this.secondsHelpOpen, this.finishedExercise, this.validSolution,
 								this.grade, this.lastLogin, this.lastExerciseChange);

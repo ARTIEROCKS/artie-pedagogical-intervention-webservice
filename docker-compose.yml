@@ -3,8 +3,8 @@ version: '3.8'
 services:
   pedagogical-intervention-webservice:
     build: .
-    # Si no desea construir localmente, elimine la línea 'build: .' y use sólo la imagen publicada.
-    image: artierocks/pedagogical-intervention-webservice:0.26.0-RELEASE
+    # If you don't want to build locally, remove the 'build: .' line and use only the published image.
+    image: artierocks/pedagogical-intervention-webservice:0.27.0-RELEASE
     container_name: pedagogical-intervention-webservice
     ports:
       - "8080:8080"
@@ -13,7 +13,7 @@ services:
       - MAX_RAM_PERCENT=75
       - INIT_RAM_PERCENT=25
       - SPRING_PROFILES_ACTIVE=default
-      # Asegura que el binario de Java esté disponible para /entrypoint.sh
+      # Ensure the Java binary is available to /entrypoint.sh
       - JAVA_HOME=/opt/java/openjdk
       - PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
