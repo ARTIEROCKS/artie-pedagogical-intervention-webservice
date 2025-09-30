@@ -1,12 +1,10 @@
 package artie.pedagogicalintervention.webservice.service;
 
-import artie.common.web.dto.Response;
 import artie.common.web.dto.SoftwareData;
-import artie.common.web.enums.ResponseCodeEnum;
 import artie.pedagogicalintervention.webservice.dto.HelpModelDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
-import java.util.Objects;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,115 +47,45 @@ public class HelpModelService {
     }
 
     /**
-     * Function that receives the pedagogical software data and calls the help model prediction
-     * @param pedagogicalSoftwareData
-     * @return
+     * Calls help-model service with the provided data and returns the parsed HelpModelDTO.
+     * It sends a non-empty array as required by the Python service.
      */
-    public boolean predict(PedagogicalSoftwareData pedagogicalSoftwareData) {
-
-        boolean result = false;
-        logger.info("Predicting if the student " + pedagogicalSoftwareData.getStudent().getId() + " needs help");
+    public HelpModelDTO predict(PedagogicalSoftwareData pedagogicalSoftwareData) {
+        logger.info("Predicting if the student " + (pedagogicalSoftwareData.getStudent() != null ? pedagogicalSoftwareData.getStudent().getId() : "null") + " needs help");
 
         try {
-            //1- Gets the parent of the pedagogical software data, that will be sent
+            // 1- Build the payload from the pedagogical software data
             SoftwareData softwareData = pedagogicalSoftwareData.toDTO();
+            List<SoftwareData> payload = Collections.singletonList(softwareData);
 
-            //2- Calls for the webservice
-            String wsResponse = restTemplate.postForObject(helpWebserviceUrl + "/predict", softwareData, String.class);
-            logger.info("Result for the prediction for the student " + pedagogicalSoftwareData.getStudent().getId() + ": " + wsResponse);
-
+            // Prepare mapper for logging and parsing
             ObjectMapper mapper = new ObjectMapper();
 
-            // First, try to parse new/any JSON format directly
-            boolean newFormatHelp = false;
+            // Log request payload (JSON array with one interaction)
             try {
-                JsonNode root = mapper.readTree(wsResponse);
-                JsonNode topMessage = root.path("message");
-                boolean topLevelOk = topMessage.isMissingNode() || !Objects.equals(topMessage.asText(), ResponseCodeEnum.ERROR.toString());
-
-                JsonNode bodyNode = root.path("body");
-                JsonNode helpNode = bodyNode.path("help_needed");
-                if (helpNode.isBoolean()) {
-                    newFormatHelp = helpNode.asBoolean() && topLevelOk;
-                } else if (helpNode.isNumber()) {
-                    newFormatHelp = helpNode.intValue() == 1 && topLevelOk;
-                }
-
-                // Map entire body to DTO and copy details if it's an object
-                if (bodyNode.isObject()) {
-                    HelpModelDTO dto = mapper.treeToValue(bodyNode, HelpModelDTO.class);
-                    if (dto != null) {
-                        // Fill extended prediction details into pedagogicalSoftwareData
-                        pedagogicalSoftwareData.setPredictedNeededHelpThreshold(dto.getThreshold());
-                        pedagogicalSoftwareData.setPredictedNeededHelpProbability(dto.getLastProbability());
-                        pedagogicalSoftwareData.setPredictedNeededHelpSequenceProbabilities(dto.getSequenceProbabilities());
-
-                        if (dto.getAttention() != null) {
-                            PedagogicalSoftwareData.PredictedNeededHelpAttention att = new PedagogicalSoftwareData.PredictedNeededHelpAttention();
-                            att.setAvailable(dto.getAttention().getAvailable());
-
-                            List<PedagogicalSoftwareData.PredictedNeededHelpTopK> topKList = null;
-                            if (dto.getAttention().getTopK() != null) {
-                                topKList = new ArrayList<>();
-                                for (HelpModelDTO.TopK k : dto.getAttention().getTopK()) {
-                                    if (k != null) {
-                                        topKList.add(new PedagogicalSoftwareData.PredictedNeededHelpTopK(k.getT(), k.getW()));
-                                    }
-                                }
-                            }
-                            att.setTopK(topKList);
-                            att.setSeqLen(dto.getAttention().getSeqLen());
-                            pedagogicalSoftwareData.setPredictedNeededHelpAttention(att);
-                        } else {
-                            pedagogicalSoftwareData.setPredictedNeededHelpAttention(null);
-                        }
-
-                        // Determine help flag also from DTO if not already set by helpNode
-                        if (!newFormatHelp && dto.getHelpNeeded() != null) {
-                            newFormatHelp = dto.getHelpNeeded() && topLevelOk;
-                        }
-                    }
-                } else if (bodyNode.isBoolean()) {
-                    // legacy very-compact format: body is directly a boolean
-                    newFormatHelp = bodyNode.asBoolean() && topLevelOk;
-                } else if (bodyNode.isNumber()) {
-                    // legacy compact numeric format: body is directly 1/0
-                    newFormatHelp = bodyNode.intValue() == 1 && topLevelOk;
-                }
-            } catch (Exception ignored) {
-                // ignore tree parsing issues; legacy parsing might work
+                String payloadJson = mapper.writeValueAsString(payload);
+                logger.debug("Prediction service request payload: " + payloadJson);
+            } catch (Exception ex) {
+                logger.warn("Could not serialize prediction payload for logging: " + ex.getMessage());
             }
 
-            // Then, try legacy Response structure
-            boolean legacyHelp = false;
-            try {
-                Response response = mapper.readValue(wsResponse, Response.class);
-                if(response != null && response.getBody() != null && Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString())){
-                    System.out.println((String)response.getBody().getObject());
-                    logger.error("Error during the help need prediction: " + (String)response.getBody().getObject());
-                }
-                boolean legacyOk = response != null && response.getBody() != null && !Objects.equals(response.getBody().getMessage(), ResponseCodeEnum.ERROR.toString());
-                if (legacyOk && response.getBody().getObject() != null) {
-                    Object obj = response.getBody().getObject();
-                    if (obj instanceof Number) {
-                        legacyHelp = ((Number) obj).intValue() == 1;
-                    } else if (obj instanceof Boolean) {
-                        legacyHelp = (Boolean) obj;
-                    }
-                }
-            } catch (Exception ignored) {
-                // ignore legacy parsing issues
+            // 2- Call the webservice (expects an array)
+            String wsResponse = restTemplate.postForObject(helpWebserviceUrl + "/predict", payload, String.class);
+            logger.info("Prediction service response for student " + (pedagogicalSoftwareData.getStudent() != null ? pedagogicalSoftwareData.getStudent().getId() : "null") + ": " + wsResponse);
+
+            // 3- Parse JSON and map body to HelpModelDTO
+            JsonNode root = mapper.readTree(wsResponse);
+            JsonNode bodyNode = root.path("body");
+            if (bodyNode.isMissingNode() || bodyNode.isNull()) {
+                logger.error("Help model response has no body node");
+                return null;
             }
-
-            result = legacyHelp || newFormatHelp;
-            logger.info("Help need prediction: " + result + " for the student id: " + pedagogicalSoftwareData.getStudent().getId());
-
+            HelpModelDTO dto = mapper.treeToValue(bodyNode, HelpModelDTO.class);
+            logger.info("Help need predicted: " + (dto != null ? dto.getHelpNeeded() : null));
+            return dto;
         } catch (Exception e) {
             logger.error("Error during the help need prediction: " + e.getMessage());
+            return null;
         }
-
-        //3- Returns the boolean body object
-        return result;
     }
-
 }

@@ -1,10 +1,12 @@
 package artie.pedagogicalintervention.webservice.test;
 
+import artie.pedagogicalintervention.webservice.dto.HelpModelDTO;
 import artie.pedagogicalintervention.webservice.dto.StudentDTO;
 import artie.pedagogicalintervention.webservice.model.PedagogicalSoftwareData;
 import artie.pedagogicalintervention.webservice.service.HelpModelService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
@@ -39,7 +41,7 @@ class HelpModelServiceTest {
     }
 
     @Test
-    void predict_setsExtendedFields_fromBody() {
+    void predict_returnsDto_andParsesBodyFields() {
         String json = "{\n" +
                 "  \"message\": \"OK\",\n" +
                 "  \"body\": {\n" +
@@ -54,28 +56,29 @@ class HelpModelServiceTest {
                 "    }\n" +
                 "  }\n" +
                 "}";
-        Mockito.when(restTemplate.postForObject(Mockito.anyString(), Mockito.any(), Mockito.eq(String.class)))
+        Mockito.when(restTemplate.postForObject(ArgumentMatchers.anyString(), ArgumentMatchers.any(), ArgumentMatchers.eq(String.class)))
                 .thenReturn(json);
 
         PedagogicalSoftwareData psd = buildMinimalPsd();
-        boolean result = helpModelService.predict(psd);
+        HelpModelDTO dto = helpModelService.predict(psd);
 
-        assertTrue(result, "help_needed should be true");
-        assertEquals(0.5, psd.getPredictedNeededHelpThreshold());
-        assertEquals(0.75, psd.getPredictedNeededHelpProbability());
-        List<Double> seq = psd.getPredictedNeededHelpSequenceProbabilities();
-        assertNotNull(seq);
+        assertNotNull(dto, "DTO should not be null");
+        assertEquals(0.5, dto.getThreshold());
+        assertTrue(Boolean.TRUE.equals(dto.getHelpNeeded()), "help_needed should be true");
+        assertEquals(0.75, dto.getLastProbability());
+        List<Double> seq = dto.getSequenceProbabilities();
+        assertNotNull(seq, "sequence_probabilities should not be null");
         assertEquals(2, seq.size());
         assertEquals(0.75, seq.get(0));
         assertEquals(0.6, seq.get(1));
-        assertNotNull(psd.getPredictedNeededHelpAttention());
-        assertEquals(true, psd.getPredictedNeededHelpAttention().getAvailable());
-        assertEquals(2, psd.getPredictedNeededHelpAttention().getSeqLen());
-        assertNotNull(psd.getPredictedNeededHelpAttention().getTopK());
-        assertEquals(2, psd.getPredictedNeededHelpAttention().getTopK().size());
-        assertEquals(0, psd.getPredictedNeededHelpAttention().getTopK().get(0).getT());
-        assertEquals(1.0, psd.getPredictedNeededHelpAttention().getTopK().get(0).getW());
-        assertEquals(1, psd.getPredictedNeededHelpAttention().getTopK().get(1).getT());
-        assertEquals(0.5, psd.getPredictedNeededHelpAttention().getTopK().get(1).getW());
+        assertNotNull(dto.getAttention(), "attention should not be null");
+        assertEquals(true, dto.getAttention().getAvailable());
+        assertEquals(2, dto.getAttention().getSeqLen());
+        assertNotNull(dto.getAttention().getTopK());
+        assertEquals(2, dto.getAttention().getTopK().size());
+        assertEquals(0, dto.getAttention().getTopK().get(0).getT());
+        assertEquals(1.0, dto.getAttention().getTopK().get(0).getW());
+        assertEquals(1, dto.getAttention().getTopK().get(1).getT());
+        assertEquals(0.5, dto.getAttention().getTopK().get(1).getW());
     }
 }
